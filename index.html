@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnostic Morphodynamique - La Hem</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <style>
+        /* ============================================================
+         * 1. STYLE ORIGINAL (CONSERVÉ)
+         * ============================================================ */
+        :root {
+            --color-primary: #5C7689; 
+            --color-e1: #3182bd; --color-e2: #31a354; --color-e3: #e6550d; --color-e4: #de2d26;
+            --color-bg: #f5f8fb;
+            --shadow-card: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        body { margin: 0; padding: 0; font-family: 'Helvetica Neue', Arial, sans-serif; background-color: var(--color-bg); overflow: hidden; }
+        #map { height: 100vh; width: 100%; z-index: 1; }
+
+        #map-title {
+            position: absolute; top: 75px; left: 50%; transform: translateX(-50%);
+            z-index: 1000; background: rgba(255, 255, 255, 0.95);
+            padding: 12px 30px; border-radius: 50px; box-shadow: var(--shadow-card);
+            text-align: center; border: 1px solid #ddd; width: auto; max-width: 80%;
+        }
+        
+        #map-title h1 { margin: 0; font-size: 18px; color: #2c3e50; text-transform: uppercase; letter-spacing: 1px; }
+        #map-title p { margin: 5px 0 0 0; font-size: 13px; color: #7f8c8d; }
+
+        .leaflet-top.leaflet-right { margin-top: 140px; }
+
+        .info { padding: 15px; font: 13px/16px Arial, Helvetica, sans-serif; background: rgba(255,255,255,0.98); box-shadow: var(--shadow-card); border-radius: 6px; min-width: 320px; }
+        .info h4 { margin: 0 0 10px; color: #333; font-size: 15px; border-bottom: 2px solid var(--color-primary); padding-bottom: 5px; text-transform: uppercase; }
+
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .data-table th { text-align: center; color: #777; font-size: 0.85em; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+        .data-table td { padding: 5px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.95em; text-align: center;}
+        .val-focus { font-weight: bold; color: #222; background-color: #f9f9f9;}
+
+        .legend { line-height: 22px; color: #555; background: rgba(255,255,255,0.95); padding: 12px; border-radius: 5px; box-shadow: var(--shadow-card); min-width: 200px; font-size: 13px; }
+        .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.9; }
+
+        /* NAVIGATION & SIDEBAR */
+        #top-nav {
+            position: absolute; top: 0; left: 0; width: 100%; height: 60px;
+            background: #2c3e50; color: white; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; z-index: 2500; box-shadow: 0 2px 10px rgba(0,0,0,0.3); box-sizing: border-box;
+        }
+        #view-selector { background: white; color: #2c3e50; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+
+        #ebf-sidebar {
+            position: fixed; right: 0; top: 60px; width: 360px; height: calc(100% - 60px);
+            background: white; z-index: 2000; box-shadow: -3px 0 10px rgba(0,0,0,0.1);
+            padding: 20px; overflow-y: auto; box-sizing: border-box; display: none;
+        }
+        .ebf-card { background: #fdfcf9; border-radius: 10px; padding: 15px; margin-bottom: 15px; border-left: 5px solid #FFAA00; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .ebf-card h3 { font-size: 13px; margin: 0 0 10px 0; color: #d35400; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .layer-control { display: flex; align-items: center; margin: 8px 0; font-size: 13px; cursor: pointer; }
+        .layer-control:hover { color: #d35400; }
+        .layer-control input { margin-right: 10px; width: 18px; height: 18px; }
+        .swatch { width: 12px; height: 12px; border-radius: 2px; margin-right: 8px; display: inline-block; border: 1px solid #999; }
+
+        .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(3px); }
+        .modal-content { background: white; margin: 10% auto; padding: 30px; border-radius: 10px; width: 90%; max-width: 650px; }
+        .leaflet-control-custom-info { background: white; width: 32px; height: 32px; border-radius: 4px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); cursor: pointer; text-align: center; line-height: 32px; font-weight: bold; font-size: 16px; color: #555; }
+    </style>
+</head>
+<body>
+
+<nav id="top-nav">
+    <div style="font-weight: bold;">BASSIN DE LA HEM</div>
+    <select id="view-selector" onchange="switchView(this.value)">
+        <option value="diagnostic">1. Diagnostic Morphodynamique (Ps)</option>
+        <option value="ebf">2. Modélisation EBF (EFO / EFN)</option>
+    </select>
+</nav>
+
+<div id="diag-ui">
+    <div id="map-title">
+        <h1>Diagnostic Morphodynamique de la Hem</h1>
+        <p>Évolution de la puissance spécifique et secteurs géomorphologiques homogènes</p>
+    </div>
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <span style="float:right; cursor:pointer; font-size:24px;" onclick="closeModal()">&times;</span>
+            <h2>Méthodologie & Seuils</h2>
+            <p><strong>Typologie géodynamique (Malavoi, 2007) :</strong></p>
+            <ul>
+                <li><span style="color:#3182bd; font-weight:bold;">E1 (< 10 W/m²)</span> : Dépôt dominant.</li>
+                <li><span style="color:#31a354; font-weight:bold;">E2 (10-30 W/m²)</span> : Ajustements lents.</li>
+                <li><span style="color:#e6550d; font-weight:bold;">E3 (30-100 W/m²)</span> : Équilibre dynamique.</li>
+                <li><span style="color:#de2d26; font-weight:bold;">E4 (> 100 W/m²)</span> : Érosion active.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div id="ebf-sidebar">
+    <h2 style="margin-top:0; color: #2c3e50; font-size: 1.4em;">Modélisation de l'EBF</h2>
+    
+    <div class="ebf-card">
+        <h3> Espace de Fonctionnement Optimal (EFO)</h3>
+        <label class="layer-control"><span class="swatch" style="border: 2px solid #FFAA00;"></span><input type="checkbox" id="check-efo"> <b>EFO Définitif</b></label>
+        <label class="layer-control"><span class="swatch" style="border: 1px solid #FFAA00;"></span><input type="checkbox" id="check-buf-ero-efo"> Fuseau de Mobilité (Ambition Maximale)</label>
+        <label class="layer-control"><span class="swatch" style="background:#f39c12; opacity:0.3;"></span><input type="checkbox" id="check-mrvbf"> MRVBF</label>
+        <label class="layer-control"><span class="swatch" style="background:#a6cee3;"></span><input type="checkbox" id="check-geol"> Socle Géologique</label>
+        <label class="layer-control"><span class="swatch" style="background:#2ecc71;"></span><input type="checkbox" id="check-zdh"> Zones à dominance Humides</label>
+        <label class="layer-control"><span class="swatch" style="background:#8e44ad; opacity:0.5;"></span><input type="checkbox" id="check-perche"> Risque d'Avulsion (lit perché)</label>
+        <label class="layer-control"><span class="swatch" style="background:#f1c40f;"></span><input type="checkbox" id="check-geo25"> Tampon 25m</label>
+    </div>
+
+    <div class="ebf-card" style="border-left-color: #e67e22;">
+        <h3> Espace de Fonctionnement Nécessaire (EFN)</h3>
+        <label class="layer-control"><span class="swatch" style="border: 2px dashed #FFAA00;"></span><input type="checkbox" id="check-efn"> <b>EFN Définitif</b></label>
+        <label class="layer-control"><span class="swatch" style="border: 1px dashed #FFAA00;"></span><input type="checkbox" id="check-buf-ero-efn"> Fuseau de Mobilité (Espace Vital)</label>
+        <label class="layer-control"><span class="swatch" style="background:#27ae60;"></span><input type="checkbox" id="check-zhe"> Zones Humides à Enjeux</label>
+        <label class="layer-control"><span class="swatch" style="background:#f39c12;"></span><input type="checkbox" id="check-geo5"> Tampon 5m</label>
+        <span style="font-size: 11px; color: #666; font-style: italic; margin-top: 10px; border-top: 1px solid #eee; padding-top: 5px; display: block;">Note : Le socle géologique (alluvions) est également réutilisé pour la construction de l'EFN.</span>
+    </div>
+
+    <div class="ebf-card" style="border-left-color: #e74c3c;">
+        <h3 style="color: #c0392b;"> Enjeux Anthropiques (Rabotage)</h3>
+        <label class="layer-control"><span class="swatch" style="background:#e74c3c;"></span><input type="checkbox" id="check-bati"> <b>Bâti & Infrastructures (OCSGE)</b></label>
+    </div>
+</div>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    // --- 1. INITIALISATION ---
+    const basemapLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png');
+    const basemapSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
+    const map = L.map('map', { center: [50.78, 2.05], zoom: 11, layers: [basemapLight] });
+
+    let currentActiveQ = 'Q100';
+
+    // --- 2. OUTILS DIAGNOSTIC (Ps) ---
+    function getClassColor(cls) {
+        const colors = { "E4": "#de2d26", "E3": "#e6550d", "E2": "#31a354", "E1": "#3182bd" };
+        return colors[cls] || "#999";
+    }
+
+    const info = L.control({position: 'topright'});
+    info.onAdd = function() { this._div = L.DomUtil.create('div', 'info'); this.update(); return this._div; };
+    info.update = function(props) {
+        if (!props) { this._div.innerHTML = '<h4>Détail Morpho</h4>Survolez la rivière'; return; }
+        const highlightClass = (q) => q === currentActiveQ ? 'val-focus' : '';
+        this._div.innerHTML = `<h4>Secteur : ${props.Typologie || 'N/A'}</h4>
+            <table class="data-table">
+                <tr><th>Crue</th><th>Q (m³/s)</th><th>Ps (W/m²)</th><th>Cl.</th></tr>
+                <tr class="${highlightClass('Q2')}"><td>Q2</td><td>${props.Q_Q2_m3s||'?'}</td><td>${props.Ps_Q2?props.Ps_Q2.toFixed(1):'?'}</td><td><b style="color:${getClassColor(props.Cl_Q2)}">${props.Cl_Q2}</b></td></tr>
+                <tr class="${highlightClass('Q5')}"><td>Q5</td><td>${props.Q_Q5_m3s||'?'}</td><td>${props.Ps_Q5?props.Ps_Q5.toFixed(1):'?'}</td><td><b style="color:${getClassColor(props.Cl_Q5)}">${props.Cl_Q5||'?'}</b></td></tr>
+                <tr class="${highlightClass('Q10')}"><td>Q10</td><td>${props.Q_Q10_m3s||'?'}</td><td>${props.Ps_Q10?props.Ps_Q10.toFixed(1):'?'}</td><td><b style="color:${getClassColor(props.Cl_Q10)}">${props.Cl_Q10||'?'}</b></td></tr>
+                <tr class="${highlightClass('Q20')}"><td>Q20</td><td>${props.Q_Q20_m3s||'?'}</td><td>${props.Ps_Q20?props.Ps_Q20.toFixed(1):'?'}</td><td><b style="color:${getClassColor(props.Cl_Q20)}">${props.Cl_Q20||'?'}</b></td></tr>
+                <tr class="${highlightClass('Q50')}"><td>Q50</td><td>${props.Q_Q50_m3s||'?'}</td><td>${props.Ps_Q50?props.Ps_Q50.toFixed(1):'?'}</td><td><b style="color:${getClassColor(props.Cl_Q50)}">${props.Cl_Q50||'?'}</b></td></tr>
+                <tr class="${highlightClass('Q100')}"><td>Q100</td><td>${props.Q_Q100_m3s||'?'}</td><td>${props.Ps_Q100?props.Ps_Q100.toFixed(1):'?'}</td><td><b style="color:${getClassColor(props.Cl_Q100)}">${props.Cl_Q100||'?'}</b></td></tr>
+            </table>`;
+    };
+
+    const legend = L.control({position: 'bottomleft'});
+    legend.onAdd = function() {
+        const div = L.DomUtil.create('div', 'legend');
+        div.innerHTML = `<h4>Énergie (Ps)</h4>
+            <i style="background:var(--color-e1)"></i> E1<br><i style="background:var(--color-e2)"></i> E2<br>
+            <i style="background:var(--color-e3)"></i> E3<br><i style="background:var(--color-e4)"></i> E4`;
+        return div;
+    };
+
+    function createQLayer(qField) {
+        return L.geoJSON(null, {
+            style: (f) => ({ color: getClassColor(f.properties[qField]), weight: 6, opacity: 0.85 }),
+            onEachFeature: (f, l) => {
+                l.on({
+                    mouseover: (e) => { e.target.setStyle({weight: 9, color: '#333'}); info.update(f.properties); },
+                    mouseout: (e) => { e.target.setStyle({weight: 6, color: getClassColor(f.properties[qField])}); }
+                });
+            }
+        });
+    }
+
+    const layersQ = {
+        'Q100': createQLayer('Cl_Q100'), 'Q50': createQLayer('Cl_Q50'), 'Q20': createQLayer('Cl_Q20'),
+        'Q10': createQLayer('Cl_Q10'), 'Q5': createQLayer('Cl_Q5'), 'Q2': createQLayer('Cl_Q2')
+    };
+
+    const layerStation = L.geoJSON(null, {
+        pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 7, fillColor: "#0078A8", color: "#fff", weight: 2, fillOpacity: 0.9 }),
+        onEachFeature: (f, l) => l.bindPopup(`<b>Station Hydrométrique :</b><br>${f.properties.station || f.properties.nom || "Station de la Hem"}`)
+    });
+
+    const layerOuvrages = L.geoJSON(null, {
+        pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 5, fillColor: "#000", color: "#fff", weight: 1, fillOpacity: 0.8 }),
+        onEachFeature: (f, l) => l.bindPopup(`<b>Ouvrage / Obstacle :</b><br>${f.properties.NomPrincipalObstEcoul || f.properties.nom || "Nom inconnu"}`)
+    });
+
+    const diagLayerControl = L.control.layers({ "Plan Clair": basemapLight, "Satellite": basemapSat }, {
+        "Crue Q100": layersQ['Q100'], "Crue Q50": layersQ['Q50'], "Crue Q20": layersQ['Q20'],
+        "Crue Q10": layersQ['Q10'], "Crue Q5": layersQ['Q5'], "Crue Q2": layersQ['Q2'],
+        "Stations": layerStation,
+        "Ouvrages": layerOuvrages
+    }, { collapsed: false });
+
+    // --- 3. SWITCH VIEW ---
+    function switchView(view) {
+        if (view === 'diagnostic') {
+            document.getElementById('diag-ui').style.display = 'block';
+            document.getElementById('ebf-sidebar').style.display = 'none';
+            diagLayerControl.addTo(map);
+            info.addTo(map);
+            legend.addTo(map);
+            layersQ['Q100'].addTo(map);
+            layerStation.addTo(map);
+            layerOuvrages.addTo(map);
+            for (let l in ebfLayers) { map.removeLayer(ebfLayers[l]); }
+        } else {
+            document.getElementById('diag-ui').style.display = 'none';
+            document.getElementById('ebf-sidebar').style.display = 'block';
+            diagLayerControl.remove();
+            info.remove();
+            legend.remove();
+            for (let q in layersQ) { map.removeLayer(layersQ[q]); }
+            map.removeLayer(layerStation);
+            map.removeLayer(layerOuvrages);
+        }
+    }
+
+    // --- 4. COUCHES EBF & POP-UPS ---
+    const ebfLayers = {
+        efo: L.geoJSON(null, { style: { color: "#FFAA00", weight: 3, fillOpacity: 0.1 } }),
+        efn: L.geoJSON(null, { style: { color: "#FFAA00", weight: 3, fillOpacity: 0.2, dashArray: "5, 10" } }),
+        bufEroEfo: L.geoJSON(null, { style: { color: "#FFAA00", weight: 1, fillOpacity: 0.1 } }),
+        bufEroEfn: L.geoJSON(null, { style: { color: "#FFAA00", weight: 1, fillOpacity: 0.1, dashArray: "2, 4" } }),
+        mrvbf: L.geoJSON(null, { style: { color: "#f39c12", weight: 0, fillOpacity: 0.2 } }),
+        geol: L.geoJSON(null, { style: { color: "#a6cee3", weight: 0, fillOpacity: 0.4 } }),
+        zdh: L.geoJSON(null, { style: { color: "#2ecc71", weight: 0, fillOpacity: 0.4 } }),
+        geo25: L.geoJSON(null, { style: { color: "#f1c40f", weight: 0, fillOpacity: 0.3 } }),
+        perche: L.geoJSON(null, { style: { color: "#8e44ad", weight: 0, fillOpacity: 0.5 } }),
+        zhe: L.geoJSON(null, { style: { color: "#27ae60", weight: 0, fillOpacity: 0.5 } }),
+        geo5: L.geoJSON(null, { style: { color: "#e67e22", weight: 0, fillOpacity: 0.4 } }),
+        bati: L.geoJSON(null, { style: { color: "#e74c3c", weight: 0, fillOpacity: 0.7 } })
+    };
+
+    const definitions = {
+        'check-efo': "<b>EFO (Espace de Fonctionnement Optimal)</b><br>Zone de mobilité maximale théorique combinant topographie, géologie et potentiel d'avulsion.",
+        'check-efn': "<b>EFN (Espace de Fonctionnement Nécessaire)</b><br>Périmètre d'action prioritaire intégrant les enjeux environnementaux majeurs.",
+        'check-buf-ero-efo': "<b>Fuseau de Mobilité (Ambition Maximale)</b> : Largeur de liberté totale accordée au lit. Calculé sur le scénario le plus large (ex: 15 fois la largeur du lit en zone de forte énergie).",
+        'check-buf-ero-efn': "<b>Fuseau de Mobilité (Espace Vital)</b> : Largeur minimale pour maintenir l'équilibre du cours d'eau. Calculé sur un scénario ajusté (ex: 10 fois la largeur du lit).",
+        'check-mrvbf': "<b>MRVBF</b><br>Indice topographique modélisant le fond de vallée alluvial (potentiel de submersion et de dépôt) basé sur l'indice d'humidité et de la pente.",
+        'check-geol': "<b>Socle Géologique</b> : Emprise des alluvions quaternaires marquant l'historique des migrations du lit.",
+        'check-zdh': "<b>Zones à dominance Humides</b><br>Secteurs présentant un intérêt pédologique et hydrologique majeur pour la régulation des débits.",
+        'check-geo25': "<b>Tampon 25m</b> : Zone de protection biogéochimique assurant la filtration des nutriments vers le cours d'eau.",
+        'check-perche': "<b>Risque d'Avulsion (lit perché) </b> : Secteurs de lits perchés présentant un potentiel élevé de création d'un nouveau tracé fluvial.",
+        'check-zhe': "<b>Zones Humides à Enjeux</b> : Secteurs à forte valeur biologique intégrés au périmètre nécessaire.",
+        'check-geo5': "<b>Tampon 5m</b> : Zone tampon biogéochimique minimale pour la stabilité des berges.",
+        'check-bati': "<b>Enjeux Anthropiques</b> : Emprise du bâti et des infrastructures routières exclues du fuseau de mobilité."
+    };
+
+    function bind(id, layer, file) {
+        document.getElementById(id).addEventListener('change', function() {
+            if (this.checked) { 
+                fetch(file).then(r => r.json()).then(data => {
+                    layer.addData(data);
+                    layer.eachLayer(l => l.bindPopup(definitions[id] || "Couche modélisée"));
+                    layer.addTo(map); 
+                });
+            } else { map.removeLayer(layer); }
+        });
+    }
+
+    bind('check-efo', ebfLayers.efo, 'EFO_FINAL_WGS.geojson');
+    bind('check-efn', ebfLayers.efn, 'EFN_FINAL_WGS.geojson');
+    bind('check-buf-ero-efo', ebfLayers.bufEroEfo, 'Buffer_Erosion_EFO.geojson');
+    bind('check-buf-ero-efn', ebfLayers.bufEroEfn, 'Buffer_Erosion_EFN.geojson');
+    bind('check-mrvbf', ebfLayers.mrvbf, 'MRVBF_LISSER.geojson');
+    bind('check-geol', ebfLayers.geol, 'Geologie.geojson');
+    bind('check-zdh', ebfLayers.zdh, 'ZDH_Global.geojson');
+    bind('check-geo25', ebfLayers.geo25, 'EBF_Geochimique_25m.geojson');
+    bind('check-perche', ebfLayers.perche, 'LIT_perche_WGS.geojson');
+    bind('check-zhe', ebfLayers.zhe, 'ZH_Enjeux.geojson');
+    bind('check-geo5', ebfLayers.geo5, 'EBF_Geochimique_5m.geojson');
+    bind('check-bati', ebfLayers.bati, 'Bati_route.geojson');
+
+    // --- 5. DÉMARRAGE ---
+    fetch('hem_troncons_homogenes_finaux_1.geojson').then(r => r.json()).then(data => {
+        for (let q in layersQ) { layersQ[q].addData(data); }
+        fetch('Station.geojson').then(r => r.json()).then(d => layerStation.addData(d));
+        fetch('Ouvrage_WGS.geojson').then(r => r.json()).then(d => layerOuvrages.addData(d));
+        switchView('diagnostic');
+    });
+
+    map.on('overlayadd', (e) => { for(let q in layersQ){ if(layersQ[q]===e.layer) currentActiveQ = q; } });
+
+    const InfoControl = L.Control.extend({
+        options: { position: 'topleft' },
+        onAdd: function () {
+            const btn = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom-info');
+            btn.innerHTML = '?'; btn.onclick = () => document.getElementById("infoModal").style.display = "block";
+            return btn;
+        }
+    });
+    map.addControl(new InfoControl());
+    function closeModal() { document.getElementById("infoModal").style.display = "none"; }
+</script>
+</body>
+</html>
