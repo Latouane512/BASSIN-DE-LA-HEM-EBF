@@ -75,8 +75,13 @@
         .dl-link:hover { background: #e8ecef; border-color: #3498db; }
 
         .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(3px); }
-        .modal-content { background: white; margin: 10% auto; padding: 30px; border-radius: 10px; width: 90%; max-width: 650px; }
+        .modal-content { background: white; margin: 5% auto; padding: 30px; border-radius: 10px; width: 90%; max-width: 700px; position: relative; }
         .leaflet-control-custom-info { background: white; width: 32px; height: 32px; border-radius: 4px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); cursor: pointer; text-align: center; line-height: 32px; font-weight: bold; font-size: 16px; color: #555; }
+        
+        .modal-body { max-height: 65vh; overflow-y: auto; padding-right: 15px; font-size: 14px; line-height: 1.5; color: #444; }
+        .modal-body h3 { color: #2980b9; font-size: 16px; margin-top: 20px; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .modal-body ul { margin-top: 5px; padding-left: 20px; }
+        .modal-body li { margin-bottom: 8px; }
     </style>
 </head>
 <body>
@@ -94,18 +99,51 @@
         <h1>Diagnostic Morphodynamique de la Hem</h1>
         <p>Évolution de la puissance spécifique et secteurs géomorphologiques homogènes</p>
     </div>
-    <div id="infoModal" class="modal">
-        <div class="modal-content">
-            <span style="float:right; cursor:pointer; font-size:24px;" onclick="closeModal()">&times;</span>
-            <h2>Méthodologie & Seuils</h2>
-            <p><strong>Typologie géodynamique (Malavoi, 2007) :</strong></p>
-            <ul>
-                <li><span style="color:#3182bd; font-weight:bold;">E1 (< 10 W/m²)</span> : Dépôt dominant.</li>
-                <li><span style="color:#31a354; font-weight:bold;">E2 (10-30 W/m²)</span> : Ajustements lents.</li>
-                <li><span style="color:#fd8d3c; font-weight:bold;">E3 (30-100 W/m²)</span> : Équilibre dynamique.</li>
-                <li><span style="color:#de2d26; font-weight:bold;">E4 (> 100 W/m²)</span> : Érosion active.</li>
-            </ul>
+</div>
+
+<div id="infoModal" class="modal">
+    <div class="modal-content">
+        <span style="position:absolute; right:20px; top:15px; cursor:pointer; font-size:28px; color:#777;" onclick="closeModal()">&times;</span>
+        
+        <div id="modal-diagnostic">
+            <h2 style="margin-top:0; color:#2c3e50;">Méthodologie & Seuils</h2>
+            <div class="modal-body">
+                <p><strong>Typologie géodynamique (Malavoi, 2007) :</strong></p>
+                <ul>
+                    <li><span style="color:#3182bd; font-weight:bold;">E1 (< 10 W/m²)</span> : Dépôt dominant. Secteurs de plaine à très faible déclivité ou à l'amont immédiat d'ouvrages hydrauliques.</li>
+                    <li><span style="color:#31a354; font-weight:bold;">E2 (10-30 W/m²)</span> : Ajustements lents. Transit sédimentaire faible.</li>
+                    <li><span style="color:#fd8d3c; font-weight:bold;">E3 (30-100 W/m²)</span> : Équilibre dynamique. Énergie suffisante pour faire migrer naturellement les méandres.</li>
+                    <li><span style="color:#de2d26; font-weight:bold;">E4 (> 100 W/m²)</span> : Érosion active. Risque maximal d'incision du lit et d'érosion latérale sévère.</li>
+                </ul>
+            </div>
         </div>
+
+        <div id="modal-ebf" style="display:none;">
+            <h2 style="margin-top:0; color:#2c3e50;">Cadre Conceptuel : L'Espace de Bon Fonctionnement (EBF)</h2>
+            <div class="modal-body">
+                <p><strong>De l’espace de liberté à l’EBF :</strong> Face aux altérations hydromorphologiques historiques, le concept novateur d’« espace de liberté » émerge dès 1981 pour permettre la mobilisation des sédiments. Au début des années 2000, l’approche strictement centrée sur la mobilité évolue vers le paradigme de l'<strong>Espace de Bon Fonctionnement (EBF)</strong>. Ce dernier englobe la mobilité mais intègre surtout l’intégralité des fonctionnalités de l’hydrosystème.</p>
+                
+                <h3>Les 5 dimensions écologiques de l'EBF</h3>
+                <p>Préserver cet espace relève des Solutions Fondées sur la Nature (SFN). L'EBF repose sur l'interdépendance de :</p>
+                <ul>
+                    <li><strong>Morphologie :</strong> Garantit la dynamique hydrosédimentaire et crée des habitats (évaluée via la puissance spécifique).</li>
+                    <li><strong>Hydraulique :</strong> Assure le laminage des crues par l'expansion des eaux.</li>
+                    <li><strong>Biogéochimie :</strong> Processus d'auto-épuration et régulation de la qualité physico-chimique (ex: zones tampons).</li>
+                    <li><strong>Hydrogéologie :</strong> Échanges hydriques fondamentaux entre la rivière et les nappes superficielles.</li>
+                    <li><strong>Biologie :</strong> Préservation des Zones Humides (ZH/ZDH), habitats de reproduction et de refuge.</li>
+                </ul>
+
+                <h3>Dualité spatiale : EFO vs EFN</h3>
+                <ul>
+                    <li><strong>L’Espace Optimal (EFO) :</strong> Enveloppe théorique maximale sans contraintes anthropiques. Il illustre la résilience historique totale du cours d'eau.</li>
+                    <li><strong>L’Espace Nécessaire (EFN) :</strong> Corridor vital minimal garantissant l’expression durable des fonctions écologiques tout en intégrant les usages socio-économiques du territoire (obtenu par la soustraction de l'urbanisation existante).</li>
+                </ul>
+
+                <h3>Un outil réglementaire au service de la DCE</h3>
+                <p>L'EBF répond à la Directive Cadre sur l’Eau (DCE) pour atteindre le bon état écologique. Sur notre bassin, le <strong>SDAGE Artois-Picardie</strong> impose sa cartographie. Son intégration dans les documents d’urbanisme (<strong>PLUi</strong>) permet de sanctuariser les parcelles (reclassement en zone Naturelle/Agricole ou intégration d'Orientations d'Aménagement (OAP) imposant des prescriptions constructives).</p>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -175,8 +213,8 @@
 
     <div class="ebf-card" style="border-left-color: #3498db;">
         <h3 style="color: #2980b9;"> Contexte Géographique</h3>
-        <label class="layer-control"><span class="swatch" style="background:#3498db;"></span><input type="checkbox" id="check-hydro"> <b>Réseau Hydrographique</b></label>
-        <label class="layer-control"><span class="swatch" style="border: 2px dashed #444; background: transparent;"></span><input type="checkbox" id="check-communes"> <b>Limites Communales</b></label>
+        <label class="layer-control"><span class="swatch" style="background:#3498db;"></span><input type="checkbox" id="check-hydro" checked> <b>Réseau Hydrographique</b></label>
+        <label class="layer-control"><span class="swatch" style="border: 2px dashed #444; background: transparent;"></span><input type="checkbox" id="check-communes" checked> <b>Limites Communales</b></label>
     </div>
 </div>
 
@@ -279,10 +317,16 @@
         "Réseau Hydrographique": layerHydroDiag
     }, { collapsed: false });
 
+    // MODIF : Gestion de l'affichage du modal et activation des couches par défaut
     function switchView(view) {
         if (view === 'diagnostic') {
             document.getElementById('diag-ui').style.display = 'block';
             document.getElementById('ebf-sidebar').style.display = 'none';
+            
+            // Switch le modal d'aide
+            document.getElementById('modal-diagnostic').style.display = 'block';
+            document.getElementById('modal-ebf').style.display = 'none';
+
             diagLayerControl.addTo(map);
             info.addTo(map);
             legend.addTo(map);
@@ -290,9 +334,15 @@
             layerStation.addTo(map);
             layerOuvrages.addTo(map);
             for (let l in ebfLayers) { map.removeLayer(ebfLayers[l]); }
+            
         } else {
             document.getElementById('diag-ui').style.display = 'none';
             document.getElementById('ebf-sidebar').style.display = 'block';
+            
+            // Switch le modal d'aide
+            document.getElementById('modal-diagnostic').style.display = 'none';
+            document.getElementById('modal-ebf').style.display = 'block';
+
             diagLayerControl.remove();
             info.remove();
             legend.remove();
@@ -300,6 +350,14 @@
             map.removeLayer(layerStation);
             map.removeLayer(layerOuvrages);
             map.removeLayer(layerHydroDiag);
+
+            // Active automatiquement les couches d'habillage si elles sont cochées
+            if (document.getElementById('check-hydro').checked && !map.hasLayer(ebfLayers.hydro)) {
+                ebfLayers.hydro.addTo(map);
+            }
+            if (document.getElementById('check-communes').checked && !map.hasLayer(ebfLayers.communes)) {
+                ebfLayers.communes.addTo(map);
+            }
         }
     }
 
@@ -519,16 +577,23 @@
         pluiChart.update();
     }
 
+    // MODIF : Les requêtes pour l'hydro et les communes alimentent maintenant aussi ebfLayers
     fetch('hem_troncons_homogenes_finaux_1.geojson').then(r => r.json()).then(data => {
         for (let q in layersQ) { layersQ[q].addData(data); }
+        
         fetch('Station.geojson').then(r => r.json()).then(d => layerStation.addData(d));
         fetch('Ouvrage_WGS.geojson').then(r => r.json()).then(d => layerOuvrages.addData(d));
-        fetch('Hydro_HEM_WGS.geojson').then(r => r.json()).then(d => layerHydroDiag.addData(d));
+        
+        fetch('Hydro_HEM_WGS.geojson').then(r => r.json()).then(d => {
+            layerHydroDiag.addData(d);
+            ebfLayers.hydro.addData(d); // Prépare la donnée pour la vue EBF
+        });
         
         fetch('communes.geojson')
             .then(r => r.json())
             .then(data => {
                 searchCommunesLayer.addData(data);
+                ebfLayers.communes.addData(data); // Prépare la donnée pour la vue EBF
                 
                 const select = document.getElementById('commune-selector');
                 select.innerHTML = '<option value="">-- Zoomer sur une commune --</option>'; 
