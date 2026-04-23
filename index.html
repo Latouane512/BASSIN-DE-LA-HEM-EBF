@@ -249,7 +249,7 @@
     info.update = function(props) {
         if (!props) { this._div.innerHTML = '<h4>Détail Morpho</h4>Survolez la rivière'; return; }
         const highlightClass = (q) => q === currentActiveQ ? 'val-focus' : '';
-        const largeur = props.largeur_moy || "N/A";
+        const largeur = props.Largeur_moy || props.largeur_moy || props.LARGEUR_MOY || "N/A";
         const largeurText = (largeur !== "N/A") ? parseFloat(largeur).toFixed(1) + ' m' : 'N/A';
 
         this._div.innerHTML = `<h4>Secteur : ${props.Typologie || 'N/A'}</h4>
