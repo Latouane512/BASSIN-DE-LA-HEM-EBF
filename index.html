@@ -249,7 +249,13 @@
     info.update = function(props) {
         if (!props) { this._div.innerHTML = '<h4>Détail Morpho</h4>Survolez la rivière'; return; }
         const highlightClass = (q) => q === currentActiveQ ? 'val-focus' : '';
+        const largeur = props.largeur_moy || "N/A";
+        const largeurText = (largeur !== "N/A") ? parseFloat(largeur).toFixed(1) + ' m' : 'N/A';
+
         this._div.innerHTML = `<h4>Secteur : ${props.Typologie || 'N/A'}</h4>
+            <p style="margin: 5px 0 10px 0; font-size: 13px; color: #555;">
+                <b>Largeur du lit :</b> ${largeurText}
+            </p>
             <table class="data-table">
                 <tr><th>Crue</th><th>Q (m³/s)</th><th>Ps (W/m²)</th><th>Cl.</th></tr>
                 <tr class="${highlightClass('Q2')}"><td>Q2</td><td>${props.Q_Q2_m3s||'?'}</td><td>${props.Ps_Q2?props.Ps_Q2.toFixed(1):'?'}</td><td><b style="color:${getClassColor(props.Cl_Q2)}">${props.Cl_Q2}</b></td></tr>
@@ -510,18 +516,15 @@
         pdfTitle.innerHTML = `Cartes réglementaires : <b>${nomCommune}</b>`;
         pdfDiv.style.display = 'block';
 
-        // Liste des cartes à vérifier
         const documents = [
             { id: 'link-efo', url: `EFO/${nomCommune}_EFO.png`, filename: `${nomCommune}_EFO.png` },
             { id: 'link-efn', url: `EFN/${nomCommune}_EFN.png`, filename: `${nomCommune}_EFN.png` },
             { id: 'link-synth', url: `Complet/${nomCommune}_EBF_Global.png`, filename: `${nomCommune}_EBF_Global.png` }
         ];
 
-        // Vérification silencieuse (HTTP HEAD) pour savoir si le fichier PNG existe sur le serveur
         documents.forEach(async (doc) => {
             const btn = document.getElementById(doc.id);
             
-            // État de chargement par défaut
             btn.style.opacity = "0.5";
             btn.onclick = (e) => { e.preventDefault(); };
 
@@ -529,22 +532,20 @@
                 const response = await fetch(doc.url, { method: 'HEAD' });
 
                 if (response.ok) {
-                    // LE FICHIER EXISTE : On active le bouton de téléchargement
                     btn.href = doc.url;
                     btn.download = doc.filename;
                     btn.style.opacity = "1";
-                    btn.onclick = null; // Enlève le blocage du clic
+                    btn.onclick = null; 
                 } else {
                     throw new Error("Fichier introuvable");
                 }
             } catch (error) {
-                // LE FICHIER N'EXISTE PAS (ex: pas d'EFO sur la commune)
                 btn.removeAttribute('href');
                 btn.removeAttribute('download');
-                btn.style.opacity = "0.6"; // Laisse le bouton visuellement grisé
+                btn.style.opacity = "0.6"; 
                 btn.onclick = (e) => {
                     e.preventDefault();
-                    alert(`⚠️ Carte non disponible pour la commune de ${nomCommune}.\n\nIl n'y a pas d'EFO ou d'EFN défini sur ce secteur.`);
+                    alert(` Carte non disponible pour la commune de ${nomCommune}.\n\nIl n'y a pas d'EFO ou d'EFN défini sur ce secteur.`);
                 };
             }
         });
