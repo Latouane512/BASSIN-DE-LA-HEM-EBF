@@ -71,9 +71,9 @@
         .chart-btn { flex: 1; padding: 6px; margin: 0 5px; border: 1px solid #ccc; background: white; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold; }
         .chart-btn.active { background: #3498db; color: white; border-color: #2980b9; }
 
-        /* Styles pour les liens PDF */
-        .pdf-link { display:flex; align-items:center; padding: 8px; background: #f4f6f7; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 5px; text-decoration: none; color: #2c3e50; font-size: 12px; transition: all 0.2s ease; }
-        .pdf-link:hover { background: #e8ecef; border-color: #3498db; }
+        /* Styles pour les liens de téléchargement PNG */
+        .dl-link { display:flex; align-items:center; padding: 8px; background: #f4f6f7; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 5px; text-decoration: none; color: #2c3e50; font-size: 12px; transition: all 0.2s ease; }
+        .dl-link:hover { background: #e8ecef; border-color: #3498db; }
 
         .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(3px); }
         .modal-content { background: white; margin: 10% auto; padding: 30px; border-radius: 10px; width: 90%; max-width: 650px; }
@@ -114,7 +114,7 @@
     <h2 style="margin-top:0; color: #2c3e50; font-size: 1.4em;">Modélisation de l'EBF</h2>
     
     <div class="ebf-card" style="border-left-color: #27ae60;">
-        <h3 style="color: #27ae60;"> Recherche & Exports (Communes)</h3>
+        <h3 style="color: #27ae60;">📍 Recherche & Exports (Communes)</h3>
         
         <select id="commune-selector" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc; font-size:13px;" onchange="zoomToCommune(this.value)">
             <option value="">-- Zoomer sur une commune --</option>
@@ -125,13 +125,13 @@
             <option value="Recques-sur-Hem">Recques-sur-Hem</option>
             <option value="Tournehem-sur-la-Hem">Tournehem-sur-la-Hem</option>
             <option value="Zutkerque">Zutkerque</option>
-            </select>
+        </select>
 
         <div id="pdf-downloads" style="display:none; margin-top: 15px;">
             <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: bold; color: #555;" id="pdf-title">Cartes réglementaires :</p>
-            <a id="link-efo" href="#" class="pdf-link" target="_blank"> Télécharger la carte EFO</a>
-            <a id="link-efn" href="#" class="pdf-link" target="_blank"> Télécharger la carte EFN</a>
-            <a id="link-synth" href="#" class="pdf-link" target="_blank"> Télécharger la Synthèse globale</a>
+            <a id="link-efo" href="#" class="dl-link" download>🖼️ Télécharger la carte EFO (PNG)</a>
+            <a id="link-efn" href="#" class="dl-link" download>🖼️ Télécharger la carte EFN (PNG)</a>
+            <a id="link-synth" href="#" class="dl-link" download>🖼️ Télécharger la Synthèse globale (PNG)</a>
         </div>
     </div>
 
@@ -207,8 +207,6 @@
     const map = L.map('map', { center: [50.78, 2.05], zoom: 11, layers: [basemapLight] });
 
     let currentActiveQ = 'Q100';
-
-    // MODIF : Couche cachée pour stocker les géométries des communes pour la recherche
     let searchCommunesLayer = L.geoJSON();
 
     function getClassColor(cls) {
@@ -439,7 +437,7 @@
     bind('check-plui-efn', ebfLayers.pluiEfn, 'EFN_PLUI.geojson'); 
     bind('check-communes', ebfLayers.communes, 'Communes_WGS.geojson'); 
 
-    // MODIF : Zoom en utilisant l'emprise (Bounding Box) de la commune
+    // --- FONCTION DE ZOOM ET LIENS PNG ---
     function zoomToCommune(nomCommune) {
         const pdfDiv = document.getElementById('pdf-downloads');
         const pdfTitle = document.getElementById('pdf-title');
@@ -450,14 +448,12 @@
             return;
         }
 
-        // Parcours de la couche de recherche pour trouver la bonne commune
         let found = false;
         searchCommunesLayer.eachLayer(l => {
             const props = l.feature.properties;
             const cNom = props.nom || props.NOM || props.NOM_COM || props.Nom || "";
             
             if (cNom.toLowerCase() === nomCommune.toLowerCase()) {
-                // Zoom sur l'emprise exacte du polygone (avec un peu de marge)
                 map.flyToBounds(l.getBounds(), { padding: [20, 20], duration: 1.5, maxZoom: 15 });
                 found = true;
             }
@@ -466,9 +462,19 @@
         if (!found) console.warn("Commune non trouvée dans le fichier Communes_WGS.geojson");
 
         pdfTitle.innerHTML = `Cartes réglementaires : <b>${nomCommune}</b>`;
-        document.getElementById('link-efo').href = `EFO/${nomCommune}_EFO.pdf`;
-        document.getElementById('link-efn').href = `EFN/${nomCommune}_EFN.pdf`;
-        document.getElementById('link-synth').href = `Complet/${nomCommune}_EBF_Global.pdf`;
+        
+        // Mise à jour des liens avec les extensions .png et les attributs download
+        const linkEfo = document.getElementById('link-efo');
+        linkEfo.href = `EFO/${nomCommune}_EFO.png`;
+        linkEfo.download = `${nomCommune}_EFO.png`;
+
+        const linkEfn = document.getElementById('link-efn');
+        linkEfn.href = `EFN/${nomCommune}_EFN.png`;
+        linkEfn.download = `${nomCommune}_EFN.png`;
+
+        const linkSynth = document.getElementById('link-synth');
+        linkSynth.href = `Complet/${nomCommune}_EBF_Global.png`;
+        linkSynth.download = `${nomCommune}_EBF_Global.png`;
         
         pdfDiv.style.display = 'block';
     }
@@ -529,8 +535,7 @@
         fetch('Ouvrage_WGS.geojson').then(r => r.json()).then(d => layerOuvrages.addData(d));
         fetch('Hydro_HEM_WGS.geojson').then(r => r.json()).then(d => layerHydroDiag.addData(d));
         
-        // MODIF : Chargement transparent du fichier des communes pour le moteur de recherche
-        fetch('communes.geojson')
+        fetch('Communes_WGS.geojson')
             .then(r => r.json())
             .then(data => searchCommunesLayer.addData(data))
             .catch(e => console.log("Erreur lors du chargement des polygones pour la recherche."));
