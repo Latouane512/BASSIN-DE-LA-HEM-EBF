@@ -27,7 +27,7 @@ L'application est structurée en deux vues distinctes, accessibles via un menu d
 * **Couches d'habillage** : Intégration du réseau hydrographique détaillé (avec toponymie), des stations hydrométriques et des ouvrages faisant obstacle à l'écoulement.
 
 ### 2️ Vue Modélisation EBF & Urbanisme (Aide à la décision)
-* **Sidebar interactive professionnelle** : Décomposition thématique des couches de modélisation (Potentiel EFO, Arbitrage EFN, Contexte géographique).
+* **Sidebar interactive** : Décomposition thématique des couches de modélisation (Potentiel EFO, Arbitrage EFN, Contexte géographique).
 * **Lexique GEMA intégré** : Chaque couche dispose d'un pop-up didactique expliquant son rôle scientifique (ex: *MRVBF, Lits perchés, Tampons biogéochimiques*).
 * **Analyse réglementaire (PLUi)** : 
     * Intégration des couches de zonage du Plan Local d'Urbanisme intercommunal, intersectées sur les emprises de l'EFO et de l'EFN.
