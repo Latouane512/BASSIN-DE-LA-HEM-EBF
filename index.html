@@ -71,7 +71,6 @@
         .chart-btn { flex: 1; padding: 6px; margin: 0 5px; border: 1px solid #ccc; background: white; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold; }
         .chart-btn.active { background: #3498db; color: white; border-color: #2980b9; }
 
-        /* Styles pour les liens de téléchargement PNG */
         .dl-link { display:flex; align-items:center; padding: 8px; background: #f4f6f7; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 5px; text-decoration: none; color: #2c3e50; font-size: 12px; transition: all 0.2s ease; }
         .dl-link:hover { background: #e8ecef; border-color: #3498db; }
 
@@ -114,24 +113,17 @@
     <h2 style="margin-top:0; color: #2c3e50; font-size: 1.4em;">Modélisation de l'EBF</h2>
     
     <div class="ebf-card" style="border-left-color: #27ae60;">
-        <h3 style="color: #27ae60;"> Recherche & Exports (Communes)</h3>
+        <h3 style="color: #27ae60;">📍 Recherche & Exports (Communes)</h3>
         
         <select id="commune-selector" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc; font-size:13px;" onchange="zoomToCommune(this.value)">
-            <option value="">-- Zoomer sur une commune --</option>
-            <option value="Alembon">Alembon</option>
-            <option value="Audruicq">Audruicq</option>
-            <option value="Licques">Licques</option>
-            <option value="Polincove">Polincove</option>
-            <option value="Recques-sur-Hem">Recques-sur-Hem</option>
-            <option value="Tournehem-sur-la-Hem">Tournehem-sur-la-Hem</option>
-            <option value="Zutkerque">Zutkerque</option>
+            <option value="">-- Chargement des communes... --</option>
         </select>
 
         <div id="pdf-downloads" style="display:none; margin-top: 15px;">
             <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: bold; color: #555;" id="pdf-title">Cartes réglementaires :</p>
-            <a id="link-efo" href="#" class="dl-link" download> Télécharger la carte EFO (PNG)</a>
-            <a id="link-efn" href="#" class="dl-link" download> Télécharger la carte EFN (PNG)</a>
-            <a id="link-synth" href="#" class="dl-link" download> Télécharger la Synthèse globale (PNG)</a>
+            <a id="link-efo" href="#" class="dl-link" download>🖼️ Télécharger la carte EFO (PNG)</a>
+            <a id="link-efn" href="#" class="dl-link" download>🖼️ Télécharger la carte EFN (PNG)</a>
+            <a id="link-synth" href="#" class="dl-link" download>🖼️ Télécharger la Synthèse globale (PNG)</a>
         </div>
     </div>
 
@@ -437,7 +429,6 @@
     bind('check-plui-efn', ebfLayers.pluiEfn, 'EFN_PLUI.geojson'); 
     bind('check-communes', ebfLayers.communes, 'communes.geojson'); 
 
-    // --- FONCTION DE ZOOM ET LIENS PNG ---
     function zoomToCommune(nomCommune) {
         const pdfDiv = document.getElementById('pdf-downloads');
         const pdfTitle = document.getElementById('pdf-title');
@@ -463,7 +454,6 @@
 
         pdfTitle.innerHTML = `Cartes réglementaires : <b>${nomCommune}</b>`;
         
-        // Mise à jour des liens avec les extensions .png et les attributs download
         const linkEfo = document.getElementById('link-efo');
         linkEfo.href = `EFO/${nomCommune}_EFO.png`;
         linkEfo.download = `${nomCommune}_EFO.png`;
@@ -537,8 +527,32 @@
         
         fetch('communes.geojson')
             .then(r => r.json())
-            .then(data => searchCommunesLayer.addData(data))
-            .catch(e => console.log("Erreur lors du chargement des polygones pour la recherche."));
+            .then(data => {
+                searchCommunesLayer.addData(data);
+                
+                const select = document.getElementById('commune-selector');
+                select.innerHTML = '<option value="">-- Zoomer sur une commune --</option>'; 
+                
+                let communesNoms = [];
+                data.features.forEach(f => {
+                    const props = f.properties;
+                    const nom = props.nom || props.NOM || props.NOM_COM || props.Nom;
+                    if (nom) communesNoms.push(nom);
+                });
+                
+                communesNoms = [...new Set(communesNoms)].sort((a, b) => a.localeCompare(b, 'fr'));
+                
+                communesNoms.forEach(nom => {
+                    const option = document.createElement('option');
+                    option.value = nom;
+                    option.textContent = nom;
+                    select.appendChild(option);
+                });
+            })
+            .catch(e => {
+                console.log("Erreur lors du chargement des polygones pour la recherche.", e);
+                document.getElementById('commune-selector').innerHTML = '<option value="">Erreur chargement des communes</option>';
+            });
 
         switchView('diagnostic');
         initChart();
