@@ -9,9 +9,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
-        /* ============================================================
-         * 1. STYLE ORIGINAL
-         * ============================================================ */
         :root {
             --color-primary: #5C7689; 
             --color-e1: #3182bd; --color-e2: #31a354; --color-e3: #e6550d; --color-e4: #de2d26;
@@ -171,14 +168,12 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    // --- 1. INITIALISATION ---
     const basemapLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png');
     const basemapSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
     const map = L.map('map', { center: [50.78, 2.05], zoom: 11, layers: [basemapLight] });
 
     let currentActiveQ = 'Q100';
 
-    // --- 2. OUTILS DIAGNOSTIC ---
     function getClassColor(cls) {
         const colors = { "E4": "#de2d26", "E3": "#e6550d", "E2": "#31a354", "E1": "#3182bd" };
         return colors[cls] || "#999";
@@ -278,7 +273,6 @@
         }
     }
 
-    // --- 4. COUCHES EBF & PLUi ---
     function getPluiColor(typezone) {
         const zone = (typezone || '').toString().toUpperCase();
         if (zone.startsWith('A') && !zone.startsWith('AU')) return '#a6da59'; // Agricole
@@ -288,7 +282,6 @@
         return '#999999'; // Défaut
     }
 
-    // FONCTIONS ROBUSTES POUR LIRE LES COLONNES EN MINUSCULES OU MAJUSCULES
     const getZone = (f) => f.properties.typezone || f.properties.TYPEZONE || "Inconnu";
     const getLibelle = (f) => f.properties.libelle || f.properties.LIBELLE || "";
     const getLibelong = (f) => f.properties.libelong || f.properties.LIBELONG || ""; // Pour récupérer la description détaillée
@@ -395,12 +388,10 @@
     bind('check-geo5', ebfLayers.geo5, 'EBF_Geochimique_5m.geojson');
     bind('check-bati', ebfLayers.bati, 'Bati_route.geojson');
     bind('check-hydro', ebfLayers.hydro, 'Hydro_HEM_WGS.geojson');
-    
-    // APPELS DES COUCHES PLUI DÉCOUPÉES
     bind('check-plui-efo', ebfLayers.pluiEfo, 'EFO_PLUI.geojson'); 
     bind('check-plui-efn', ebfLayers.pluiEfn, 'EFN_PLUI.geojson'); 
 
-    // --- 5. GRAPHIQUE INTERACTIF PLUi ---
+    // GRAPHIQUE INTERACTIF PLUi
     const chartData = {
         'EFO': {
             labels: ['Agricole (A)', 'Naturel (N)', 'Urbain (U)', 'A urbaniser (AU)'],
@@ -413,7 +404,7 @@
     };
 
     const chartColors = [
-        '#a6da59', // A (Le nouveau vert défini)
+        '#a6da59', // A 
         'rgb(51, 160, 44)',   // N
         'rgb(217, 217, 217)', // U
         'rgb(250, 172, 76)'   // AU
