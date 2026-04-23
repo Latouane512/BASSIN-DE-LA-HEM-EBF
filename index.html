@@ -435,7 +435,7 @@
     bind('check-hydro', ebfLayers.hydro, 'Hydro_HEM_WGS.geojson');
     bind('check-plui-efo', ebfLayers.pluiEfo, 'EFO_PLUI.geojson'); 
     bind('check-plui-efn', ebfLayers.pluiEfn, 'EFN_PLUI.geojson'); 
-    bind('check-communes', ebfLayers.communes, 'Communes_WGS.geojson'); 
+    bind('check-communes', ebfLayers.communes, 'communes.geojson'); 
 
     // --- FONCTION DE ZOOM ET LIENS PNG ---
     function zoomToCommune(nomCommune) {
@@ -459,7 +459,7 @@
             }
         });
 
-        if (!found) console.warn("Commune non trouvée dans le fichier Communes_WGS.geojson");
+        if (!found) console.warn("Commune non trouvée dans le fichier communes.geojson");
 
         pdfTitle.innerHTML = `Cartes réglementaires : <b>${nomCommune}</b>`;
         
