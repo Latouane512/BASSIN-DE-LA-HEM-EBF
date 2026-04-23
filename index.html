@@ -71,7 +71,7 @@
         .chart-btn { flex: 1; padding: 6px; margin: 0 5px; border: 1px solid #ccc; background: white; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold; }
         .chart-btn.active { background: #3498db; color: white; border-color: #2980b9; }
 
-        .dl-link { display:flex; align-items:center; padding: 8px; background: #f4f6f7; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 5px; text-decoration: none; color: #2c3e50; font-size: 12px; transition: all 0.2s ease; }
+        .dl-link { display:flex; align-items:center; padding: 8px; background: #f4f6f7; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 5px; text-decoration: none; color: #2c3e50; font-size: 12px; transition: all 0.2s ease; cursor: pointer; }
         .dl-link:hover { background: #e8ecef; border-color: #3498db; }
 
         .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(3px); }
@@ -151,7 +151,7 @@
     <h2 style="margin-top:0; color: #2c3e50; font-size: 1.4em;">Modélisation de l'EBF</h2>
     
     <div class="ebf-card" style="border-left-color: #27ae60;">
-        <h3 style="color: #27ae60;"> Recherche & Exports (Communes)</h3>
+        <h3 style="color: #27ae60;">📍 Recherche & Exports (Communes)</h3>
         
         <select id="commune-selector" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc; font-size:13px;" onchange="zoomToCommune(this.value)">
             <option value="">-- Chargement des communes... --</option>
@@ -159,9 +159,9 @@
 
         <div id="pdf-downloads" style="display:none; margin-top: 15px;">
             <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: bold; color: #555;" id="pdf-title">Cartes réglementaires :</p>
-            <a id="link-efo" href="#" class="dl-link" download> Télécharger la carte EFO (PNG)</a>
-            <a id="link-efn" href="#" class="dl-link" download> Télécharger la carte EFN (PNG)</a>
-            <a id="link-synth" href="#" class="dl-link" download> Télécharger la Synthèse globale (PNG)</a>
+            <a id="link-efo" href="#" class="dl-link">🖼️ Télécharger la carte EFO (PNG)</a>
+            <a id="link-efn" href="#" class="dl-link">🖼️ Télécharger la carte EFN (PNG)</a>
+            <a id="link-synth" href="#" class="dl-link">🖼️ Télécharger la Synthèse globale (PNG)</a>
         </div>
     </div>
 
@@ -317,13 +317,11 @@
         "Réseau Hydrographique": layerHydroDiag
     }, { collapsed: false });
 
-    // MODIF : Gestion de l'affichage du modal et activation des couches par défaut
     function switchView(view) {
         if (view === 'diagnostic') {
             document.getElementById('diag-ui').style.display = 'block';
             document.getElementById('ebf-sidebar').style.display = 'none';
             
-            // Switch le modal d'aide
             document.getElementById('modal-diagnostic').style.display = 'block';
             document.getElementById('modal-ebf').style.display = 'none';
 
@@ -339,7 +337,6 @@
             document.getElementById('diag-ui').style.display = 'none';
             document.getElementById('ebf-sidebar').style.display = 'block';
             
-            // Switch le modal d'aide
             document.getElementById('modal-diagnostic').style.display = 'none';
             document.getElementById('modal-ebf').style.display = 'block';
 
@@ -351,7 +348,6 @@
             map.removeLayer(layerOuvrages);
             map.removeLayer(layerHydroDiag);
 
-            // Active automatiquement les couches d'habillage si elles sont cochées
             if (document.getElementById('check-hydro').checked && !map.hasLayer(ebfLayers.hydro)) {
                 ebfLayers.hydro.addTo(map);
             }
@@ -487,6 +483,7 @@
     bind('check-plui-efn', ebfLayers.pluiEfn, 'EFN_PLUI.geojson'); 
     bind('check-communes', ebfLayers.communes, 'communes.geojson'); 
 
+    // --- GESTION DES TÉLÉCHARGEMENTS ET VERIFICATION (ERREUR 404) ---
     function zoomToCommune(nomCommune) {
         const pdfDiv = document.getElementById('pdf-downloads');
         const pdfTitle = document.getElementById('pdf-title');
@@ -511,20 +508,46 @@
         if (!found) console.warn("Commune non trouvée dans le fichier communes.geojson");
 
         pdfTitle.innerHTML = `Cartes réglementaires : <b>${nomCommune}</b>`;
-        
-        const linkEfo = document.getElementById('link-efo');
-        linkEfo.href = `EFO/${nomCommune}_EFO.png`;
-        linkEfo.download = `${nomCommune}_EFO.png`;
-
-        const linkEfn = document.getElementById('link-efn');
-        linkEfn.href = `EFN/${nomCommune}_EFN.png`;
-        linkEfn.download = `${nomCommune}_EFN.png`;
-
-        const linkSynth = document.getElementById('link-synth');
-        linkSynth.href = `Complet/${nomCommune}_EBF_Global.png`;
-        linkSynth.download = `${nomCommune}_EBF_Global.png`;
-        
         pdfDiv.style.display = 'block';
+
+        // Liste des cartes à vérifier
+        const documents = [
+            { id: 'link-efo', url: `EFO/${nomCommune}_EFO.png`, filename: `${nomCommune}_EFO.png` },
+            { id: 'link-efn', url: `EFN/${nomCommune}_EFN.png`, filename: `${nomCommune}_EFN.png` },
+            { id: 'link-synth', url: `Complet/${nomCommune}_EBF_Global.png`, filename: `${nomCommune}_EBF_Global.png` }
+        ];
+
+        // Vérification silencieuse (HTTP HEAD) pour savoir si le fichier PNG existe sur le serveur
+        documents.forEach(async (doc) => {
+            const btn = document.getElementById(doc.id);
+            
+            // État de chargement par défaut
+            btn.style.opacity = "0.5";
+            btn.onclick = (e) => { e.preventDefault(); };
+
+            try {
+                const response = await fetch(doc.url, { method: 'HEAD' });
+
+                if (response.ok) {
+                    // LE FICHIER EXISTE : On active le bouton de téléchargement
+                    btn.href = doc.url;
+                    btn.download = doc.filename;
+                    btn.style.opacity = "1";
+                    btn.onclick = null; // Enlève le blocage du clic
+                } else {
+                    throw new Error("Fichier introuvable");
+                }
+            } catch (error) {
+                // LE FICHIER N'EXISTE PAS (ex: pas d'EFO sur la commune)
+                btn.removeAttribute('href');
+                btn.removeAttribute('download');
+                btn.style.opacity = "0.6"; // Laisse le bouton visuellement grisé
+                btn.onclick = (e) => {
+                    e.preventDefault();
+                    alert(`⚠️ Carte non disponible pour la commune de ${nomCommune}.\n\nIl n'y a pas d'EFO ou d'EFN défini sur ce secteur.`);
+                };
+            }
+        });
     }
 
     const chartData = {
@@ -577,7 +600,6 @@
         pluiChart.update();
     }
 
-    // MODIF : Les requêtes pour l'hydro et les communes alimentent maintenant aussi ebfLayers
     fetch('hem_troncons_homogenes_finaux_1.geojson').then(r => r.json()).then(data => {
         for (let q in layersQ) { layersQ[q].addData(data); }
         
@@ -586,14 +608,14 @@
         
         fetch('Hydro_HEM_WGS.geojson').then(r => r.json()).then(d => {
             layerHydroDiag.addData(d);
-            ebfLayers.hydro.addData(d); // Prépare la donnée pour la vue EBF
+            ebfLayers.hydro.addData(d); 
         });
         
         fetch('communes.geojson')
             .then(r => r.json())
             .then(data => {
                 searchCommunesLayer.addData(data);
-                ebfLayers.communes.addData(data); // Prépare la donnée pour la vue EBF
+                ebfLayers.communes.addData(data); 
                 
                 const select = document.getElementById('commune-selector');
                 select.innerHTML = '<option value="">-- Zoomer sur une commune --</option>'; 
