@@ -11,10 +11,9 @@
     <style>
         :root {
             --color-primary: #5C7689; 
-            --color-e1: #3182bd; --color-e2: #31a354; --color-e3: #e6550d; --color-e4: #de2d26;
+            --color-e1: #3182bd; --color-e2: #31a354; --color-e3: #fd8d3c; --color-e4: #de2d26;
             --color-bg: #f5f8fb;
             --shadow-card: 0 4px 15px rgba(0,0,0,0.2);
-            /* Couleurs du PLUi extraites du QML */
             --color-a: #a6da59;
             --color-au: rgb(250, 172, 76);
             --color-n: rgb(51, 160, 44);
@@ -35,6 +34,7 @@
         #map-title p { margin: 5px 0 0 0; font-size: 13px; color: #7f8c8d; }
 
         .leaflet-top.leaflet-right { margin-top: 140px; }
+        .leaflet-top.leaflet-left { margin-top: 70px; }
 
         .info { padding: 15px; font: 13px/16px Arial, Helvetica, sans-serif; background: rgba(255,255,255,0.98); box-shadow: var(--shadow-card); border-radius: 6px; min-width: 320px; }
         .info h4 { margin: 0 0 10px; color: #333; font-size: 15px; border-bottom: 2px solid var(--color-primary); padding-bottom: 5px; text-transform: uppercase; }
@@ -47,7 +47,6 @@
         .legend { line-height: 22px; color: #555; background: rgba(255,255,255,0.95); padding: 12px; border-radius: 5px; box-shadow: var(--shadow-card); min-width: 200px; font-size: 13px; }
         .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.9; }
 
-        /* NAVIGATION & SIDEBAR */
         #top-nav {
             position: absolute; top: 0; left: 0; width: 100%; height: 60px;
             background: #2c3e50; color: white; display: flex; align-items: center; justify-content: space-between;
@@ -67,11 +66,14 @@
         .layer-control input { margin-right: 10px; width: 18px; height: 18px; }
         .swatch { width: 12px; height: 12px; border-radius: 2px; margin-right: 8px; display: inline-block; border: 1px solid #999; }
 
-        /* Graphique Styles */
         .chart-container { position: relative; height: 200px; width: 100%; margin-top: 15px; }
         .chart-toggles { display: flex; justify-content: space-between; margin-top: 10px; margin-bottom: 10px;}
         .chart-btn { flex: 1; padding: 6px; margin: 0 5px; border: 1px solid #ccc; background: white; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold; }
         .chart-btn.active { background: #3498db; color: white; border-color: #2980b9; }
+
+        /* Styles pour les liens PDF */
+        .pdf-link { display:flex; align-items:center; padding: 8px; background: #f4f6f7; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 5px; text-decoration: none; color: #2c3e50; font-size: 12px; transition: all 0.2s ease; }
+        .pdf-link:hover { background: #e8ecef; border-color: #3498db; }
 
         .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(3px); }
         .modal-content { background: white; margin: 10% auto; padding: 30px; border-radius: 10px; width: 90%; max-width: 650px; }
@@ -101,7 +103,7 @@
             <ul>
                 <li><span style="color:#3182bd; font-weight:bold;">E1 (< 10 W/m²)</span> : Dépôt dominant.</li>
                 <li><span style="color:#31a354; font-weight:bold;">E2 (10-30 W/m²)</span> : Ajustements lents.</li>
-                <li><span style="color:#e6550d; font-weight:bold;">E3 (30-100 W/m²)</span> : Équilibre dynamique.</li>
+                <li><span style="color:#fd8d3c; font-weight:bold;">E3 (30-100 W/m²)</span> : Équilibre dynamique.</li>
                 <li><span style="color:#de2d26; font-weight:bold;">E4 (> 100 W/m²)</span> : Érosion active.</li>
             </ul>
         </div>
@@ -111,6 +113,28 @@
 <div id="ebf-sidebar">
     <h2 style="margin-top:0; color: #2c3e50; font-size: 1.4em;">Modélisation de l'EBF</h2>
     
+    <div class="ebf-card" style="border-left-color: #27ae60;">
+        <h3 style="color: #27ae60;"> Recherche & Exports (Communes)</h3>
+        
+        <select id="commune-selector" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc; font-size:13px;" onchange="zoomToCommune(this.value)">
+            <option value="">-- Zoomer sur une commune --</option>
+            <option value="Alembon">Alembon</option>
+            <option value="Audruicq">Audruicq</option>
+            <option value="Licques">Licques</option>
+            <option value="Polincove">Polincove</option>
+            <option value="Recques-sur-Hem">Recques-sur-Hem</option>
+            <option value="Tournehem-sur-la-Hem">Tournehem-sur-la-Hem</option>
+            <option value="Zutkerque">Zutkerque</option>
+            </select>
+
+        <div id="pdf-downloads" style="display:none; margin-top: 15px;">
+            <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: bold; color: #555;" id="pdf-title">Cartes réglementaires :</p>
+            <a id="link-efo" href="#" class="pdf-link" target="_blank"> Télécharger la carte EFO</a>
+            <a id="link-efn" href="#" class="pdf-link" target="_blank"> Télécharger la carte EFN</a>
+            <a id="link-synth" href="#" class="pdf-link" target="_blank"> Télécharger la Synthèse globale</a>
+        </div>
+    </div>
+
     <div class="ebf-card">
         <h3> Espace de Fonctionnement Optimal (EFO)</h3>
         <label class="layer-control"><span class="swatch" style="border: 2px solid #FFAA00;"></span><input type="checkbox" id="check-efo"> <b>EFO Définitif</b></label>
@@ -160,6 +184,7 @@
     <div class="ebf-card" style="border-left-color: #3498db;">
         <h3 style="color: #2980b9;"> Contexte Géographique</h3>
         <label class="layer-control"><span class="swatch" style="background:#3498db;"></span><input type="checkbox" id="check-hydro"> <b>Réseau Hydrographique</b></label>
+        <label class="layer-control"><span class="swatch" style="border: 2px dashed #444; background: transparent;"></span><input type="checkbox" id="check-communes"> <b>Limites Communales</b></label>
     </div>
 </div>
 
@@ -168,14 +193,26 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    const basemapLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png');
+    const basemapLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+    });
+    
     const basemapSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
+    
+    const basemapTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+        maxZoom: 17,
+        attribution: '&copy; OpenStreetMap contributors, SRTM | Style: &copy; OpenTopoMap'
+    });
+
     const map = L.map('map', { center: [50.78, 2.05], zoom: 11, layers: [basemapLight] });
 
     let currentActiveQ = 'Q100';
 
+    // MODIF : Couche cachée pour stocker les géométries des communes pour la recherche
+    let searchCommunesLayer = L.geoJSON();
+
     function getClassColor(cls) {
-        const colors = { "E4": "#de2d26", "E3": "#e6550d", "E2": "#31a354", "E1": "#3182bd" };
+        const colors = { "E4": "#de2d26", "E3": "#fd8d3c", "E2": "#31a354", "E1": "#3182bd" };
         return colors[cls] || "#999";
     }
 
@@ -240,7 +277,11 @@
         }
     });
 
-    const diagLayerControl = L.control.layers({ "Plan Clair": basemapLight, "Satellite": basemapSat }, {
+    const diagLayerControl = L.control.layers({ 
+        "Plan Clair (Voyager)": basemapLight, 
+        "OSM Topo / Naturel": basemapTopo, 
+        "Satellite": basemapSat 
+    }, {
         "Crue Q100": layersQ['Q100'], "Crue Q50": layersQ['Q50'], "Crue Q20": layersQ['Q20'],
         "Crue Q10": layersQ['Q10'], "Crue Q5": layersQ['Q5'], "Crue Q2": layersQ['Q2'],
         "Stations": layerStation,
@@ -248,7 +289,6 @@
         "Réseau Hydrographique": layerHydroDiag
     }, { collapsed: false });
 
-    // --- 3. SWITCH VIEW ---
     function switchView(view) {
         if (view === 'diagnostic') {
             document.getElementById('diag-ui').style.display = 'block';
@@ -275,16 +315,16 @@
 
     function getPluiColor(typezone) {
         const zone = (typezone || '').toString().toUpperCase();
-        if (zone.startsWith('A') && !zone.startsWith('AU')) return '#a6da59'; // Agricole
-        if (zone.startsWith('1AU') || zone.startsWith('2AU') || zone.startsWith('AU')) return 'rgb(250, 172, 76)'; // A urbaniser
-        if (zone.startsWith('N')) return 'rgb(51, 160, 44)'; // Naturel
-        if (zone.startsWith('U')) return 'rgb(217, 217, 217)'; // Urbain
-        return '#999999'; // Défaut
+        if (zone.startsWith('A') && !zone.startsWith('AU')) return '#a6da59'; 
+        if (zone.startsWith('1AU') || zone.startsWith('2AU') || zone.startsWith('AU')) return 'rgb(250, 172, 76)'; 
+        if (zone.startsWith('N')) return 'rgb(51, 160, 44)'; 
+        if (zone.startsWith('U')) return 'rgb(217, 217, 217)'; 
+        return '#999999'; 
     }
 
     const getZone = (f) => f.properties.typezone || f.properties.TYPEZONE || "Inconnu";
     const getLibelle = (f) => f.properties.libelle || f.properties.LIBELLE || "";
-    const getLibelong = (f) => f.properties.libelong || f.properties.LIBELONG || ""; // Pour récupérer la description détaillée
+    const getLibelong = (f) => f.properties.libelong || f.properties.LIBELONG || ""; 
 
     const pluiStyle = (f) => ({
         fillColor: getPluiColor(getZone(f)),
@@ -334,9 +374,15 @@
             style: { color: "#3498db", weight: 2, opacity: 0.8 },
             onEachFeature: (f, l) => { l.bindPopup(`<b>Cours d'eau :</b><br>${f.properties.NOM_C_EAU || "Non renseigné"}`); }
         }),
-        // COUCHES PLUi DÉCOUPÉES AVEC LE NOUVEAU POPUP RICHE
         pluiEfo: L.geoJSON(null, { style: pluiStyle, onEachFeature: pluiPopup }),
-        pluiEfn: L.geoJSON(null, { style: pluiStyle, onEachFeature: pluiPopup })
+        pluiEfn: L.geoJSON(null, { style: pluiStyle, onEachFeature: pluiPopup }),
+        communes: L.geoJSON(null, {
+            style: { color: "#444", weight: 2, dashArray: "5, 5", fillOpacity: 0.05, fillColor: "#ccc" },
+            onEachFeature: (f, l) => {
+                const nom = f.properties.nom || f.properties.NOM || f.properties.NOM_COM || "Commune";
+                l.bindPopup(`<b>Commune :</b> ${nom}`);
+            }
+        })
     };
 
     const definitions = {
@@ -355,7 +401,8 @@
         'check-zhe': "<b>Zones Humides à Enjeux</b>",
         'check-geo5': "<b>Tampon 5m</b>",
         'check-bati': "<b>Enjeux Anthropiques</b> : Emprise du bâti et infrastructures.",
-        'check-hydro': "<b>Réseau Hydrographique</b>"
+        'check-hydro': "<b>Réseau Hydrographique</b>",
+        'check-communes': "<b>Limites Communales</b> : Frontières administratives des communes."
     };
 
     function bind(id, layer, file) {
@@ -363,7 +410,7 @@
             if (this.checked) { 
                 fetch(file).then(r => r.json()).then(data => {
                     layer.addData(data);
-                    if (id !== 'check-hydro' && !id.startsWith('check-plui')) {
+                    if (id !== 'check-hydro' && !id.startsWith('check-plui') && id !== 'check-communes') {
                         layer.eachLayer(l => l.bindPopup(definitions[id] || "Couche modélisée"));
                     }
                     layer.addTo(map); 
@@ -390,8 +437,42 @@
     bind('check-hydro', ebfLayers.hydro, 'Hydro_HEM_WGS.geojson');
     bind('check-plui-efo', ebfLayers.pluiEfo, 'EFO_PLUI.geojson'); 
     bind('check-plui-efn', ebfLayers.pluiEfn, 'EFN_PLUI.geojson'); 
+    bind('check-communes', ebfLayers.communes, 'Communes_WGS.geojson'); 
 
-    // GRAPHIQUE INTERACTIF PLUi
+    // MODIF : Zoom en utilisant l'emprise (Bounding Box) de la commune
+    function zoomToCommune(nomCommune) {
+        const pdfDiv = document.getElementById('pdf-downloads');
+        const pdfTitle = document.getElementById('pdf-title');
+        
+        if (!nomCommune) {
+            pdfDiv.style.display = 'none';
+            map.setView([50.78, 2.05], 11); 
+            return;
+        }
+
+        // Parcours de la couche de recherche pour trouver la bonne commune
+        let found = false;
+        searchCommunesLayer.eachLayer(l => {
+            const props = l.feature.properties;
+            const cNom = props.nom || props.NOM || props.NOM_COM || props.Nom || "";
+            
+            if (cNom.toLowerCase() === nomCommune.toLowerCase()) {
+                // Zoom sur l'emprise exacte du polygone (avec un peu de marge)
+                map.flyToBounds(l.getBounds(), { padding: [20, 20], duration: 1.5, maxZoom: 15 });
+                found = true;
+            }
+        });
+
+        if (!found) console.warn("Commune non trouvée dans le fichier Communes_WGS.geojson");
+
+        pdfTitle.innerHTML = `Cartes réglementaires : <b>${nomCommune}</b>`;
+        document.getElementById('link-efo').href = `EFO/${nomCommune}_EFO.pdf`;
+        document.getElementById('link-efn').href = `EFN/${nomCommune}_EFN.pdf`;
+        document.getElementById('link-synth').href = `Complet/${nomCommune}_EBF_Global.pdf`;
+        
+        pdfDiv.style.display = 'block';
+    }
+
     const chartData = {
         'EFO': {
             labels: ['Agricole (A)', 'Naturel (N)', 'Urbain (U)', 'A urbaniser (AU)'],
@@ -404,10 +485,10 @@
     };
 
     const chartColors = [
-        '#a6da59', // A 
-        'rgb(51, 160, 44)',   // N
-        'rgb(217, 217, 217)', // U
-        'rgb(250, 172, 76)'   // AU
+        '#a6da59', 
+        'rgb(51, 160, 44)',   
+        'rgb(217, 217, 217)', 
+        'rgb(250, 172, 76)'   
     ];
 
     let pluiChart;
@@ -442,17 +523,25 @@
         pluiChart.update();
     }
 
-    // --- 6. DÉMARRAGE GLOBAL ---
     fetch('hem_troncons_homogenes_finaux_1.geojson').then(r => r.json()).then(data => {
         for (let q in layersQ) { layersQ[q].addData(data); }
         fetch('Station.geojson').then(r => r.json()).then(d => layerStation.addData(d));
         fetch('Ouvrage_WGS.geojson').then(r => r.json()).then(d => layerOuvrages.addData(d));
         fetch('Hydro_HEM_WGS.geojson').then(r => r.json()).then(d => layerHydroDiag.addData(d));
+        
+        // MODIF : Chargement transparent du fichier des communes pour le moteur de recherche
+        fetch('communes.geojson')
+            .then(r => r.json())
+            .then(data => searchCommunesLayer.addData(data))
+            .catch(e => console.log("Erreur lors du chargement des polygones pour la recherche."));
+
         switchView('diagnostic');
         initChart();
     });
 
     map.on('overlayadd', (e) => { for(let q in layersQ){ if(layersQ[q]===e.layer) currentActiveQ = q; } });
+
+    L.control.scale({position: 'bottomright', imperial: false}).addTo(map);
 
     const InfoControl = L.Control.extend({
         options: { position: 'topleft' },
