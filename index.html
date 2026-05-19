@@ -250,7 +250,12 @@
         if (!props) { this._div.innerHTML = '<h4>Détail Morpho</h4>Survolez la rivière'; return; }
         const highlightClass = (q) => q === currentActiveQ ? 'val-focus' : '';
         const largeur = props.Largeur_moy || props.largeur_moy || props.LARGEUR_MOY || "N/A";
-        const largeurText = (largeur !== "N/A") ? parseFloat(largeur).toFixed(1) + ' m' : 'N/A';
+        
+        // Affichage de la largeur avec 2 décimales
+        const largeurText = (largeur !== "N/A") ? parseFloat(largeur).toFixed(2) + ' m' : 'N/A';
+
+        // Petite fonction sécurisée pour formater correctement les Q et Ps à 2 décimales
+        const safeVal = (val) => val ? parseFloat(val).toFixed(2) : '?';
 
         this._div.innerHTML = `<h4>Secteur : ${props.Typologie || 'N/A'}</h4>
             <p style="margin: 5px 0 10px 0; font-size: 13px; color: #555;">
@@ -258,15 +263,15 @@
             </p>
             <table class="data-table">
                 <tr><th>Crue</th><th>Q (m³/s)</th><th>Ps (W/m²)</th><th>Cl.</th></tr>
-                <tr class="${highlightClass('Q2')}"><td>Q2</td><td>${props.Q_Q2_m3s||'?'}</td><td>${props.Ps_Q2?props.Ps_Q2.toFixed(1):'?'}</td><td><b style="color:${getClassColor(props.Cl_Q2)}">${props.Cl_Q2}</b></td></tr>
-                <tr class="${highlightClass('Q5')}"><td>Q5</td><td>${props.Q_Q5_m3s||'?'}</td><td>${props.Ps_Q5?props.Ps_Q5.toFixed(1):'?'}</td><td><b style="color:${getClassColor(props.Cl_Q5)}">${props.Cl_Q5||'?'}</b></td></tr>
-                <tr class="${highlightClass('Q10')}"><td>Q10</td><td>${props.Q_Q10_m3s||'?'}</td><td>${props.Ps_Q10?props.Ps_Q10.toFixed(1):'?'}</td><td><b style="color:${getClassColor(props.Cl_Q10)}">${props.Cl_Q10||'?'}</b></td></tr>
-                <tr class="${highlightClass('Q20')}"><td>Q20</td><td>${props.Q_Q20_m3s||'?'}</td><td>${props.Ps_Q20?props.Ps_Q20.toFixed(1):'?'}</td><td><b style="color:${getClassColor(props.Cl_Q20)}">${props.Cl_Q20||'?'}</b></td></tr>
-                <tr class="${highlightClass('Q50')}"><td>Q50</td><td>${props.Q_Q50_m3s||'?'}</td><td>${props.Ps_Q50?props.Ps_Q50.toFixed(1):'?'}</td><td><b style="color:${getClassColor(props.Cl_Q50)}">${props.Cl_Q50||'?'}</b></td></tr>
-                <tr class="${highlightClass('Q100')}"><td>Q100</td><td>${props.Q_Q100_m3s||'?'}</td><td>${props.Ps_Q100?props.Ps_Q100.toFixed(1):'?'}</td><td><b style="color:${getClassColor(props.Cl_Q100)}">${props.Cl_Q100}</b></td></tr>
+                <tr class="${highlightClass('Q2')}"><td>Q2</td><td>${safeVal(props.Q_Q2_m3s)}</td><td>${safeVal(props.Ps_Q2)}</td><td><b style="color:${getClassColor(props.Cl_Q2)}">${props.Cl_Q2 || '?'}</b></td></tr>
+                <tr class="${highlightClass('Q5')}"><td>Q5</td><td>${safeVal(props.Q_Q5_m3s)}</td><td>${safeVal(props.Ps_Q5)}</td><td><b style="color:${getClassColor(props.Cl_Q5)}">${props.Cl_Q5 || '?'}</b></td></tr>
+                <tr class="${highlightClass('Q10')}"><td>Q10</td><td>${safeVal(props.Q_Q10_m3s)}</td><td>${safeVal(props.Ps_Q10)}</td><td><b style="color:${getClassColor(props.Cl_Q10)}">${props.Cl_Q10 || '?'}</b></td></tr>
+                <tr class="${highlightClass('Q20')}"><td>Q20</td><td>${safeVal(props.Q_Q20_m3s)}</td><td>${safeVal(props.Ps_Q20)}</td><td><b style="color:${getClassColor(props.Cl_Q20)}">${props.Cl_Q20 || '?'}</b></td></tr>
+                <tr class="${highlightClass('Q50')}"><td>Q50</td><td>${safeVal(props.Q_Q50_m3s)}</td><td>${safeVal(props.Ps_Q50)}</td><td><b style="color:${getClassColor(props.Cl_Q50)}">${props.Cl_Q50 || '?'}</b></td></tr>
+                <tr class="${highlightClass('Q100')}"><td>Q100</td><td>${safeVal(props.Q_Q100_m3s)}</td><td>${safeVal(props.Ps_Q100)}</td><td><b style="color:${getClassColor(props.Cl_Q100)}">${props.Cl_Q100 || '?'}</b></td></tr>
             </table>`;
     };
-
+    
     const legend = L.control({position: 'bottomleft'});
     legend.onAdd = function() {
         const div = L.DomUtil.create('div', 'legend');
