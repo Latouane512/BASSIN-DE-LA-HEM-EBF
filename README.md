@@ -20,7 +20,7 @@ Pensé comme un véritable **Outil d'Aide à la Décision (OAD)**, cet outil per
 
 L'application est structurée en deux vues distinctes, accessibles via un menu de navigation fluide :
 
-### 1️ Vue Diagnostic (Puissance Spécifique)
+### 1️ Vue Diagnostic (Puissance Spécifique & Energie cinétique)
 * **Cartographie interactive** : Visualisation des tronçons homogènes selon la typologie de Malavoi. La sémiologie graphique a été spécifiquement optimisée pour distinguer clairement les dynamiques d'équilibre (E3 - Orange adouci) et d'érosion active (E4 - Rouge intense) lors de la superposition des crues.
 * **Sélecteur de crues** : Bascule dynamique entre les périodes de retour (Q2, Q5, Q10, Q20, Q50, Q100).
 * **Fonds de plan enrichis & UI** : Choix entre *CartoDB Voyager* (clair, contrasté et routier), *OSM Topo* (naturaliste/relief) et *Esri Satellite*. Intégration d'une échelle cartographique dynamique.
