@@ -75,13 +75,21 @@
         .dl-link:hover { background: #e8ecef; border-color: #3498db; }
 
         .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(3px); }
-        .modal-content { background: white; margin: 5% auto; padding: 30px; border-radius: 10px; width: 90%; max-width: 700px; position: relative; }
+        .modal-content { background: white; margin: 3% auto; padding: 30px; border-radius: 10px; width: 95%; max-width: 900px; position: relative; }
         .leaflet-control-custom-info { background: white; width: 32px; height: 32px; border-radius: 4px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); cursor: pointer; text-align: center; line-height: 32px; font-weight: bold; font-size: 16px; color: #555; }
         
-        .modal-body { max-height: 65vh; overflow-y: auto; padding-right: 15px; font-size: 14px; line-height: 1.5; color: #444; }
+        .modal-body { max-height: 75vh; overflow-y: auto; padding-right: 15px; font-size: 14px; line-height: 1.5; color: #444; }
         .modal-body h3 { color: #2980b9; font-size: 16px; margin-top: 20px; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
         .modal-body ul { margin-top: 5px; padding-left: 20px; }
         .modal-body li { margin-bottom: 8px; }
+
+        /* Styles spécifiques pour le grand tableau de synthèse RMC */
+        .matrix-table { width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 20px; font-size: 12px; }
+        .matrix-table th, .matrix-table td { border: 1px solid #ddd; padding: 10px; text-align: left; vertical-align: top; }
+        .matrix-table th { background-color: #2c3e50; color: white; font-weight: bold; text-transform: uppercase; }
+        .matrix-table tr:nth-child(even) { background-color: #f9f9f9; }
+        .matrix-section-title { background-color: #eaeef2; font-weight: bold; color: #2c3e50; }
+        .note-box { background-color: #fef9e7; border-left: 5px solid #f39c12; padding: 12px; margin-top: 15px; border-radius: 4px; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -119,28 +127,80 @@
         </div>
 
         <div id="modal-ebf" style="display:none;">
-            <h2 style="margin-top:0; color:#2c3e50;">Cadre Conceptuel : L'Espace de Bon Fonctionnement (EBF)</h2>
+            <h2 style="margin-top:0; color:#2c3e50;">Guide Technique & Matrice des Enveloppes EBF</h2>
             <div class="modal-body">
-                <p><strong>De l’espace de liberté à l’EBF :</strong> Face aux altérations hydromorphologiques historiques, le concept novateur d’« espace de liberté » émerge dès 1981 pour permettre la mobilisation des sédiments. Au début des années 2000, l’approche strictement centrée sur la mobilité évolue vers le paradigme de l'<strong>Espace de Bon Fonctionnement (EBF)</strong>. Ce dernier englobe la mobilité mais intègre surtout l’intégralité des fonctionnalités de l’hydrosystème.</p>
+                <p>Ce tableau synthétise le cadre conceptuel, les objectifs de gestion et l'origine des données SIG mobilisées conformément au <strong>Guide de l'Espace de Bon Fonctionnement (Guide RMC)</strong>.</p>
                 
-                <h3>Les 5 dimensions écologiques de l'EBF</h3>
-                <p>Préserver cet espace relève des Solutions Fondées sur la Nature (SFN). L'EBF repose sur l'interdépendance de :</p>
-                <ul>
-                    <li><strong>Morphologie :</strong> Garantit la dynamique hydrosédimentaire et crée des habitats (évaluée via la puissance spécifique).</li>
-                    <li><strong>Hydraulique :</strong> Assure le laminage des crues par l'expansion des eaux.</li>
-                    <li><strong>Biogéochimie :</strong> Processus d'auto-épuration et régulation de la qualité physico-chimique (ex: zones tampons).</li>
-                    <li><strong>Hydrogéologie :</strong> Échanges hydriques fondamentaux entre la rivière et les nappes superficielles.</li>
-                    <li><strong>Biologie :</strong> Préservation des Zones Humides (ZH/ZDH), habitats de reproduction et de refuge.</li>
-                </ul>
+                <table class="matrix-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Catégorie</th>
+                            <th style="width: 40%;">EFO (Espace de Fonctionnement Optimal)</th>
+                            <th style="width: 40%;">EFN (Espace Fonctionnel Nécessaire)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="matrix-section-title">Concept de base</td>
+                            <td>Enveloppe théorique maximale. La rivière y a tout l'espace nécessaire, comme si l'homme n'existait pas.</td>
+                            <td>Enveloppe réaliste et réglementaire. Protège la rivière tout en respectant les usages humains incompressibles (rabotage à l’aide de l’anthropisation).</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-section-title">Objectif de gestion</td>
+                            <td>Sert de zone de désartificialisation à très long terme (Idéal à atteindre).</td>
+                            <td>Périmètre d'action immédiat pour l'ingénierie végétale, la protection et les accords agricoles.</td>
+                        </tr>
+                        <tr>
+                            <th colspan="3" style="background-color: #34495e; text-align: center; color: white; font-size: 11px;">COUCHES SIG / OUTILS ET CONCEPTS DU GUIDE RMC</th>
+                        </tr>
+                        <tr>
+                            <td class="matrix-section-title">Contexte Historique &amp; Trajectoire</td>
+                            <td>Analyse de la trajectoire : carte Cassini, carte d'État-Major, Scan 50 Historique et BD TOPO pour analyser la mobilité historique.</td>
+                            <td>Analyse Diachronique : Exploitation des photographies aériennes anciennes pour fixer la trajectoire historique de la bande active.</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-section-title">Aménagement, Bâti &amp; Ouvrages</td>
+                            <td>Ne prend pas en compte le bâti existant (Vision théorique sans contrainte).</td>
+                            <td>Rabotage : Soustraction géomatique des routes et bâtiments (Vision pragmatique basée sur la <b>BD TOPO</b>).<br><i>Couches associées : Couche des ouvrages (ROE), usages et infrastructures via Corine Land Cover et/ou BD TOPO.</i></td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-section-title">Contexte Hydrologique &amp; Aléas</td>
+                            <td><b>MRVBF :</b> S'étend sur toute la plaine inondable théorique + <b>Alluvions récentes</b> (validation de l’emprise maximale historique).</td>
+                            <td><b>Alluvions récentes contraintes :</b> Superposition stricte avec les dépôts alluvionnaires de la carte géologique BRGM.</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-section-title">Données Aléas &amp; Topo mutualisées</td>
+                            <td colspan="2">RGE ALTI 5m ou levés LiDAR, PPRi (Crue de référence). Cartographie TRI (Directive Inondation : crue moyenne et scénario extrême Q100). Atlas des Zones Inondables (AZI), méthode hydrogéomorphologique (HGM) et cartes géologiques (BRGM).</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-section-title">Contexte Écologique &amp; Milieux</td>
+                            <td><b>ZDH (Zones à Dominante Humide) :</b> Enveloppe physique globale selon la topographie et le sol + <b>ZHE</b> (Uniquement les zones stratégiques : filtration, biodiversité, stockage).</td>
+                            <td><b>ZHE (Zones Humides à Enjeux) :</b> Uniquement les zones stratégiques et fonctionnelles conservées (filtration, biodiversité, stockage).</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-section-title">Données Écologiques de référence</td>
+                            <td colspan="2">Inventaires départementaux des Zones Humides (Couches de fonctionnalité fluviale), indicateurs <b>RHOMEO</b> (suivi des zones humides), données du pôle d’information flore-habitat (<b>PIFH</b>), et trames vertes/bleues via <b>SRCE / TVB / SRADDET</b> (Aires de Migration Simulée - AMS).</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-section-title">Inventaires Patrimoniaux</td>
+                            <td colspan="2"><b>Exclus par défaut</b> (ZNIEFF de types 1 et 2, NATURA 2000 ZCS/ZPS, APPS, ENS) pour éviter une surpondération artificielle de l’enveloppe technique de l’EBF.</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-section-title">Zone Tampon (Biogéochimie)</td>
+                            <td><b>Filtre anti-pesticides (25m) :</b> Intègre la totalité de la bande maximale théorique.</td>
+                            <td><b>Filtre anti-pesticides (5m) :</b> Intègre uniquement la zone tampon minimale réglementaire. <br><i>Données : Registre Parcellaire Graphique (RPG) pour cibler les parcelles agricoles riveraines (générées par buffer de part et d'autre).</i></td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-section-title">Géomorphologie Historique</td>
+                            <td><b>Lits perchés :</b> Intégrés pour l'extension maximale de l'EBF.</td>
+                            <td><b>Lits perchés :</b> Intégrés pour l'extension restreinte de l'EBF.<br><i>Données : Carte géologique (BRGM / AERMC), Banque du Sous-Sol (BSS forages), Base de données Historiques sur les inondations (BDHI) et bases RTM (torrents).</i></td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                <h3>Dualité spatiale : EFO vs EFN</h3>
-                <ul>
-                    <li><strong>L’Espace Optimal (EFO) :</strong> Enveloppe théorique maximale sans contraintes anthropiques. Il illustre la résilience historique totale du cours d'eau.</li>
-                    <li><strong>L’Espace Nécessaire (EFN) :</strong> Corridor vital minimal garantissant l’expression durable des fonctions écologiques tout en intégrant les usages socio-économiques du territoire (obtenu par la soustraction de l'urbanisation existante).</li>
-                </ul>
-
-                <h3>Un outil réglementaire au service de la DCE</h3>
-                <p>L'EBF répond à la Directive Cadre sur l’Eau (DCE) pour atteindre le bon état écologique. Sur notre bassin, le <strong>SDAGE Artois-Picardie</strong> impose sa cartographie. Son intégration dans les documents d’urbanisme (<strong>PLUi</strong>) permet de sanctuariser les parcelles (reclassement en zone Naturelle/Agricole ou intégration d'Orientations d'Aménagement (OAP) imposant des prescriptions constructives).</p>
+                <div class="note-box">
+                    <strong>Note technique d'application RMC :</strong> Ces couches d'inventaires environnementaux ne définissent pas un périmètre EBF en soi. Un tri géographique rigoureux doit éliminer les polygones déconnectés de la dynamique fluviale pour éviter d’englober des milieux purement terrestres ou des versants hors-sujets.
+                </div>
             </div>
         </div>
 
@@ -251,10 +311,7 @@
         const highlightClass = (q) => q === currentActiveQ ? 'val-focus' : '';
         const largeur = props.Largeur_moy || props.largeur_moy || props.LARGEUR_MOY || "N/A";
         
-        // Affichage de la largeur avec 2 décimales
         const largeurText = (largeur !== "N/A") ? parseFloat(largeur).toFixed(2) + ' m' : 'N/A';
-
-        // Petite fonction sécurisée pour formater correctement les Q et Ps à 2 décimales
         const safeVal = (val) => val ? parseFloat(val).toFixed(2) : '?';
 
         this._div.innerHTML = `<h4>Secteur : ${props.Typologie || 'N/A'}</h4>
@@ -494,7 +551,6 @@
     bind('check-plui-efn', ebfLayers.pluiEfn, 'EFN_PLUI.geojson'); 
     bind('check-communes', ebfLayers.communes, 'communes.geojson'); 
 
-    // --- GESTION DES TÉLÉCHARGEMENTS ET VERIFICATION (ERREUR 404) ---
     function zoomToCommune(nomCommune) {
         const pdfDiv = document.getElementById('pdf-downloads');
         const pdfTitle = document.getElementById('pdf-title');
@@ -529,13 +585,11 @@
 
         documents.forEach(async (doc) => {
             const btn = document.getElementById(doc.id);
-            
             btn.style.opacity = "0.5";
             btn.onclick = (e) => { e.preventDefault(); };
 
             try {
                 const response = await fetch(doc.url, { method: 'HEAD' });
-
                 if (response.ok) {
                     btn.href = doc.url;
                     btn.download = doc.filename;
@@ -567,13 +621,7 @@
         }
     };
 
-    const chartColors = [
-        '#a6da59', 
-        'rgb(51, 160, 44)',   
-        'rgb(217, 217, 217)', 
-        'rgb(250, 172, 76)'   
-    ];
-
+    const chartColors = ['#a6da59', 'rgb(51, 160, 44)', 'rgb(217, 217, 217)', 'rgb(250, 172, 76)'];
     let pluiChart;
 
     function initChart() {
@@ -634,7 +682,6 @@
                 });
                 
                 communesNoms = [...new Set(communesNoms)].sort((a, b) => a.localeCompare(b, 'fr'));
-                
                 communesNoms.forEach(nom => {
                     const option = document.createElement('option');
                     option.value = nom;
@@ -668,3 +715,4 @@
 </script>
 </body>
 </html>
+
