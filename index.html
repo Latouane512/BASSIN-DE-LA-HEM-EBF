@@ -103,8 +103,8 @@
 <nav id="top-nav">
     <div style="font-weight: bold;">BASSIN DE LA HEM</div>
     <select id="view-selector" onchange="switchView(this.value)">
-        <option value="diagnostic">1. Diagnostic Morphodynamique (Ps)</option>
-        <option value="ebf">2. Modélisation EBF (EFO / EFN) & PLUi</option>
+        <option value="ebf">1. Modélisation EBF (EFO / EFN) & PLUi</option>
+        <option value="diagnostic">2. Diagnostic Morphodynamique (Ps)</option>
     </select>
 </nav>
 
@@ -115,11 +115,11 @@
     </div>
 </div>
 
-<div id="infoModal" class="modal">
+<div id="infoModal" class="modal" style="display: block;">
     <div class="modal-content">
         <span style="position:absolute; right:20px; top:15px; cursor:pointer; font-size:28px; color:#777;" onclick="closeModal()">&times;</span>
         
-        <div id="modal-diagnostic">
+        <div id="modal-diagnostic" style="display:none;">
             <h2 style="margin-top:0; color:#2c3e50;">Méthodologie & Seuils</h2>
             <div class="modal-body">
                 <p><strong>Typologie géodynamique (Malavoi, 2007) :</strong></p>
@@ -132,7 +132,7 @@
             </div>
         </div>
 
-        <div id="modal-ebf" style="display:none;">
+        <div id="modal-ebf">
             <h2 style="margin-top:0; color:#2c3e50;">Cadre Conceptuel : L'Espace de Bon Fonctionnement (EBF)</h2>
             <div class="modal-body">
                 <p><strong>De l’espace de liberté à l’EBF :</strong> Face aux altérations hydromorphologiques historiques, le concept novateur d’« espace de liberté » émerge dès 1981 pour permettre la mobilisation des sédiments. Au début des années 2000, l’approche strictement centrée sur la mobility évolue vers le paradigme de l'<strong>Espace de Bon Fonctionnement (EBF)</strong>. Ce dernier englobe la mobilité mais intègre surtout l’intégralité des fonctionnalités de l’hydrosystème.</p>
@@ -164,14 +164,14 @@
                         </tr>
                         <tr>
                             <td class="rmc-cat">Contexte Historique</td>
-                            <td class="rmc-efo"><b>Analyse de la trajectoire :</b> Analyse de la mobilité historique : Analyse de la trajectoire : carte Cassini, Etat-Major, Scan 50 Historique et BD TOPO.</td>
-                            <td class="rmc-efn"><b>Analyse de la trajectoire :</b> Analyse de la mobilité historique : Analyse de la trajectoire : carte Cassini, Etat-Major, Scan 50 Historique et BD TOPO.</td>
-                            <td class="rmc-sig">Analyse Diachronique : Exploitation des photogra-phies aériennes anciennes pour fixer la trajectoire historique de la bande active.</td>
+                            <td class="rmc-efo"><b>Analyse de la trajectoire :</b> Analyse de la mobilité historique sur le temps long.</td>
+                            <td class="rmc-efn"><b>Analyse de la trajectoire :</b> Analyse de la mobilité historique sur le temps long.</td>
+                            <td class="rmc-sig">Cartes de Cassini, cartes d'État-Major, Scan 50 Historique et BD TOPO.</td>
                         </tr>
                         <tr>
                             <td class="rmc-cat">Géomorphologie Historique</td>
-                            <td class="rmc-efo"><b>Analyse diachronique :</b> Identification des Lits perché par photo-interprétation sur LiDAR HD</td>
-                            <td class="rmc-efn"><b>Analyse diachronique :</b> Identification des Lits perché par photo-interprétation sur LiDAR HD</td>
+                            <td class="rmc-efo"><b>Analyse diachronique :</b> Exploitation des photographies aériennes anciennes pour fixer la trajectoire historique de la bande active. Lits perchés intégrés pour l'extension maximale.</td>
+                            <td class="rmc-efn"><b>Analyse diachronique :</b> Exploitation des photographies aériennes anciennes pour fixer la trajectoire historique de la bande active. Lits perchés intégrés pour l'extension de l'EBF.</td>
                             <td class="rmc-sig">Missions aériennes historiques (IGN), Carte géologique (BRGM / AERMC) pour discriminer le matelas alluvial, Banque du Sous-Sol (BSS/forages), BDHI (Inondations), Données RTM (Torrents actifs).</td>
                         </tr>
                         <tr>
@@ -729,7 +729,8 @@
                 document.getElementById('commune-selector').innerHTML = '<option value="">Erreur chargement des communes</option>';
             });
 
-        switchView('diagnostic');
+        // Modification : S'ouvre sur la modélisation EBF au lieu du diagnostic
+        switchView('ebf');
         initChart();
     });
 
