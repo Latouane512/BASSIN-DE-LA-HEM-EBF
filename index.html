@@ -65,6 +65,9 @@
         .layer-control:hover { color: #d35400; }
         .layer-control input { margin-right: 10px; width: 18px; height: 18px; }
         .swatch { width: 12px; height: 12px; border-radius: 2px; margin-right: 8px; display: inline-block; border: 1px solid #999; }
+        
+        /* Style pour les sous-titres des couches complémentaires */
+        .sub-layers-title { font-size: 11px; color: #7f8c8d; font-weight: bold; text-transform: uppercase; margin: 12px 0 4px 4px; letter-spacing: 0.5px; border-bottom: 1px dashed #ddd; padding-bottom: 2px; }
 
         .chart-container { position: relative; height: 200px; width: 100%; margin-top: 15px; }
         .chart-toggles { display: flex; justify-content: space-between; margin-top: 10px; margin-bottom: 10px;}
@@ -248,25 +251,29 @@
     </div>
 
     <div class="ebf-card">
-        <h3> Espace de Fonctionnement Optimal (EFO)</h3>
+        <h3> Espace de Bon Fonctionnement (Optimal)</h3>
         <label class="layer-control"><span class="swatch" style="border: 2px solid #FFAA00;"></span><input type="checkbox" id="check-efo"> <b>EFO Définitif</b></label>
-        <label class="layer-control"><span class="swatch" style="border: 1px solid #FFAA00;"></span><input type="checkbox" id="check-buf-ero-efo"> Enveloppe de mobilité maximale (fuseau d'érosion)</label>
-        <label class="layer-control"><span class="swatch" style="background:#f39c12; opacity:0.3;"></span><input type="checkbox" id="check-mrvbf"> Enveloppe hydraulique (fond de vallée alluvial)</label>
-        <label class="layer-control"><span class="swatch" style="background:#a6cee3;"></span><input type="checkbox" id="check-geol"> Enveloppe géologique (alluvions)</label>
-        <label class="layer-control"><span class="swatch" style="background:#2ecc71;"></span><input type="checkbox" id="check-zdh"> Enveloppe morphologique (zones humides morphologiques)</label>
-        <label class="layer-control"><span class="swatch" style="background:#27ae60;"></span><input type="checkbox" id="check-zhe-efo"> Enveloppe environnementale (zones humides à enjeux)</label>
-        <label class="layer-control"><span class="swatch" style="background:#8e44ad; opacity:0.5;"></span><input type="checkbox" id="check-perche"> Secteur à risque de divagation (lit perché historique)</label>
-        <label class="layer-control"><span class="swatch" style="background:#f1c40f;"></span><input type="checkbox" id="check-geo25"> Zone tampon biogéochimique globale (25m)</label>
+        <label class="layer-control"><span class="swatch" style="border: 1px solid #FFAA00;"></span><input type="checkbox" id="check-buf-ero-efo"> Espace morphologique</label>
+        <label class="layer-control"><span class="swatch" style="background:#f39c12; opacity:0.3;"></span><input type="checkbox" id="check-mrvbf"> Enveloppe hydraulique</label>
+        <label class="layer-control"><span class="swatch" style="background:#a6cee3;"></span><input type="checkbox" id="check-geol"> Enveloppe hydrogéologique</label>
+        <label class="layer-control"><span class="swatch" style="background:#f1c40f;"></span><input type="checkbox" id="check-geo25"> Enveloppe biogéochimique</label>
+        <label class="layer-control"><span class="swatch" style="background:#27ae60;"></span><input type="checkbox" id="check-zhe-efo"> Enveloppe biologique</label>
+        
+        <div class="sub-layers-title">Couches complémentaires</div>
+        <label class="layer-control"><span class="swatch" style="background:#2ecc71;"></span><input type="checkbox" id="check-zdh"> Zones à dominantes humides</label>
+        <label class="layer-control"><span class="swatch" style="background:#8e44ad; opacity:0.5;"></span><input type="checkbox" id="check-perche"> Couches des lits perchés</label>
     </div>
 
     <div class="ebf-card" style="border-left-color: #e67e22;">
-        <h3> Espace de Fonctionnement Nécessaire (EFN)</h3>
+        <h3> Espace de Bon Fonctionnement (Nécessaire)</h3>
         <label class="layer-control"><span class="swatch" style="border: 2px dashed #FFAA00;"></span><input type="checkbox" id="check-efn"> <b>EFN Définitif</b></label>
-        <label class="layer-control"><span class="swatch" style="border: 1px dashed #FFAA00;"></span><input type="checkbox" id="check-buf-ero-efn"> Enveloppe de mobilité (corridor minimal)</label>
-        <label class="layer-control"><span class="swatch" style="background:#a6cee3;"></span><input type="checkbox" id="check-geol-efn"> Enveloppe géologique </label>
-        <label class="layer-control"><span class="swatch" style="background:#8e44ad; opacity:0.5;"></span><input type="checkbox" id="check-perche-efn"> Secteur à risque de divagation </label>
-        <label class="layer-control"><span class="swatch" style="background:#27ae60;"></span><input type="checkbox" id="check-zhe"> Enveloppe environnementale (zones humides à enjeux)</label>
-        <label class="layer-control"><span class="swatch" style="background:#f39c12;"></span><input type="checkbox" id="check-geo5"> Zone tampon biogéochimique minimale (5m)</label>
+        <label class="layer-control"><span class="swatch" style="border: 1px dashed #FFAA00;"></span><input type="checkbox" id="check-buf-ero-efn"> Espace morphologique</label>
+        <label class="layer-control"><span class="swatch" style="background:#a6cee3;"></span><input type="checkbox" id="check-geol-efn"> Enveloppe hydrogéologique</label>
+        <label class="layer-control"><span class="swatch" style="background:#f39c12;"></span><input type="checkbox" id="check-geo5"> Enveloppe biogéochimique</label>
+        <label class="layer-control"><span class="swatch" style="background:#27ae60;"></span><input type="checkbox" id="check-zhe"> Enveloppe biologique</label>
+        
+        <div class="sub-layers-title">Couches complémentaires</div>
+        <label class="layer-control"><span class="swatch" style="background:#8e44ad; opacity:0.5;"></span><input type="checkbox" id="check-perche-efn"> Couches des lits perchés</label>
     </div>
 
     <div class="ebf-card" style="border-left-color: #9b59b6;">
@@ -524,7 +531,7 @@
 
     const definitions = {
         'check-efo': "<b>EFO (Espace de Fonctionnement Optimal)</b><br>Zone de mobilité maximale théorique.",
-        'check-efn': "<b>EFN (Espace de Fonctionnement Nécessaire)</b><br>Périmètre d'action prioritaire intégrant les enjeux environnementaux.",
+        'check-efn': "<b>EFN (Espace de Fonctionnement Necessary)</b><br>Périmètre d'action prioritaire intégrant les enjeux environnementaux.",
         'check-buf-ero-efo': "<b>Fuseau de Mobilité (Ambition Maximale)</b> : Largeur de liberté totale accordée au lit.",
         'check-buf-ero-efn': "<b>Fuseau de Mobilité (Espace Vital)</b> : Largeur minimale pour maintenir l'équilibre du cours d'eau.",
         'check-mrvbf': "<b>MRVBF</b><br>Indice topographique modélisant le fond de vallée alluvial.",
@@ -729,7 +736,6 @@
                 document.getElementById('commune-selector').innerHTML = '<option value="">Erreur chargement des communes</option>';
             });
 
-        // Modification : S'ouvre sur la modélisation EBF au lieu du diagnostic
         switchView('ebf');
         initChart();
     });
