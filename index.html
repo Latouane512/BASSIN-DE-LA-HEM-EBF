@@ -59,12 +59,12 @@
             background: white; z-index: 2000; box-shadow: -3px 0 10px rgba(0,0,0,0.1);
             padding: 20px; overflow-y: auto; box-sizing: border-box; display: none;
         }
-        .ebf-card { background: #fdfcf9; border-radius: 10px; padding: 15px; margin-bottom: 15px; border-left: 5px solid #FFAA00; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .ebf-card h3 { font-size: 13px; margin: 0 0 10px 0; color: #d35400; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .ebf-card { background: #fdfcf9; border-radius: 10px; padding: 15px; margin-bottom: 15px; border-left: 5px solid #2c3e50; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .ebf-card h3 { font-size: 13px; margin: 0 0 10px 0; color: #2c3e50; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 5px; }
         .layer-control { display: flex; align-items: center; margin: 8px 0; font-size: 13px; cursor: pointer; }
-        .layer-control:hover { color: #d35400; }
+        .layer-control:hover { color: #3498db; }
         .layer-control input { margin-right: 10px; width: 18px; height: 18px; }
-        .swatch { width: 12px; height: 12px; border-radius: 2px; margin-right: 8px; display: inline-block; border: 1px solid #999; }
+        .swatch { width: 12px; height: 12px; border-radius: 2px; margin-right: 8px; display: inline-block; border: 1px solid #777; }
         
         .sub-layers-title { font-size: 11px; color: #7f8c8d; font-weight: bold; text-transform: uppercase; margin: 12px 0 4px 4px; letter-spacing: 0.5px; border-bottom: 1px dashed #ddd; padding-bottom: 2px; }
 
@@ -195,16 +195,6 @@
                             </td>
                         </tr>
                         <tr>
-                            <td class="rmc-cat">Cas des Inventaires Patrimoniaux (ZNIEFF/ Natura 2000)</td>
-                            <td class="rmc-efo">Exclu par défaut pour éviter une surpondération de l’enveloppe technique de l’EBF</td>
-                            <td class="rmc-efn">Exclu par défaut pour éviter une surpondération de l’enveloppe technique de l’EBF</td>
-                            <td class="rmc-sig">
-                                Couche d’inventaires Environnementaux : ZNIEFF de Type 1 et 2 (DREAL).<br><br>
-                                Zonage réglementaire : NATURA2000 (ZCS / ZPS), APPS, ENS<br><br>
-                                <strong>Note technique RMC :</strong> Ces couches ne définissent pas un périmètre EBF en soi. Un tri géographique rigoureux doit éliminer les polygones déconnectés de la dynamique fluviale pour éviter d’englober des milieux terrestre /versants hors sujets.
-                            </td>
-                        </tr>
-                        <tr>
                             <td class="rmc-cat">Contexte Biogéochimique</td>
                             <td class="rmc-efo"><b>Filtre anti-pesticides (25m) :</b> Intègre la totalité de la bande maximale théorique.</td>
                             <td class="rmc-efn"><b>Filtre anti-pesticides (5m) :</b> Intègre uniquement la zone tampon minimale réglementaire.</td>
@@ -219,6 +209,16 @@
                                 Banque du Sous-Sol (BSS) (forages).<br><br>
                                 Base de données Historiques sur les inondations (BDHI).<br><br>
                                 Bases de données RTM pour les torrents actifs
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="rmc-cat">Cas des Inventaires Patrimoniaux (ZNIEFF/ Natura 2000)</td>
+                            <td class="rmc-efo">Exclu par défaut pour éviter une surpondération de l’enveloppe technique de l’EBF</td>
+                            <td class="rmc-efn">Exclu par défaut pour éviter une surpondération de l’enveloppe technique de l’EBF</td>
+                            <td class="rmc-sig">
+                                Couche d’inventaires Environnementaux : ZNIEFF de Type 1 et 2 (DREAL).<br><br>
+                                Zonage réglementaire : NATURA2000 (ZCS / ZPS), APPS, ENS<br><br>
+                                <strong>Note technique RMC :</strong> Ces couches ne définissent pas un périmètre EBF en soi. Un tri géographique rigoureux doit éliminer les polygones déconnectés de la dynamique fluviale pour éviter d’englober des milieux terrestre /versants hors sujets.
                             </td>
                         </tr>
                     </tbody>
@@ -260,31 +260,31 @@
         </div>
     </div>
 
-    <div class="ebf-card">
-        <h3> Espace de Bon Fonctionnement (Optimal)</h3>
-        <label class="layer-control"><span class="swatch" style="border: 2px solid #FFAA00;"></span><input type="checkbox" id="check-efo"> <b>EBF Optimal Définitif</b></label>
-        <label class="layer-control"><span class="swatch" style="border: 1px solid #FFAA00;"></span><input type="checkbox" id="check-buf-ero-efo"> Espace morphologique</label>
-        <label class="layer-control"><span class="swatch" style="background:#f39c12; opacity:0.3;"></span><input type="checkbox" id="check-mrvbf"> Enveloppe hydraulique</label>
+    <div class="ebf-card" style="border-left-color: #FFAA00;">
+        <h3 style="color: #FFAA00;"> Espace de Bon Fonctionnement (Optimal)</h3>
+        <label class="layer-control"><span class="swatch" style="border: 2px solid #FFAA00; background: transparent;"></span><input type="checkbox" id="check-efo"> <b>EBF Optimal Définitif</b></label>
+        <label class="layer-control"><span class="swatch" style="background:#FFAA00;"></span><input type="checkbox" id="check-buf-ero-efo"> Espace morphologique</label>
+        <label class="layer-control"><span class="swatch" style="background:#3498db;"></span><input type="checkbox" id="check-mrvbf"> Enveloppe hydraulique</label>
         <label class="layer-control"><span class="swatch" style="background:#a6cee3;"></span><input type="checkbox" id="check-geol"> Enveloppe hydrogéologique</label>
         <label class="layer-control"><span class="swatch" style="background:#f1c40f;"></span><input type="checkbox" id="check-geo25"> Enveloppe biogéochimique</label>
         <label class="layer-control"><span class="swatch" style="background:#27ae60;"></span><input type="checkbox" id="check-zhe-efo"> Enveloppe biologique</label>
         
         <div class="sub-layers-title">Couches complémentaires</div>
         <label class="layer-control"><span class="swatch" style="background:#2ecc71;"></span><input type="checkbox" id="check-zdh"> Zones à dominantes humides</label>
-        <label class="layer-control"><span class="swatch" style="background:#8e44ad; opacity:0.5;"></span><input type="checkbox" id="check-perche"> Couches des lits perchés</label>
+        <label class="layer-control"><span class="swatch" style="background:#8e44ad;"></span><input type="checkbox" id="check-perche"> Couches des lits perchés</label>
     </div>
 
     <div class="ebf-card" style="border-left-color: #e67e22;">
-        <h3> Espace de Bon Fonctionnement (Nécessaire)</h3>
-        <label class="layer-control"><span class="swatch" style="border: 2px dashed #FFAA00;"></span><input type="checkbox" id="check-efn"> <b>EBF Nécessaire Définitif</b></label>
-        <label class="layer-control"><span class="swatch" style="border: 1px dashed #FFAA00;"></span><input type="checkbox" id="check-buf-ero-efn"> Espace morphologique</label>
-        <label class="layer-control"><span class="swatch" style="background:#3498db; opacity:0.5;"></span><input type="checkbox" id="check-azi-efn"> Enveloppe hydraulique</label>
-        <label class="layer-control"><span class="swatch" style="background:#a6cee3;"></span><input type="checkbox" id="check-geol-efn"> Enveloppe hydrogéologique</label>
-        <label class="layer-control"><span class="swatch" style="background:#f39c12;"></span><input type="checkbox" id="check-geo5"> Enveloppe biogéochimique</label>
-        <label class="layer-control"><span class="swatch" style="background:#27ae60;"></span><input type="checkbox" id="check-zhe"> Enveloppe biologique</label>
+        <h3 style="color: #e67e22;"> Espace de Bon Fonctionnement (Nécessaire)</h3>
+        <label class="layer-control"><span class="swatch" style="border: 2px dashed #e67e22; background: transparent;"></span><input type="checkbox" id="check-efn"> <b>EBF Nécessaire Définitif</b></label>
+        <label class="layer-control"><span class="swatch" style="border: 1px solid #FFAA00; background: transparent;"></span><input type="checkbox" id="check-buf-ero-efn"> Espace morphologique</label>
+        <label class="layer-control"><span class="swatch" style="border: 1px solid #3498db; background: transparent;"></span><input type="checkbox" id="check-azi-efn"> Enveloppe hydraulique</label>
+        <label class="layer-control"><span class="swatch" style="border: 1px solid #a6cee3; background: transparent;"></span><input type="checkbox" id="check-geol-efn"> Enveloppe hydrogéologique</label>
+        <label class="layer-control"><span class="swatch" style="border: 1px solid #f1c40f; background: transparent;"></span><input type="checkbox" id="check-geo5"> Enveloppe biogéochimique</label>
+        <label class="layer-control"><span class="swatch" style="border: 1px solid #27ae60; background: transparent;"></span><input type="checkbox" id="check-zhe"> Enveloppe biologique</label>
         
         <div class="sub-layers-title">Couches complémentaires</div>
-        <label class="layer-control"><span class="swatch" style="background:#8e44ad; opacity:0.5;"></span><input type="checkbox" id="check-perche-efn"> Couches des lits perchés</label>
+        <label class="layer-control"><span class="swatch" style="border: 1px solid #8e44ad; background: transparent;"></span><input type="checkbox" id="check-perche-efn"> Couches des lits perchés</label>
     </div>
 
     <div class="ebf-card" style="border-left-color: #9b59b6;">
@@ -511,11 +511,11 @@
 
     const ebfLayers = {
         efo: L.geoJSON(null, { style: { color: "#FFAA00", weight: 3, fillOpacity: 0.1 } }),
-        efn: L.geoJSON(null, { style: { color: "#FFAA00", weight: 3, fillOpacity: 0.2, dashArray: "5, 10" } }),
-        bufEroEfo: L.geoJSON(null, { style: { color: "#FFAA00", weight: 1, fillOpacity: 0.1 } }),
-        bufEroEfn: L.geoJSON(null, { style: { color: "#FFAA00", weight: 1, fillOpacity: 0.1, dashArray: "2, 4" } }),
-        mrvbf: L.geoJSON(null, { style: { color: "#f39c12", weight: 0, fillOpacity: 0.2 } }),
-        aziEfn: L.geoJSON(null, { style: { color: "#3498db", weight: 0, fillOpacity: 0.3 } }),
+        efn: L.geoJSON(null, { style: { color: "#e67e22", weight: 3, fillOpacity: 0.2, dashArray: "5, 10" } }),
+        bufEroEfo: L.geoJSON(null, { style: { color: "#FFAA00", weight: 2, fillOpacity: 0.1 } }),
+        bufEroEfn: L.geoJSON(null, { style: { color: "#FFAA00", weight: 2, fillOpacity: 0.1, dashArray: "4, 4" } }),
+        mrvbf: L.geoJSON(null, { style: { color: "#3498db", weight: 0, fillOpacity: 0.3 } }),
+        aziEfn: L.geoJSON(null, { style: { color: "#3498db", weight: 0, fillOpacity: 0.3, dashArray: "3, 3" } }),
         geol: L.geoJSON(null, { style: { color: "#a6cee3", weight: 0, fillOpacity: 0.4 } }),
         geolEfn: L.geoJSON(null, { style: { color: "#a6cee3", weight: 0, fillOpacity: 0.4 } }),
         zdh: L.geoJSON(null, { style: { color: "#2ecc71", weight: 0, fillOpacity: 0.4 } }),
@@ -524,7 +524,7 @@
         percheEfn: L.geoJSON(null, { style: { color: "#8e44ad", weight: 0, fillOpacity: 0.5 } }),
         zheEfo: L.geoJSON(null, { style: { color: "#27ae60", weight: 0, fillOpacity: 0.5 } }), 
         zhe: L.geoJSON(null, { style: { color: "#27ae60", weight: 0, fillOpacity: 0.5 } }),
-        geo5: L.geoJSON(null, { style: { color: "#e67e22", weight: 0, fillOpacity: 0.4 } }),
+        geo5: L.geoJSON(null, { style: { color: "#f1c40f", weight: 0, fillOpacity: 0.4 } }),
         bati: L.geoJSON(null, { style: { color: "#e74c3c", weight: 0, fillOpacity: 0.7 } }),
         hydro: L.geoJSON(null, { 
             style: { color: "#3498db", weight: 2, opacity: 0.8 },
@@ -544,19 +544,19 @@
     const definitions = {
         'check-efo': "<b>EBF Optimal Définitif</b><br>Zone de mobilité maximale théorique.",
         'check-efn': "<b>EBF Nécessaire Définitif</b><br>Périmètre d'action prioritaire intégrant les enjeux environnementaux.",
-        'check-buf-ero-efo': "<b>Espace morphologique</b> : Largeur de liberté totale accordée au lit.",
-        'check-buf-ero-efn': "<b>Espace morphologique</b> : Largeur minimale pour maintenir l'équilibre du cours d'eau.",
+        'check-buf-ero-efo': "<b>Espace morphologique (Optimal)</b> : Largeur de liberté totale accordée au lit.",
+        'check-buf-ero-efn': "<b>Espace morphologique (Nécessaire)</b> : corridor fonctionnel préservé.",
         'check-mrvbf': "<b>Enveloppe hydraulique (EFO)</b><br>Indice topographique modélisant le fond de vallée alluvial.",
         'check-azi-efn': "<b>Enveloppe hydraulique (EFN)</b> : Atlas des zones d’inondation (Crues AZI).",
-        'check-geol': "<b>Enveloppe hydrogéologique</b> : Emprise des alluvions quaternaires.",
-        'check-geol-efn': "<b>Enveloppe hydrogéologique</b> : Emprise des alluvions quaternaires.",
-        'check-zdh': "<b>Zones à dominantes humides</b>",
-        'check-geo25': "<b>Enveloppe biogéochimique</b> : Zone de protection.",
-        'check-perche': "<b>Couches des lits perchés</b>",
-        'check-perche-efn': "<b>Couches des lits perchés</b>",
-        'check-zhe-efo': "<b>Enveloppe biologique</b>", 
-        'check-zhe': "<b>Enveloppe biologique</b>",
-        'check-geo5': "<b>Enveloppe biogéochimique</b>",
+        'check-geol': "<b>Enveloppe hydrogéologique (EFO)</b> : Emprise des alluvions quaternaires.",
+        'check-geol-efn': "<b>Enveloppe hydrogéologique (EFN)</b> : Emprise géologique validée.",
+        'check-zdh': "<b>Zones à dominantes humides</b> : Enveloppe physique globale.",
+        'check-geo25': "<b>Enveloppe biogéochimique (EFO)</b> : Zone tampon maximale théorique de 25m.",
+        'check-perche': "<b>Couches des lits perchés (EFO)</b>",
+        'check-perche-efn': "<b>Couches des lits perchés (EFN)</b>",
+        'check-zhe-efo': "<b>Enveloppe biologique (EFO)</b> : Zones humides stratégiques.", 
+        'check-zhe': "<b>Enveloppe biologique (EFN)</b> : Corridor biologique contraint.",
+        'check-geo5': "<b>Enveloppe biogéochimique (EFN)</b> : Zone tampon minimale réglementaire de 5m.",
         'check-bati': "<b>Enjeux Anthropiques</b> : Emprise du bâti et infrastructures.",
         'check-hydro': "<b>Réseau Hydrographique</b>",
         'check-communes': "<b>Limites Communales</b> : Frontières administratives des communes."
