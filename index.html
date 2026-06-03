@@ -66,7 +66,6 @@
         .layer-control input { margin-right: 10px; width: 18px; height: 18px; }
         .swatch { width: 12px; height: 12px; border-radius: 2px; margin-right: 8px; display: inline-block; border: 1px solid #999; }
         
-        /* Style pour les sous-titres des couches complémentaires */
         .sub-layers-title { font-size: 11px; color: #7f8c8d; font-weight: bold; text-transform: uppercase; margin: 12px 0 4px 4px; letter-spacing: 0.5px; border-bottom: 1px dashed #ddd; padding-bottom: 2px; }
 
         .chart-container { position: relative; height: 200px; width: 100%; margin-top: 15px; }
@@ -86,7 +85,6 @@
         .modal-body ul { margin-top: 5px; padding-left: 20px; }
         .modal-body li { margin-bottom: 8px; }
 
-        /* Styles spécifiques pour la table matricielle RMC */
         .rmc-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; line-height: 1.4; }
         .rmc-table th { background-color: #2c3e50; color: white; padding: 10px; font-weight: bold; text-align: left; border: 1px solid #34495e; text-transform: uppercase; font-size: 11px; }
         .rmc-table td { padding: 10px; border: 1px solid #ddd; vertical-align: top; }
@@ -214,7 +212,7 @@
                     <strong>Note technique RMC :</strong> Ces couches d'inventaires environnementaux ne définissent pas un périmètre EBF en soi. Un tri géographique rigoureux doit être mené pour éliminer les polygones déconnectés de la dynamique fluviale afin d'éviter d'englober des milieux purement terrestres ou de versants hors sujets.
                 </div>
 
-                <h3 style="margin-top:30px;">Les 5 dimensions écologiques de l'EBF</h3>
+                <h3>Les 5 dimensions écologiques de l'EBF</h3>
                 <p>Préserver cet espace relève des Solutions Fondées sur la Nature (SFN). L'EBF repose sur l'interdépendance de :</p>
                 <ul>
                     <li><strong>Morphologie :</strong> Garantit la dynamique hydrosédimentaire et crée des habitats (évaluée via la puissance spécifique).</li>
@@ -252,7 +250,7 @@
 
     <div class="ebf-card">
         <h3> Espace de Bon Fonctionnement (Optimal)</h3>
-        <label class="layer-control"><span class="swatch" style="border: 2px solid #FFAA00;"></span><input type="checkbox" id="check-efo"> <b>EFO Définitif</b></label>
+        <label class="layer-control"><span class="swatch" style="border: 2px solid #FFAA00;"></span><input type="checkbox" id="check-efo"> <b>EBF Optimal Définitif</b></label>
         <label class="layer-control"><span class="swatch" style="border: 1px solid #FFAA00;"></span><input type="checkbox" id="check-buf-ero-efo"> Espace morphologique</label>
         <label class="layer-control"><span class="swatch" style="background:#f39c12; opacity:0.3;"></span><input type="checkbox" id="check-mrvbf"> Enveloppe hydraulique</label>
         <label class="layer-control"><span class="swatch" style="background:#a6cee3;"></span><input type="checkbox" id="check-geol"> Enveloppe hydrogéologique</label>
@@ -266,7 +264,7 @@
 
     <div class="ebf-card" style="border-left-color: #e67e22;">
         <h3> Espace de Bon Fonctionnement (Nécessaire)</h3>
-        <label class="layer-control"><span class="swatch" style="border: 2px dashed #FFAA00;"></span><input type="checkbox" id="check-efn"> <b>EFN Définitif</b></label>
+        <label class="layer-control"><span class="swatch" style="border: 2px dashed #FFAA00;"></span><input type="checkbox" id="check-efn"> <b>EBF Nécessaire Définitif</b></label>
         <label class="layer-control"><span class="swatch" style="border: 1px dashed #FFAA00;"></span><input type="checkbox" id="check-buf-ero-efn"> Espace morphologique</label>
         <label class="layer-control"><span class="swatch" style="background:#a6cee3;"></span><input type="checkbox" id="check-geol-efn"> Enveloppe hydrogéologique</label>
         <label class="layer-control"><span class="swatch" style="background:#f39c12;"></span><input type="checkbox" id="check-geo5"> Enveloppe biogéochimique</label>
@@ -530,20 +528,20 @@
     };
 
     const definitions = {
-        'check-efo': "<b>EFO (Espace de Fonctionnement Optimal)</b><br>Zone de mobilité maximale théorique.",
-        'check-efn': "<b>EFN (Espace de Fonctionnement Necessary)</b><br>Périmètre d'action prioritaire intégrant les enjeux environnementaux.",
-        'check-buf-ero-efo': "<b>Fuseau de Mobilité (Ambition Maximale)</b> : Largeur de liberté totale accordée au lit.",
-        'check-buf-ero-efn': "<b>Fuseau de Mobilité (Espace Vital)</b> : Largeur minimale pour maintenir l'équilibre du cours d'eau.",
-        'check-mrvbf': "<b>MRVBF</b><br>Indice topographique modélisant le fond de vallée alluvial.",
-        'check-geol': "<b>Socle Géologique</b> : Emprise des alluvions quaternaires.",
-        'check-geol-efn': "<b>Socle Géologique</b> : Emprise des alluvions quaternaires.",
-        'check-zdh': "<b>Zones à dominance Humides</b>",
-        'check-geo25': "<b>Tampon 25m</b> : Zone de protection biogéochimique.",
-        'check-perche': "<b>Risque d'Avulsion (lit perché) </b>",
-        'check-perche-efn': "<b>Risque d'Avulsion (lit perché) </b>",
-        'check-zhe-efo': "<b>Zones Humides à Enjeux</b>", 
-        'check-zhe': "<b>Zones Humides à Enjeux</b>",
-        'check-geo5': "<b>Tampon 5m</b>",
+        'check-efo': "<b>EBF Optimal Définitif</b><br>Zone de mobilité maximale théorique.",
+        'check-efn': "<b>EBF Nécessaire Définitif</b><br>Périmètre d'action prioritaire intégrait les enjeux environnementaux.",
+        'check-buf-ero-efo': "<b>Espace morphologique</b> : Largeur de liberté totale accordée au lit.",
+        'check-buf-ero-efn': "<b>Espace morphologique</b> : Largeur minimale pour maintenir l'équilibre du cours d'eau.",
+        'check-mrvbf': "<b>Enveloppe hydraulique</b><br>Indice topographique modélisant le fond de vallée alluvial.",
+        'check-geol': "<b>Enveloppe hydrogéologique</b> : Emprise des alluvions quaternaires.",
+        'check-geol-efn': "<b>Enveloppe hydrogéologique</b> : Emprise des alluvions quaternaires.",
+        'check-zdh': "<b>Zones à dominantes humides</b>",
+        'check-geo25': "<b>Enveloppe biogéochimique</b> : Zone de protection.",
+        'check-perche': "<b>Couches des lits perchés</b>",
+        'check-perche-efn': "<b>Couches des lits perchés</b>",
+        'check-zhe-efo': "<b>Enveloppe biologique</b>", 
+        'check-zhe': "<b>Enveloppe biologique</b>",
+        'check-geo5': "<b>Enveloppe biogéochimique</b>",
         'check-bati': "<b>Enjeux Anthropiques</b> : Emprise du bâti et infrastructures.",
         'check-hydro': "<b>Réseau Hydrographique</b>",
         'check-communes': "<b>Limites Communales</b> : Frontières administratives des communes."
@@ -583,7 +581,6 @@
     bind('check-plui-efn', ebfLayers.pluiEfn, 'EFN_PLUI.geojson'); 
     bind('check-communes', ebfLayers.communes, 'communes.geojson'); 
 
-    // --- GESTION DES TÉLÉCHARGEMENTS ET VERIFICATION (ERREUR 404) ---
     function zoomToCommune(nomCommune) {
         const pdfDiv = document.getElementById('pdf-downloads');
         const pdfTitle = document.getElementById('pdf-title');
