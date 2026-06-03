@@ -145,8 +145,8 @@
                     <thead>
                         <tr>
                             <th>Catégorie</th>
-                            <th>EBF Optimal (Espace de Bon Fonctionnement Optimal)</th>
-                            <th>EBF Nécessaire (Espace Fonctionnel Nécessaire)</th>
+                            <th>EFO (Espace de Fonctionnement Optimal)</th>
+                            <th>EFN (Espace Fonctionnel Nécessaire)</th>
                             <th>Couches SIG / Outils & Concepts (Guide RMC)</th>
                         </tr>
                     </thead>
@@ -171,53 +171,9 @@
                         </tr>
                         <tr>
                             <td class="rmc-cat">Géomorphologie Historique</td>
-                            <td class="rmc-efo"><b>Analyse diachronique :</b> Exploitation des photographies aériennes anciennes pour fixer la trajectoire historique de la bande active.</td>
-                            <td class="rmc-efn"><b>Analyse diachronique :</b> Exploitation des photographies aériennes anciennes pour fixer la trajectoire historique de la bande active.</td>
+                            <td class="rmc-efo"><b>Analyse diachronique :</b> Exploitation des photographies aériennes anciennes pour fixer la trajectoire historique de la bande active. Lits perchés intégrés pour l'extension maximale.</td>
+                            <td class="rmc-efn"><b>Analyse diachronique :</b> Exploitation des photographies aériennes anciennes pour fixer la trajectoire historique de la bande active. Lits perchés intégrés pour l'extension de l'EBF.</td>
                             <td class="rmc-sig">Missions aériennes historiques (IGN), Carte géologique (BRGM / AERMC) pour discriminer le matelas alluvial, Banque du Sous-Sol (BSS/forages), BDHI (Inondations), Données RTM (Torrents actifs).</td>
-                        </tr>
-                        <tr>
-                            <td class="rmc-cat">Couches de l'EBF (Couches de base)</td>
-                            <td class="rmc-efo">
-                                <ul>
-                                    <li><b>Espace morphologique :</b> Extension d'ambition maximale.</li>
-                                    <li><b>Enveloppe hydraulique :</b> Modélisation MRVBF sur toute la plaine inondable théorique.</li>
-                                    <li><b>Enveloppe hydrogéologique :</b> Alluvions récentes (validation maximale).</li>
-                                    <li><b>Enveloppe biogéochimique :</b> Filtre anti-pesticides (25m).</li>
-                                    <li><b>Enveloppe biologique :</b> Zones humides à enjeux stratégiques.</li>
-                                </ul>
-                            </td>
-                            <td class="rmc-efn">
-                                <ul>
-                                    <li><b>Espace morphologique :</b> Extension réduite selon l'espace vital.</li>
-                                    <li><b>Enveloppe hydrogéologique :</b> Alluvions récentes contraintes par l'activité humaine.</li>
-                                    <li><b>Enveloppe biogéochimique :</b> Filtre anti-pesticides minimal réglementaire (5m).</li>
-                                    <li><b>Enveloppe biologique :</b> Zones humides à enjeux stratégiques.</li>
-                                </ul>
-                            </td>
-                            <td class="rmc-sig">
-                                <ul>
-                                    <li>Couche des fuseaux d'érosion (Buffer)</li>
-                                    <li>Indice topographique MRVBF</li>
-                                    <li>Carte géologique du BRGM</li>
-                                    <li>Registre Parcellaire Graphique (RPG)</li>
-                                    <li>Inventaires des Zones Humides</li>
-                                </ul>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="rmc-cat">Couches complémentaires</td>
-                            <td class="rmc-efo">
-                                <ul>
-                                    <li><b>Zones à dominantes humides :</b> Enveloppe physique globale selon la topographie et le sol.</li>
-                                    <li><b>Couches des lits perchés :</b> Intégrées pour l'extension maximale de l'EBF.</li>
-                                </ul>
-                            </td>
-                            <td class="rmc-efn">
-                                <ul>
-                                    <li><b>Couches des lits perchés :</b> Intégrées pour l'extension de l'EBF.</li>
-                                </ul>
-                            </td>
-                            <td class="rmc-sig">Inventaires départementaux des ZH, Indicateurs RHOMEO, Données PIFH, Cartes BRGM.</td>
                         </tr>
                         <tr>
                             <td class="rmc-cat">Aménagement / Bâti</td>
@@ -226,10 +182,28 @@
                             <td class="rmc-sig">BD TOPO (Infrastructures/Bâtis), Corine Land Cover (Occupation des sols), Référentiel des Obstacles à l'Écoulement (ROE).</td>
                         </tr>
                         <tr>
+                            <td class="rmc-cat">Contexte Hydrologique</td>
+                            <td class="rmc-efo"><b>MRVBF :</b> S'étend sur toute la plaine inondable théorique.<br><b>+ Alluvions récentes :</b> Validation de l'emprise maximale historique.</td>
+                            <td class="rmc-efn"><b>Alluvions récentes contraintes :</b> Superposition stricte avec les dépôts alluvionnaires géologiques.</td>
+                            <td class="rmc-sig">RGE ALTI 5m ou levés LiDAR, PPRi (Crue de référence), Cartographie TRI (Directive Inondation : crue moyenne et scénario extrême Q100), Atlas des Zones Inondables (AZI), Méthode Hydrogéomorphologique (HGM), Carte géologique (BRGM).</td>
+                        </tr>
+                        <tr>
+                            <td class="rmc-cat">Contexte Écologique</td>
+                            <td class="rmc-efo"><b>ZDH (Zones à Dominante Humide) :</b> Enveloppe physique globale selon la topographie et le sol.<br><b>+ ZHE :</b> Uniquement les zones stratégiques.</td>
+                            <td class="rmc-efn"><b>ZHE (Zones Humides à Enjeux) :</b> Uniquement les zones stratégiques (filtration, biodiversité, stockage).</td>
+                            <td class="rmc-sig">Inventaires départementaux des Zones Humides, Indicateurs RHOMEO (Suivi ZH), Données du Pôle d'Information Flore-Habitat (PIFH), SRCE / TVB / SRADDET (Aires de Migration Simulée - AMS).</td>
+                        </tr>
+                        <tr>
                             <td class="rmc-cat">Inventaires Patrimoniaux</td>
                             <td class="rmc-efo">Exclu par défaut pour éviter une surpondération de l'enveloppe technique de l'EBF.</td>
                             <td class="rmc-efn">Exclu par défaut pour éviter une surpondération de l'enveloppe technique de l'EBF.</td>
                             <td class="rmc-sig">ZNIEFF de Type 1 et 2 (DREAL), Zonages réglementaires : NATURA 2000 (ZCS / ZPS), APPB, ENS.</td>
+                        </tr>
+                        <tr>
+                            <td class="rmc-cat">Zone Tampon (Biogéochimie)</td>
+                            <td class="rmc-efo"><b>Filtre anti-pesticides (25m) :</b> Intègre la totalité de la bande maximale théorique.</td>
+                            <td class="rmc-efn"><b>Filtre anti-pesticides (5m) :</b> Intègre uniquement la zone tampon minimale réglementaire.</td>
+                            <td class="rmc-sig">Registre Parcellaire Graphique (RPG pour ciblage des parcelles agricoles riveraines), Bande tampon linéaire générée par buffer (tampon de 15m de part et d'autre de l'axe ou haut de berge).</td>
                         </tr>
                     </tbody>
                 </table>
@@ -555,7 +529,7 @@
 
     const definitions = {
         'check-efo': "<b>EBF Optimal Définitif</b><br>Zone de mobilité maximale théorique.",
-        'check-efn': "<b>EBF Nécessaire Définitif</b><br>Périmètre d'action prioritaire intégrant les enjeux environnementaux.",
+        'check-efn': "<b>EBF Nécessaire Définitif</b><br>Périmètre d'action prioritaire intégrait les enjeux environnementaux.",
         'check-buf-ero-efo': "<b>Espace morphologique</b> : Largeur de liberté totale accordée au lit.",
         'check-buf-ero-efn': "<b>Espace morphologique</b> : Largeur minimale pour maintenir l'équilibre du cours d'eau.",
         'check-mrvbf': "<b>Enveloppe hydraulique</b><br>Indice topographique modélisant le fond de vallée alluvial.",
