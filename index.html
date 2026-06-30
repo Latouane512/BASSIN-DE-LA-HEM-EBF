@@ -412,20 +412,24 @@
     // Style pour les parcelles (HEM_TON_SOL)
 // Cette fonction marche pour HEM_TON_SOL et Zone_Bati
 function getStyleByAction(feature) {
-    const action = (feature.properties.Action_SFN || "").trim(); // Récupère la valeur telle quelle
+    const action = (feature.properties.Action_SFN || "").trim();
 
-    // Définition des couleurs selon la valeur exacte du champ
+    // Dictionnaire de correspondance exact avec vos données
     const styles = {
-        "Zone non vulnérable (Tampon)": { color: "#27ae60", fillColor: "#27ae60", fillOpacity: 0.5 },
-        "Priorité absolue (Urgence)": { color: "#c0392b", fillColor: "#c0392b", fillOpacity: 0.6 },
-        "Vulnérabilité modérée": { color: "#e67e22", fillColor: "#e67e22", fillOpacity: 0.6 },
-        "Veille": { color: "#f39c12", fillColor: "#f39c12", fillOpacity: 0.5 },
-        "Hors zone": { color: "#bdc3c7", fillColor: "#bdc3c7", fillOpacity: 0.3 },
-        "Bâtiment - Exposition Élevée": { color: "#c0392b", fillColor: "#e74c3c", fillOpacity: 0.8 },
-        "Bâtiment - Simple Surveillance": { color: "#f1c40f", fillColor: "#f1c40f", fillOpacity: 0.8 }
+        // --- HEM_TON_SOL ---
+        "VAGUE 2 : Préservation - Couvert herbeux": { color: "#27ae60", fillColor: "#27ae60", fillOpacity: 0.5 },
+        "RISQUE FAIBLE : Pas de ruissellement": { color: "#bdc3c7", fillColor: "#bdc3c7", fillOpacity: 0.3 },
+        "SURVEILLANCE : Pratiques agronomiques": { color: "#f39c12", fillColor: "#f39c12", fillOpacity: 0.5 },
+        "VAGUE 1 : URGENCE - Haie / Fascine": { color: "#c0392b", fillColor: "#c0392b", fillOpacity: 0.6 },
+        "VAGUE 2 : Consolidation - MAEC": { color: "#e67e22", fillColor: "#e67e22", fillOpacity: 0.6 },
+        "EXISTANT : Bande enherbée / tampon": { color: "#9b59b6", fillColor: "#9b59b6", fillOpacity: 0.5 },
+        
+        // --- Zone_Bati ---
+        "Non impacté par le ruissellement": { color: "#bdc3c7", fillColor: "#bdc3c7", fillOpacity: 0.3 },
+        "VAGUE 1 : SÉCURITÉ BÂTI - Protection d'urgence (Noue / Mur)": { color: "#c0392b", fillColor: "#e74c3c", fillOpacity: 0.8 },
+        "SURVEILLANCE BÂTI : Veille inondation": { color: "#f1c40f", fillColor: "#f1c40f", fillOpacity: 0.8 }
     };
 
-    // Retourne le style correspondant, ou un style gris par défaut si la valeur n'est pas dans la liste
     return styles[action] || { color: "#7f8c8d", weight: 1, fillColor: "#bdc3c7", fillOpacity: 0.4 };
 }
 
@@ -484,11 +488,13 @@ function getStyleByAction(feature) {
 const legendActionSfn = L.control({position: 'bottomleft'});
 legendActionSfn.onAdd = function() {
     const div = L.DomUtil.create('div', 'legend');
-    div.innerHTML = `<h4>Diagnostic Parcelles</h4>
-        <i style="background:#27ae60"></i> Non vulnérable (Tampon)<br>
-        <i style="background:#c0392b"></i> Priorité absolue (Urgence)<br>
-        <i style="background:#e67e22"></i> Vulnérabilité modérée<br>
-        <i style="background:#f39c12"></i> Veille`;
+    div.innerHTML = `<h4>Diagnostic Parcelles & Bâti</h4>
+        <i style="background:#27ae60"></i> Préservation (Couvert herbeux)<br>
+        <i style="background:#c0392b"></i> URGENCE / SÉCURITÉ BÂTI<br>
+        <i style="background:#e67e22"></i> Consolidation (MAEC)<br>
+        <i style="background:#f39c12"></i> Surveillance / Veille<br>
+        <i style="background:#9b59b6"></i> Bande enherbée<br>
+        <i style="background:#bdc3c7"></i> Non impacté / Risque faible`;
     return div;
 };
 
