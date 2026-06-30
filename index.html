@@ -410,27 +410,23 @@
 
     // FONCTION SYMBOLOGIE Action_SFN
     // Style pour les parcelles (HEM_TON_SOL)
-function getParcelleStyle(feature) {
-    const props = feature.properties;
-    const action = (props.Action_SFN || "").toUpperCase();
-    const codeCultu = (props.code_cultu || "").toUpperCase();
-    const pente = parseFloat(props.pente || 0);
+// Cette fonction marche pour HEM_TON_SOL et Zone_Bati
+function getStyleByAction(feature) {
+    const action = (feature.properties.Action_SFN || "").trim(); // Récupère la valeur telle quelle
 
-    if (codeCultu.includes('PPH') || action.includes('PRAIRIE')) return { color: "#27ae60", fillColor: "#27ae60", fillOpacity: 0.5 };
-    if (pente >= 10 && !action.includes('RISQUE FAIBLE')) return { color: "#c0392b", fillColor: "#c0392b", fillOpacity: 0.6 };
-    if (pente >= 5 && pente < 10 && !action.includes('RISQUE FAIBLE')) return { color: "#e67e22", fillColor: "#e67e22", fillOpacity: 0.6 };
-    return { color: "#f39c12", fillColor: "#f39c12", fillOpacity: 0.5 }; // Veille
-}
+    // Définition des couleurs selon la valeur exacte du champ
+    const styles = {
+        "Zone non vulnérable (Tampon)": { color: "#27ae60", fillColor: "#27ae60", fillOpacity: 0.5 },
+        "Priorité absolue (Urgence)": { color: "#c0392b", fillColor: "#c0392b", fillOpacity: 0.6 },
+        "Vulnérabilité modérée": { color: "#e67e22", fillColor: "#e67e22", fillOpacity: 0.6 },
+        "Veille": { color: "#f39c12", fillColor: "#f39c12", fillOpacity: 0.5 },
+        "Hors zone": { color: "#bdc3c7", fillColor: "#bdc3c7", fillOpacity: 0.3 },
+        "Bâtiment - Exposition Élevée": { color: "#c0392b", fillColor: "#e74c3c", fillOpacity: 0.8 },
+        "Bâtiment - Simple Surveillance": { color: "#f1c40f", fillColor: "#f1c40f", fillOpacity: 0.8 }
+    };
 
-// Style pour le bâti (Zone_Bati)
-function getBatiStyle(feature) {
-    const props = feature.properties;
-    const action = (props.Action_SFN || "").toUpperCase();
-    const penteBati = parseFloat(props.pente_bati || 0);
-
-    if (action.includes("NON IMPACTÉ")) return { color: "#bdc3c7", fillColor: "#bdc3c7", fillOpacity: 0.3 };
-    if (penteBati >= 5) return { color: "#c0392b", fillColor: "#e74c3c", fillOpacity: 0.8 };
-    return { color: "#f1c40f", fillColor: "#f1c40f", fillOpacity: 0.8 }; // Surveillance
+    // Retourne le style correspondant, ou un style gris par défaut si la valeur n'est pas dans la liste
+    return styles[action] || { color: "#7f8c8d", weight: 1, fillColor: "#bdc3c7", fillOpacity: 0.4 };
 }
 
 
@@ -552,18 +548,19 @@ legendActionSfn.onAdd = function() {
     });
 
     // Couche HEM_TON_SOL avec symbologie Action_SFN
-    const layerParcellesAgr = L.geoJSON(null, {
-    style: getParcelleStyle, // Utilise la nouvelle fonction
+    // Couche HEM_TON_SOL
+const layerParcellesAgr = L.geoJSON(null, {
+    style: getStyleByAction, // On utilise la fonction unique
     onEachFeature: (f, l) => {
-        l.bindPopup(`<b>Parcelle :</b> ${f.properties.Action_SFN || "Non définie"}`);
+        l.bindPopup(`<b>Action :</b> ${f.properties.Action_SFN || "Non définie"}`);
     }
 });
 
-    // Couche Zone_Bati avec symbologie Action_SFN
-   const layerBatiImpacte = L.geoJSON(null, {
-    style: getBatiStyle, // Utilise la nouvelle fonction
+// Couche Zone_Bati
+const layerBatiImpacte = L.geoJSON(null, {
+    style: getStyleByAction, // On utilise la même fonction
     onEachFeature: (f, l) => {
-        l.bindPopup(`<b>Bâti :</b> ${f.properties.Action_SFN || "Non définie"}`);
+        l.bindPopup(`<b>Action :</b> ${f.properties.Action_SFN || "Non définie"}`);
     }
 });
     /* ----------------------------------------------------- */
