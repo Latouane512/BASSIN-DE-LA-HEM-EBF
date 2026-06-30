@@ -3,21 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diagnostic Morphodynamique - La Hem</title>
+    <title>Diagnostic Morphodynamique & Ruissellement - La Hem</title>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         :root {
-            --color-primary: #5C7689; 
+            --color-primary: #2c3e50; 
+            --color-secondary: #34495e;
             --color-e1: #3182bd; --color-e2: #31a354; --color-e3: #fd8d3c; --color-e4: #de2d26;
             --color-bg: #f5f8fb;
-            --shadow-card: 0 4px 15px rgba(0,0,0,0.2);
+            --shadow-card: 0 4px 15px rgba(0,0,0,0.15);
             --color-a: #a6da59;
             --color-au: rgb(250, 172, 76);
             --color-n: rgb(51, 160, 44);
             --color-u: rgb(217, 217, 217);
+            
+            /* Couleurs thématiques Diagnostic / PRHYMO */
+            --color-prhymo: #8e44ad;
+            --color-ruissellement: #2980b9;
+            --color-agri-hts: #27ae60;
+            --color-agri-std: #f1c40f;
+            --color-bati-impact: #c0392b;
         }
 
         body { margin: 0; padding: 0; font-family: 'Helvetica Neue', Arial, sans-serif; background-color: var(--color-bg); overflow: hidden; }
@@ -26,49 +34,55 @@
         #map-title {
             position: absolute; top: 75px; left: 50%; transform: translateX(-50%);
             z-index: 1000; background: rgba(255, 255, 255, 0.95);
-            padding: 12px 30px; border-radius: 50px; box-shadow: var(--shadow-card);
-            text-align: center; border: 1px solid #ddd; width: auto; max-width: 80%;
+            padding: 10px 25px; border-radius: 50px; box-shadow: var(--shadow-card);
+            text-align: center; border: 1px solid #ddd; width: auto; max-width: 50%;
+            transition: all 0.3s ease;
         }
         
-        #map-title h1 { margin: 0; font-size: 18px; color: #2c3e50; text-transform: uppercase; letter-spacing: 1px; }
-        #map-title p { margin: 5px 0 0 0; font-size: 13px; color: #7f8c8d; }
+        #map-title h1 { margin: 0; font-size: 16px; color: #2c3e50; text-transform: uppercase; letter-spacing: 1px; }
+        #map-title p { margin: 3px 0 0 0; font-size: 12px; color: #7f8c8d; }
 
-        .leaflet-top.leaflet-right { margin-top: 140px; }
-        .leaflet-top.leaflet-left { margin-top: 70px; }
+        .leaflet-top.leaflet-right { margin-top: 75px; }
+        .leaflet-top.leaflet-left { margin-top: 75px; }
 
-        .info { padding: 15px; font: 13px/16px Arial, Helvetica, sans-serif; background: rgba(255,255,255,0.98); box-shadow: var(--shadow-card); border-radius: 6px; min-width: 320px; }
-        .info h4 { margin: 0 0 10px; color: #333; font-size: 15px; border-bottom: 2px solid var(--color-primary); padding-bottom: 5px; text-transform: uppercase; }
+        .info { padding: 15px; font: 13px/16px Arial, Helvetica, sans-serif; background: rgba(255,255,255,0.98); box-shadow: var(--shadow-card); border-radius: 6px; min-width: 300px; }
+        .info h4 { margin: 0 0 10px; color: #333; font-size: 14px; border-bottom: 2px solid var(--color-primary); padding-bottom: 5px; text-transform: uppercase; }
 
         .data-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .data-table th { text-align: center; color: #777; font-size: 0.85em; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
-        .data-table td { padding: 5px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.95em; text-align: center;}
-        .val-focus { font-weight: bold; color: #222; background-color: #f9f9f9;}
+        .data-table td { padding: 4px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.90em; text-align: center;}
+        .val-focus { font-weight: bold; color: #222; background-color: #ededed;}
 
-        .legend { line-height: 22px; color: #555; background: rgba(255,255,255,0.95); padding: 12px; border-radius: 5px; box-shadow: var(--shadow-card); min-width: 200px; font-size: 13px; }
-        .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.9; }
+        .legend { line-height: 20px; color: #555; background: rgba(255,255,255,0.95); padding: 12px; border-radius: 5px; box-shadow: var(--shadow-card); min-width: 150px; font-size: 12px; }
+        .legend i { width: 16px; height: 16px; float: left; margin-right: 8px; opacity: 0.9; border-radius: 2px; }
 
         #top-nav {
             position: absolute; top: 0; left: 0; width: 100%; height: 60px;
             background: #2c3e50; color: white; display: flex; align-items: center; justify-content: space-between;
             padding: 0 20px; z-index: 2500; box-shadow: 0 2px 10px rgba(0,0,0,0.3); box-sizing: border-box;
         }
-        #view-selector { background: white; color: #2c3e50; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        #view-selector { background: white; color: #2c3e50; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 13px;}
 
-        #ebf-sidebar {
-            position: fixed; right: 0; top: 60px; width: 380px; height: calc(100% - 60px);
-            background: white; z-index: 2000; box-shadow: -3px 0 10px rgba(0,0,0,0.1);
+        /* Panneaux latéraux unifiés */
+        .sidebar {
+            position: fixed; top: 60px; width: 380px; height: calc(100% - 60px);
+            background: white; z-index: 2000; box-shadow: 0px 4px 20px rgba(0,0,0,0.1);
             padding: 20px; overflow-y: auto; box-sizing: border-box; display: none;
         }
-        .ebf-card { background: #fdfcf9; border-radius: 10px; padding: 15px; margin-bottom: 15px; border-left: 5px solid #2c3e50; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .ebf-card h3 { font-size: 13px; margin: 0 0 10px 0; color: #2c3e50; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        #ebf-sidebar { right: 0; box-shadow: -3px 0 10px rgba(0,0,0,0.05); }
+        #diag-sidebar { left: 0; box-shadow: 3px 0 10px rgba(0,0,0,0.05); }
+
+        .ui-card { background: #fdfcf9; border-radius: 8px; padding: 15px; margin-bottom: 15px; border-left: 5px solid #2c3e50; box-shadow: 0 2px 5px rgba(0,0,0,0.04); }
+        .ui-card h3 { font-size: 12px; margin: 0 0 10px 0; color: #2c3e50; text-transform: uppercase; border-bottom: 1px solid #eee; padding-bottom: 5px; letter-spacing: 0.5px;}
+        
         .layer-control { display: flex; align-items: center; margin: 8px 0; font-size: 13px; cursor: pointer; }
         .layer-control:hover { color: #3498db; }
-        .layer-control input { margin-right: 10px; width: 18px; height: 18px; }
+        .layer-control input { margin-right: 10px; width: 16px; height: 16px; cursor: pointer; }
         .swatch { width: 12px; height: 12px; border-radius: 2px; margin-right: 8px; display: inline-block; border: 1px solid #777; }
         
         .sub-layers-title { font-size: 11px; color: #7f8c8d; font-weight: bold; text-transform: uppercase; margin: 12px 0 4px 4px; letter-spacing: 0.5px; border-bottom: 1px dashed #ddd; padding-bottom: 2px; }
 
-        .chart-container { position: relative; height: 200px; width: 100%; margin-top: 15px; }
+        .chart-container { position: relative; height: 180px; width: 100%; margin-top: 15px; }
         .chart-toggles { display: flex; justify-content: space-between; margin-top: 10px; margin-bottom: 10px;}
         .chart-btn { flex: 1; padding: 6px; margin: 0 5px; border: 1px solid #ccc; background: white; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold; }
         .chart-btn.active { background: #3498db; color: white; border-color: #2980b9; }
@@ -76,12 +90,13 @@
         .dl-link { display:flex; align-items:center; padding: 8px; background: #f4f6f7; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 5px; text-decoration: none; color: #2c3e50; font-size: 12px; transition: all 0.2s ease; cursor: pointer; }
         .dl-link:hover { background: #e8ecef; border-color: #3498db; }
 
-        .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); backdrop-filter: blur(3px); }
-        .modal-content { background: white; margin: 2% auto; padding: 30px; border-radius: 10px; width: 95%; max-width: 1000px; position: relative; }
-        .leaflet-control-custom-info { background: white; width: 32px; height: 32px; border-radius: 4px; box-shadow: 0 1px 5px rgba(0,0,0,0.65); cursor: pointer; text-align: center; line-height: 32px; font-weight: bold; font-size: 16px; color: #555; }
+        /* Style Modale moderne */
+        .modal { display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(22, 34, 46, 0.6); backdrop-filter: blur(4px); }
+        .modal-content { background: white; margin: 2% auto; padding: 25px; border-radius: 8px; width: 90%; max-width: 950px; position: relative; box-shadow: 0 5px 25px rgba(0,0,0,0.3); }
+        .leaflet-control-custom-info { background: white; width: 32px; height: 32px; border-radius: 4px; box-shadow: 0 1px 5px rgba(0,0,0,0.4); cursor: pointer; text-align: center; line-height: 32px; font-weight: bold; font-size: 15px; color: #333; }
         
-        .modal-body { max-height: 75vh; overflow-y: auto; padding-right: 15px; font-size: 13px; line-height: 1.5; color: #444; }
-        .modal-body h3 { color: #2980b9; font-size: 16px; margin-top: 20px; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .modal-body { max-height: 70vh; overflow-y: auto; padding-right: 15px; font-size: 13.5px; line-height: 1.6; color: #444; }
+        .modal-body h3 { color: #2980b9; font-size: 15px; margin-top: 20px; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
         .modal-body ul { margin-top: 5px; padding-left: 20px; }
         .modal-body li { margin-bottom: 6px; }
 
@@ -96,7 +111,6 @@
         .rmc-badge { display: inline-block; padding: 2px 6px; border-radius: 3px; font-weight: bold; font-size: 10px; text-transform: uppercase; margin-bottom: 5px; }
         .badge-efo { background: #fff3cd; color: #d35400; border: 1px solid #ffeeba; }
         .badge-efn { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .rmc-note { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 10px; border-radius: 5px; margin-top: 15px; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -105,153 +119,113 @@
     <div style="font-weight: bold;">BASSIN DE LA HEM</div>
     <select id="view-selector" onchange="switchView(this.value)">
         <option value="ebf">1. Modélisation EBF (EFO / EFN) & PLUi</option>
-        <option value="diagnostic">2. Diagnostic Morphodynamique (Ps)</option>
+        <option value="diagnostic" selected>2. Diagnostic Morpho & Ruissellement</option>
     </select>
 </nav>
 
-<div id="diag-ui">
-    <div id="map-title">
-        <h1>Diagnostic Morphodynamique de la Hem</h1>
-        <p>Évolution de la puissance spécifique et secteurs géomorphologiques homogènes</p>
-    </div>
+<div id="map-title" style="display: none;">
+    <h1 id="main-title-text">Diagnostic Morphodynamique & PRHYMO</h1>
+    <p id="sub-title-text">Puissance spécifique, axes de ruissellement et vulnérabilité</p>
 </div>
 
-<div id="infoModal" class="modal" style="display: block;">
+<div id="infoModal" class="modal">
     <div class="modal-content">
         <span style="position:absolute; right:20px; top:15px; cursor:pointer; font-size:28px; color:#777;" onclick="closeModal()">&times;</span>
         
-        <div id="modal-diagnostic" style="display:none;">
+        <div id="modal-diagnostic">
             <h2 style="margin-top:0; color:#2c3e50;">Méthodologie & Seuils</h2>
             <div class="modal-body">
                 <p><strong>Typologie géodynamique (Malavoi, 2007) :</strong></p>
                 <ul>
-                    <li><span style="color:#3182bd; font-weight:bold;">E1 (< 10 W/m²)</span> : Dépôt dominant. Secteurs de plaine à très faible déclivité ou à l'amont immédiat d'ouvrages hydrauliques.</li>
+                    <li><span style="color:#3182bd; font-weight:bold;">E1 (&lt; 10 W/m²)</span> : Dépôt dominant. Secteurs de plaine à très faible déclivité ou à l'amont immédiat d'ouvrages hydrauliques.</li>
                     <li><span style="color:#31a354; font-weight:bold;">E2 (10-30 W/m²)</span> : Ajustements lents. Transit sédimentaire faible.</li>
                     <li><span style="color:#fd8d3c; font-weight:bold;">E3 (30-100 W/m²)</span> : Équilibre dynamique. Énergie suffisante pour faire migrer naturellement les méandres.</li>
-                    <li><span style="color:#de2d26; font-weight:bold;">E4 (> 100 W/m²)</span> : Érosion active. Risque maximal d'incision du lit et d'érosion latérale sévère.</li>
+                    <li><span style="color:#de2d26; font-weight:bold;">E4 (&gt; 100 W/m²)</span> : Érosion active. Risque maximal d'incision du lit et d'érosion latérale sévère.</li>
                 </ul>
+                <h3>Analyse PRHYMO & Ruissellement</h3>
+                <p>L'intégration des données PRHYMO permet d'identifier les axes de concentration des écoulements hors réseau hydrographique principal, mettant en évidence les vulnérabilités du bâti et des parcelles agricoles ("Hem ton sol").</p>
             </div>
         </div>
 
-        <div id="modal-ebf">
+        <div id="modal-ebf" style="display:none;">
             <h2 style="margin-top:0; color:#2c3e50;">Cadre Conceptuel : L'Espace de Bon Fonctionnement (EBF)</h2>
             <div class="modal-body">
-                <p><strong>De l’espace de liberté à l’EBF :</strong> Face aux altérations hydromorphologiques historiques, le concept novateur d’« espace de liberté » émerge dès 1981 pour permettre la mobilisation des sédiments. Au début des années 2000, l’approche strictement centrée sur la mobilité évolue vers le paradigme de l'<strong>Espace de Bon Fonctionnement (EBF)</strong>. Ce dernier englobe la mobilité mais intègre surtout l’intégralité des fonctionnalités de l’hydrosystème.</p>
+                <p><strong>De l’espace de liberté à l’EBF :</strong> Le concept novateur d’« espace de liberté » émerge dès 1981. Il évolue vers le paradigme de l'<strong>Espace de Bon Fonctionnement (EBF)</strong> intégrant l’intégralité des fonctionnalités de l’hydrosystème.</p>
                 
-                <h3>Matrice Technique & Base de Données des Enveloppes (Guide RMC)</h3>
-                <p>Ce tableau croise la dualité spatiale de l'EBF (EFO/EFN) avec les outils d'analyses géomatiques prescrits par les guides techniques de l'Agence de l'Eau Rhône-Méditerranée-Corse (RMC).</p>
-                
+                <h3>Matrice Technique (Guide RMC)</h3>
                 <table class="rmc-table">
                     <thead>
                         <tr>
                             <th>Catégorie</th>
-                            <th>EFO (Espace de Fonctionnement Optimal)</th>
-                            <th>EFN (Espace Fonctionnel Nécessaire)</th>
-                            <th>Couches SIG / Outils et Concept du Guide RMC</th>
+                            <th>EFO (Optimal)</th>
+                            <th>EFN (Nécessaire)</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="rmc-cat">Philosophie globale et Objectif de gestion</td>
-                            <td class="rmc-efo">
-                                <b>Enveloppe théorique maximale.</b><br><br>
-                                La rivière y a tout l'espace nécessaire, comme si l'homme n'existait pas.<br><br>
-                                <span class="rmc-badge badge-efo">Objectif</span> Sert de zone de désartificialisation à très long terme (Idéal à atteindre).
-                            </td>
-                            <td class="rmc-efn">
-                                <b>Enveloppe réaliste et réglementaire.</b><br><br>
-                                Protège la rivière tout en respectant les usages humains incompressibles. (Rabotage à l’aide de l’anthropisation)<br><br>
-                                <span class="rmc-badge badge-efn">Objectif</span> Périmètre d'action immédiat pour l'ingénierie végétale, la protection et les accords agricoles.
-                            </td>
-                            <td class="rmc-sig">Concepts fondamentaux de l'Espace de Bon Fonctionnement fluvial.</td>
-                        </tr>
-                        <tr>
-                            <td class="rmc-cat">Aménagement / Bâti</td>
-                            <td class="rmc-efo">Ne prend pas en compte le bâti existant (Vision théorique pure sans contrainte).</td>
-                            <td class="rmc-efn"><b>Rabotage :</b> Soustraction géomatique des routes et bâtiments (Vision pragmatique). (BD Topo)</td>
-                            <td class="rmc-sig">Couches d’usages et infrastructure : Corine Land Cover et / ou BD Topo<br><br>Couche des ouvrages (ROE)</td>
-                        </tr>
-                        <tr>
-                            <td class="rmc-cat">Contexte Hydraulique</td>
-                            <td class="rmc-efo"><b>MRVBF :</b> S'étend sur toute la plaine inondable théorique.</td>
-                            <td class="rmc-efn"><b>AZI :</b> Atlas des zones d’inondation (Enveloppe hydraulique)</td>
-                            <td class="rmc-sig">Couches Aléas et Topographie : RGE ALTI 5m ou levés LiDAR, PPRi (Crue de référence)<br><br>Cartographie TRI : Directive inondation (crue moyenne et scénario extrême (Q100). Atlas des Zones Inondables (AZI)</td>
-                        </tr>
-                        <tr>
-                            <td class="rmc-cat">Contexte Hydrogéologique</td>
-                            <td class="rmc-efo"><b>Alluvions récentes :</b> validation de l’emprise maximale historique</td>
-                            <td class="rmc-efn"><b>Alluvions récentes contraintes :</b> superposition avec les dépôts alluvionnaires (carte géologique BRGM)</td>
-                            <td class="rmc-sig">Méthode hydrogéomorphologique (HGM). Carte géologique (BRGM)</td>
-                        </tr>
-                        <tr>
-                            <td class="rmc-cat">Contexte Écologique / Biologique</td>
-                            <td class="rmc-efo"><b>ZDH (Zones à Dominante Humide) :</b> Enveloppe physique globale selon la topographie et le sol.<br><br><b>+</b><br><br><b>ZHE :</b> Uniquement les zones stratégiques (filtration, biodiversité, stockage).</td>
-                            <td class="rmc-efn"><b>ZHE (Zones Humides à Enjeux) :</b> Uniquement les zones stratégiques (filtration, biodiversité, stockage).</td>
-                            <td class="rmc-sig">
-                                Couche de fonctionnalité Fluviale : Inventaire départementaux des Zones Humides.<br><br>
-                                Indicateurs RHOMEO (suivies des zones humides)<br><br>
-                                Données du pôle d’information flore-habitat (PIFH).<br><br>
-                                SRCE / TVB / SRADDET (Aires de Migration Simulée AMS)
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="rmc-cat">Contexte Biogéochimique</td>
-                            <td class="rmc-efo"><b>Filtre anti-pesticides (25m) :</b> Intègre la totalité de la bande maximale théorique.</td>
-                            <td class="rmc-efn"><b>Filtre anti-pesticides (5m) :</b> Intègre uniquement la zone tampon minimale réglementaire.</td>
-                            <td class="rmc-sig">Couches Sol et Occupation : Registre parcellaire a Grande échelle (RPG) (ciblage des parcelles agricoles riveraines). Bande tampon linéaire (générée par buffer de 15 mètres de part et d’autre de l’axe ou du haut de berge)</td>
-                        </tr>
-                        <tr>
-                            <td class="rmc-cat">Lit perché</td>
-                            <td class="rmc-efo"><b>Lits perchés :</b> Identification des Lits perchés par photo-interprétation sur LiDAR HD</td>
-                            <td class="rmc-efn"><b>Lits perchés :</b> Identification des Lits perchés par photo-interprétation sur LiDAR HD</td>
-                            <td class="rmc-sig">
-                                Couche sous-sol et chroniques : Carte géologique (BRGM / AERMC) pour discriminer le matelas alluvial.<br><br>
-                                Banque du Sous-Sol (BSS) (forages).<br><br>
-                                Base de données Historiques sur les inondations (BDHI).<br><br>
-                                Bases de données RTM pour les torrents actifs
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="rmc-cat">Cas des Inventaires Patrimoniaux (ZNIEFF/ Natura 2000)</td>
-                            <td class="rmc-efo">Exclu par défaut pour éviter une surpondération de l’enveloppe technique de l’EBF</td>
-                            <td class="rmc-efn">Exclu par défaut pour éviter une surpondération de l’enveloppe technique de l’EBF</td>
-                            <td class="rmc-sig">
-                                Couche d’inventaires Environnementaux : ZNIEFF de Type 1 et 2 (DREAL).<br><br>
-                                Zonage réglementaire : NATURA2000 (ZCS / ZPS), APPS, ENS<br><br>
-                                <strong>Note technique RMC :</strong> Ces couches ne définissent pas un périmètre EBF en soi. Un tri géographique rigoureux doit éliminer les polygones déconnectés de la dynamique fluviale pour éviter d’englober des milieux terrestre /versants hors sujets.
-                            </td>
+                            <td class="rmc-cat">Philosophie globale</td>
+                            <td class="rmc-efo"><b>Enveloppe théorique maximale.</b></td>
+                            <td class="rmc-efn"><b>Enveloppe réaliste et réglementaire.</b></td>
                         </tr>
                     </tbody>
                 </table>
-
-                <h3 style="margin-top:30px;">Les 5 dimensions écologiques de l'EBF</h3>
-                <p>Préserver cet espace relève des Solutions Fondées sur la Nature (SFN). L'EBF repose sur l'interdépendance de :</p>
-                <ul>
-                    <li><strong>Morphologie :</strong> Garantit la dynamique hydrosédimentaire et crée des habitats (évaluée via la puissance spécifique).</li>
-                    <li><strong>Hydraulique :</strong> Assure le laminage des crues par l'expansion des eaux.</li>
-                    <li><strong>Biogéochimie :</strong> Processus d'auto-épuration et régulation de la qualité physico-chimique (ex: zones tampons).</li>
-                    <li><strong>Hydrogéologie :</strong> Échanges hydriques fondamentaux entre la rivière et les nappes superficielles.</li>
-                    <li><strong>Biologie :</strong> Préservation des Zones Humides (ZH/ZDH), habitats de reproduction et de refuge.</li>
-                </ul>
-
-                <h3>Un outil réglementaire au service de la DCE</h3>
-                <p>L'EBF répond à la Directive Cadre sur l’Eau (DCE) pour atteindre le bon état écologique. Sur notre bassin, le <strong>SDAGE Artois-Picardie</strong> impose sa cartographie. Son intégration dans les documents d’urbanisme (<strong>PLUi</strong>) permet de sanctuariser les parcelles (reclassement en zone Naturelle/Agricole ou intégration d'Orientations d'Aménagement (OAP) imposant des prescriptions constructives).</p>
             </div>
         </div>
-
     </div>
 </div>
 
-<div id="ebf-sidebar">
-    <h2 style="margin-top:0; color: #2c3e50; font-size: 1.4em;">Modélisation de l'EBF</h2>
+<div id="diag-sidebar" class="sidebar">
+    <h2 style="margin-top:0; color: #2c3e50; font-size: 1.3em;">Diagnostic du Bassin</h2>
     
-    <div class="ebf-card" style="border-left-color: #27ae60;">
-        <h3 style="color: #27ae60;"> Recherche & Exports (Communes)</h3>
+    <div class="ui-card" style="border-left-color: #3498db;">
+        <h3 style="color: #2980b9;"> Morphodynamique (Puissance Spécifique)</h3>
+        <p style="font-size:11px; color:#666; margin-top:0;">Sélectionnez le scénario de crue modélisé :</p>
         
+        <label class="layer-control"><input type="radio" name="crue-radio" value="Q100" checked> Crue Q100 (Extrême)</label>
+        <label class="layer-control"><input type="radio" name="crue-radio" value="Q50"> Crue Q50</label>
+        <label class="layer-control"><input type="radio" name="crue-radio" value="Q20"> Crue Q20</label>
+        <label class="layer-control"><input type="radio" name="crue-radio" value="Q10"> Crue Q10</label>
+        <label class="layer-control"><input type="radio" name="crue-radio" value="Q5"> Crue Q5</label>
+        <label class="layer-control"><input type="radio" name="crue-radio" value="Q2"> Crue Q2 (Fréquente)</label>
+        
+        <div class="sub-layers-title">Contexte</div>
+        <label class="layer-control"><span class="swatch" style="background:#0078A8; border-radius:50%;"></span><input type="checkbox" id="check-stations-diag"> Stations Hydrométriques</label>
+        <label class="layer-control"><span class="swatch" style="background:#000; border-radius:50%;"></span><input type="checkbox" id="check-ouvrages-diag"> Ouvrages / Obstacles</label>
+    </div>
+
+    <div class="ui-card" style="border-left-color: var(--color-prhymo);">
+        <h3 style="color: var(--color-prhymo);"> Vulnérabilité & Ruissellement</h3>
+        
+        <label class="layer-control" title="USRA_HEM.geojson">
+            <span class="swatch" style="background:var(--color-ruissellement); height:4px; margin-top:4px; border:none;"></span>
+            <input type="checkbox" id="check-ruissellement"> <b>Axes de ruissellement</b>
+        </label>
+        
+        <label class="layer-control" title="Zone_Bati.geojson">
+            <span class="swatch" style="background:var(--color-bati-impact);"></span>
+            <input type="checkbox" id="check-bati-impact"> Bâti impacté par ruissellement
+        </label>
+        
+        <label class="layer-control" title="HEM_TON_SOL.geojson">
+            <span class="swatch" style="background:var(--color-agri-hts);"></span>
+            <input type="checkbox" id="check-parcelles"> <b>Parcelles (Hem ton sol / Agri)</b>
+        </label>
+        
+        <div style="font-size: 11px; margin-left: 28px; color: #666; margin-top:5px;">
+            <i style="background:var(--color-agri-hts); width:10px; height:10px; display:inline-block; border:1px solid #333;"></i> Engagé "Hem ton sol" <br>
+            <i style="background:var(--color-agri-std); width:10px; height:10px; display:inline-block; border:1px solid #333; margin-top:3px;"></i> Agricole standard
+        </div>
+    </div>
+</div>
+
+<div id="ebf-sidebar" class="sidebar">
+    <h2 style="margin-top:0; color: #2c3e50; font-size: 1.3em;">Modélisation de l'EBF</h2>
+    
+    <div class="ui-card" style="border-left-color: #27ae60;">
+        <h3 style="color: #27ae60;"> Recherche & Exports (Communes)</h3>
         <select id="commune-selector" style="width:100%; padding:8px; border-radius:5px; border:1px solid #ccc; font-size:13px;" onchange="zoomToCommune(this.value)">
             <option value="">-- Chargement des communes... --</option>
         </select>
-
         <div id="pdf-downloads" style="display:none; margin-top: 15px;">
             <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: bold; color: #555;" id="pdf-title">Cartes réglementaires :</p>
             <a id="link-efo" href="#" class="dl-link"> Télécharger la carte EFO (PNG)</a>
@@ -260,7 +234,7 @@
         </div>
     </div>
 
-    <div class="ebf-card" style="border-left-color: #FFAA00;">
+    <div class="ui-card" style="border-left-color: #FFAA00;">
         <h3 style="color: #FFAA00;"> Espace de Bon Fonctionnement (Optimal)</h3>
         <label class="layer-control"><span class="swatch" style="border: 2px solid #FFAA00; background: transparent;"></span><input type="checkbox" id="check-efo"> <b>EBF Optimal Définitif</b></label>
         <label class="layer-control"><span class="swatch" style="background:#FFAA00;"></span><input type="checkbox" id="check-buf-ero-efo"> Espace morphologique</label>
@@ -268,13 +242,9 @@
         <label class="layer-control"><span class="swatch" style="background:#a6cee3;"></span><input type="checkbox" id="check-geol"> Enveloppe hydrogéologique</label>
         <label class="layer-control"><span class="swatch" style="background:#f1c40f;"></span><input type="checkbox" id="check-geo25"> Enveloppe biogéochimique</label>
         <label class="layer-control"><span class="swatch" style="background:#27ae60;"></span><input type="checkbox" id="check-zhe-efo"> Enveloppe biologique</label>
-        
-        <div class="sub-layers-title">Couches complémentaires</div>
-        <label class="layer-control"><span class="swatch" style="background:#2ecc71;"></span><input type="checkbox" id="check-zdh"> Zones à dominantes humides</label>
-        <label class="layer-control"><span class="swatch" style="background:#8e44ad;"></span><input type="checkbox" id="check-perche"> Couches des lits perchés</label>
     </div>
 
-    <div class="ebf-card" style="border-left-color: #e67e22;">
+    <div class="ui-card" style="border-left-color: #e67e22;">
         <h3 style="color: #e67e22;"> Espace de Bon Fonctionnement (Nécessaire)</h3>
         <label class="layer-control"><span class="swatch" style="border: 2px dashed #e67e22; background: transparent;"></span><input type="checkbox" id="check-efn"> <b>EBF Nécessaire Définitif</b></label>
         <label class="layer-control"><span class="swatch" style="border: 1px solid #FFAA00; background: transparent;"></span><input type="checkbox" id="check-buf-ero-efn"> Espace morphologique</label>
@@ -282,36 +252,16 @@
         <label class="layer-control"><span class="swatch" style="border: 1px solid #a6cee3; background: transparent;"></span><input type="checkbox" id="check-geol-efn"> Enveloppe hydrogéologique</label>
         <label class="layer-control"><span class="swatch" style="border: 1px solid #f1c40f; background: transparent;"></span><input type="checkbox" id="check-geo5"> Enveloppe biogéochimique</label>
         <label class="layer-control"><span class="swatch" style="border: 1px solid #27ae60; background: transparent;"></span><input type="checkbox" id="check-zhe"> Enveloppe biologique</label>
-        
-        <div class="sub-layers-title">Couches complémentaires</div>
-        <label class="layer-control"><span class="swatch" style="border: 1px solid #8e44ad; background: transparent;"></span><input type="checkbox" id="check-perche-efn"> Couches des lits perchés</label>
     </div>
 
-    <div class="ebf-card" style="border-left-color: #9b59b6;">
+    <div class="ui-card" style="border-left-color: #9b59b6;">
         <h3 style="color: #8e44ad;"> Enjeux Anthropiques & Urbanisme</h3>
         <label class="layer-control"><span class="swatch" style="background:#e74c3c;"></span><input type="checkbox" id="check-bati"> Bâti & Infrastructures (OCSGE)</label>
-        
         <label class="layer-control"><span class="swatch" style="background:var(--color-a);"></span><input type="checkbox" id="check-plui-efo"> <b>Zonage PLUi (Emprise EFO)</b></label>
         <label class="layer-control"><span class="swatch" style="background:var(--color-a);"></span><input type="checkbox" id="check-plui-efn"> <b>Zonage PLUi (Emprise EFN)</b></label>
-        
-        <div style="font-size: 11px; margin-left: 28px; color: #666;">
-            <i style="background:var(--color-u); width:10px; height:10px; display:inline-block;"></i> U &nbsp;
-            <i style="background:var(--color-au); width:10px; height:10px; display:inline-block;"></i> AU &nbsp;
-            <i style="background:var(--color-a); width:10px; height:10px; display:inline-block;"></i> A &nbsp;
-            <i style="background:var(--color-n); width:10px; height:10px; display:inline-block;"></i> N
-        </div>
-
-        <h4 style="margin: 15px 0 5px; font-size: 12px; color: #555;">Analyse de l'occupation des sols (%)</h4>
-        <div class="chart-toggles">
-            <button class="chart-btn active" onclick="updateChart('EFO', this)">EFO</button>
-            <button class="chart-btn" onclick="updateChart('EFN', this)">EFN</button>
-        </div>
-        <div class="chart-container">
-            <canvas id="pluiChart"></canvas>
-        </div>
     </div>
 
-    <div class="ebf-card" style="border-left-color: #3498db;">
+    <div class="ui-card" style="border-left-color: #3498db;">
         <h3 style="color: #2980b9;"> Contexte Géographique</h3>
         <label class="layer-control"><span class="swatch" style="background:#3498db;"></span><input type="checkbox" id="check-hydro" checked> <b>Réseau Hydrographique</b></label>
         <label class="layer-control"><span class="swatch" style="border: 2px dashed #444; background: transparent;"></span><input type="checkbox" id="check-communes" checked> <b>Limites Communales</b></label>
@@ -323,21 +273,24 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    const basemapLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
-    });
-    
+    // --- 1. INITIALISATION DE LA CARTE & FONDS ---
+    const basemapLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap contributors &copy; CARTO' });
     const basemapSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
-    
-    const basemapTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-        maxZoom: 17,
-        attribution: '&copy; OpenStreetMap contributors, SRTM | Style: &copy; OpenTopoMap'
-    });
+    const basemapTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17, attribution: '&copy; OpenStreetMap contributors, SRTM | Style: &copy; OpenTopoMap' });
 
     const map = L.map('map', { center: [50.78, 2.05], zoom: 11, layers: [basemapLight] });
+    L.control.scale({position: 'bottomright', imperial: false}).addTo(map);
 
-    let currentActiveQ = 'Q100';
+    L.control.layers({ 
+        "Plan Clair (Voyager)": basemapLight, 
+        "OSM Topo / Naturel": basemapTopo, 
+        "Satellite": basemapSat 
+    }, {}, { position: 'bottomright' }).addTo(map);
+
     let searchCommunesLayer = L.geoJSON();
+
+    // --- 2. LOGIQUE DIAGNOSTIC MORPHODYNAMIQUE ---
+    let currentActiveQ = 'Q100';
 
     function getClassColor(cls) {
         const colors = { "E4": "#de2d26", "E3": "#fd8d3c", "E2": "#31a354", "E1": "#3182bd" };
@@ -350,17 +303,11 @@
         if (!props) { this._div.innerHTML = '<h4>Détail Morpho</h4>Survolez la rivière'; return; }
         const highlightClass = (q) => q === currentActiveQ ? 'val-focus' : '';
         const largeur = props.Largeur_moy || props.largeur_moy || props.LARGEUR_MOY || "N/A";
-        
-        // Affichage de la largeur avec 2 décimales
         const largeurText = (largeur !== "N/A") ? parseFloat(largeur).toFixed(2) + ' m' : 'N/A';
-
-        // Petite fonction sécurisée pour formater correctement les Q et Ps à 2 décimales
         const safeVal = (val) => val ? parseFloat(val).toFixed(2) : '?';
 
         this._div.innerHTML = `<h4>Secteur : ${props.Typologie || 'N/A'}</h4>
-            <p style="margin: 5px 0 10px 0; font-size: 13px; color: #555;">
-                <b>Largeur du lit :</b> ${largeurText}
-            </p>
+            <p style="margin: 5px 0 10px 0; font-size: 13px; color: #555;"><b>Largeur du lit :</b> ${largeurText}</p>
             <table class="data-table">
                 <tr><th>Crue</th><th>Q (m³/s)</th><th>Ps (W/m²)</th><th>Cl.</th></tr>
                 <tr class="${highlightClass('Q2')}"><td>Q2</td><td>${safeVal(props.Q_Q2_m3s)}</td><td>${safeVal(props.Ps_Q2)}</td><td><b style="color:${getClassColor(props.Cl_Q2)}">${props.Cl_Q2 || '?'}</b></td></tr>
@@ -398,6 +345,15 @@
         'Q10': createQLayer('Cl_Q10'), 'Q5': createQLayer('Cl_Q5'), 'Q2': createQLayer('Cl_Q2')
     };
 
+    // Gestion des boutons radios pour les crues
+    document.querySelectorAll('input[name="crue-radio"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            for (let q in layersQ) { map.removeLayer(layersQ[q]); }
+            currentActiveQ = this.value;
+            layersQ[currentActiveQ].addTo(map);
+        });
+    });
+
     const layerStation = L.geoJSON(null, {
         pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 7, fillColor: "#0078A8", color: "#fff", weight: 2, fillOpacity: 0.9 }),
         onEachFeature: (f, l) => l.bindPopup(`<b>Station Hydrométrique :</b><br>${f.properties.station || f.properties.nom || "Station de la Hem"}`)
@@ -408,66 +364,43 @@
         onEachFeature: (f, l) => l.bindPopup(`<b>Ouvrage / Obstacle :</b><br>${f.properties.NomPrincipalObstEcoul || f.properties.nom || "Nom inconnu"}`)
     });
 
-    const layerHydroDiag = L.geoJSON(null, {
-        style: { color: "#3498db", weight: 2, opacity: 0.8 },
+    // --- 3. LOGIQUE PRHYMO / RUISSELLEMENT ---
+    const layerRuissellement = L.geoJSON(null, { 
+        style: { color: "var(--color-ruissellement)", weight: 2, opacity: 0.9 },
+        onEachFeature: (f, l) => l.bindPopup(`<b>Axe de ruissellement (Hors lit)</b>`)
+    });
+
+    const layerBatiImpact = L.geoJSON(null, { 
+        style: { color: "var(--color-bati-impact)", weight: 1, fillOpacity: 0.7, fillColor: "var(--color-bati-impact)" },
+        onEachFeature: (f, l) => l.bindPopup(`<b>Bâti impacté par le ruissellement</b>`)
+    });
+
+    // Algorithme HEM_TON_SOL vs Agricole Standard
+    const isHemTonSol = (f) => f.properties.Agri_Nom && f.properties.Agri_Nom.toString().trim() !== "";
+    
+    const layerParcelles = L.geoJSON(null, {
+        style: (f) => ({
+            fillColor: isHemTonSol(f) ? "var(--color-agri-hts)" : "var(--color-agri-std)",
+            weight: 1,
+            color: "#333",
+            fillOpacity: 0.6
+        }),
         onEachFeature: (f, l) => {
-            const nom = f.properties.NOM_C_EAU || "Cours d'eau non renseigné";
-            l.bindPopup(`<b>Cours d'eau :</b><br>${nom}`);
+            const type = isHemTonSol(f) ? "<span style='color:var(--color-agri-hts)'>Parcelle HEM ton sol</span>" : "Parcelle agricole classique";
+            const nom = isHemTonSol(f) ? f.properties.Agri_Nom : "Non renseigné";
+            l.bindPopup(`<h4 style="margin:0 0 5px 0;">${type}</h4><b>Exploitant :</b> ${nom}`);
         }
     });
 
-    const diagLayerControl = L.control.layers({ 
-        "Plan Clair (Voyager)": basemapLight, 
-        "OSM Topo / Naturel": basemapTopo, 
-        "Satellite": basemapSat 
-    }, {
-        "Crue Q100": layersQ['Q100'], "Crue Q50": layersQ['Q50'], "Crue Q20": layersQ['Q20'],
-        "Crue Q10": layersQ['Q10'], "Crue Q5": layersQ['Q5'], "Crue Q2": layersQ['Q2'],
-        "Stations": layerStation,
-        "Ouvrages": layerOuvrages,
-        "Réseau Hydrographique": layerHydroDiag
-    }, { collapsed: false });
+    const diagExtraLayers = {
+        'check-ruissellement': { layer: layerRuissellement, file: 'USRA_HEM.geojson' },
+        'check-bati-impact': { layer: layerBatiImpact, file: 'Zone_Bati.geojson' },
+        'check-parcelles': { layer: layerParcelles, file: 'HEM_TON_SOL.geojson' },
+        'check-stations-diag': { layer: layerStation, file: 'Station.geojson' },
+        'check-ouvrages-diag': { layer: layerOuvrages, file: 'Ouvrage_WGS.geojson' }
+    };
 
-    function switchView(view) {
-        if (view === 'diagnostic') {
-            document.getElementById('diag-ui').style.display = 'block';
-            document.getElementById('ebf-sidebar').style.display = 'none';
-            
-            document.getElementById('modal-diagnostic').style.display = 'block';
-            document.getElementById('modal-ebf').style.display = 'none';
-
-            diagLayerControl.addTo(map);
-            info.addTo(map);
-            legend.addTo(map);
-            layersQ['Q100'].addTo(map);
-            layerStation.addTo(map);
-            layerOuvrages.addTo(map);
-            for (let l in ebfLayers) { map.removeLayer(ebfLayers[l]); }
-            
-        } else {
-            document.getElementById('diag-ui').style.display = 'none';
-            document.getElementById('ebf-sidebar').style.display = 'block';
-            
-            document.getElementById('modal-diagnostic').style.display = 'none';
-            document.getElementById('modal-ebf').style.display = 'block';
-
-            diagLayerControl.remove();
-            info.remove();
-            legend.remove();
-            for (let q in layersQ) { map.removeLayer(layersQ[q]); }
-            map.removeLayer(layerStation);
-            map.removeLayer(layerOuvrages);
-            map.removeLayer(layerHydroDiag);
-
-            if (document.getElementById('check-hydro').checked && !map.hasLayer(ebfLayers.hydro)) {
-                ebfLayers.hydro.addTo(map);
-            }
-            if (document.getElementById('check-communes').checked && !map.hasLayer(ebfLayers.communes)) {
-                ebfLayers.communes.addTo(map);
-            }
-        }
-    }
-
+    // --- 4. LOGIQUE EBF & PLUI (Existant) ---
     function getPluiColor(typezone) {
         const zone = (typezone || '').toString().toUpperCase();
         if (zone.startsWith('A') && !zone.startsWith('AU')) return '#a6da59'; 
@@ -477,36 +410,12 @@
         return '#999999'; 
     }
 
-    const getZone = (f) => f.properties.typezone || f.properties.TYPEZONE || "Inconnu";
-    const getLibelle = (f) => f.properties.libelle || f.properties.LIBELLE || "";
-    const getLibelong = (f) => f.properties.libelong || f.properties.LIBELONG || ""; 
-
-    const pluiStyle = (f) => ({
-        fillColor: getPluiColor(getZone(f)),
-        weight: 1,
-        opacity: 1,
-        color: '#666',
-        fillOpacity: 0.6
-    });
-
+    const pluiStyle = (f) => ({ fillColor: getPluiColor(f.properties.typezone || f.properties.TYPEZONE), weight: 1, opacity: 1, color: '#666', fillOpacity: 0.6 });
     const pluiPopup = (f, l) => {
-        let popupContent = `<div style="min-width: 200px;">
-                                <h4 style="margin: 0 0 5px 0; color: #2c3e50; border-bottom: 1px solid #ddd; padding-bottom: 3px;">
-                                    Zonage PLUi : <b>${getZone(f)}</b>
-                                </h4>
-                                <p style="margin: 5px 0; font-weight: bold; color: #d35400;">
-                                    Code : ${getLibelle(f)}
-                                </p>`;
-                                
-        let description = getLibelong(f);
-        if (description) {
-            popupContent += `<p style="margin: 5px 0; font-size: 11px; color: #555; line-height: 1.4;">
-                                <i>${description}</i>
-                             </p>`;
-        }
-        
-        popupContent += `</div>`;
-        l.bindPopup(popupContent);
+        const z = f.properties.typezone || f.properties.TYPEZONE || "Inconnu";
+        const code = f.properties.libelle || f.properties.LIBELLE || "";
+        const desc = f.properties.libelong || f.properties.LIBELONG || "";
+        l.bindPopup(`<h4>Zonage PLUi : <b>${z}</b></h4><p style="color:#d35400;">Code : ${code}</p><p style="font-size:11px;"><i>${desc}</i></p>`);
     };
 
     const ebfLayers = {
@@ -526,236 +435,125 @@
         zhe: L.geoJSON(null, { style: { color: "#27ae60", weight: 0, fillOpacity: 0.5 } }),
         geo5: L.geoJSON(null, { style: { color: "#f1c40f", weight: 0, fillOpacity: 0.4 } }),
         bati: L.geoJSON(null, { style: { color: "#e74c3c", weight: 0, fillOpacity: 0.7 } }),
-        hydro: L.geoJSON(null, { 
-            style: { color: "#3498db", weight: 2, opacity: 0.8 },
-            onEachFeature: (f, l) => { l.bindPopup(`<b>Cours d'eau :</b><br>${f.properties.NOM_C_EAU || "Non renseigné"}`); }
-        }),
+        hydro: L.geoJSON(null, { style: { color: "#3498db", weight: 2, opacity: 0.8 }, onEachFeature: (f, l) => l.bindPopup(`<b>Cours d'eau :</b><br>${f.properties.NOM_C_EAU || "Non renseigné"}`) }),
         pluiEfo: L.geoJSON(null, { style: pluiStyle, onEachFeature: pluiPopup }),
         pluiEfn: L.geoJSON(null, { style: pluiStyle, onEachFeature: pluiPopup }),
-        communes: L.geoJSON(null, {
-            style: { color: "#444", weight: 2, dashArray: "5, 5", fillOpacity: 0.05, fillColor: "#ccc" },
-            onEachFeature: (f, l) => {
-                const nom = f.properties.nom || f.properties.NOM || f.properties.NOM_COM || "Commune";
-                l.bindPopup(`<b>Commune :</b> ${nom}`);
-            }
-        })
+        communes: L.geoJSON(null, { style: { color: "#444", weight: 2, dashArray: "5, 5", fillOpacity: 0.05, fillColor: "#ccc" }, onEachFeature: (f, l) => l.bindPopup(`<b>Commune :</b> ${f.properties.nom || f.properties.NOM || f.properties.NOM_COM}`) })
     };
 
-    const definitions = {
-        'check-efo': "<b>EBF Optimal Définitif</b><br>Zone de mobilité maximale théorique.",
-        'check-efn': "<b>EBF Nécessaire Définitif</b><br>Périmètre d'action prioritaire intégrant les enjeux environnementaux.",
-        'check-buf-ero-efo': "<b>Espace morphologique (Optimal)</b> : Largeur de liberté totale accordée au lit.",
-        'check-buf-ero-efn': "<b>Espace morphologique (Nécessaire)</b> : corridor fonctionnel préservé.",
-        'check-mrvbf': "<b>Enveloppe hydraulique (EFO)</b><br>Indice topographique modélisant le fond de vallée alluvial.",
-        'check-azi-efn': "<b>Enveloppe hydraulique (EFN)</b> : Atlas des zones d’inondation (Crues AZI).",
-        'check-geol': "<b>Enveloppe hydrogéologique (EFO)</b> : Emprise des alluvions quaternaires.",
-        'check-geol-efn': "<b>Enveloppe hydrogéologique (EFN)</b> : Emprise géologique validée.",
-        'check-zdh': "<b>Zones à dominantes humides</b> : Enveloppe physique globale.",
-        'check-geo25': "<b>Enveloppe biogéochimique (EFO)</b> : Zone tampon maximale théorique de 25m.",
-        'check-perche': "<b>Couches des lits perchés (EFO)</b>",
-        'check-perche-efn': "<b>Couches des lits perchés (EFN)</b>",
-        'check-zhe-efo': "<b>Enveloppe biologique (EFO)</b> : Zones humides stratégiques.", 
-        'check-zhe': "<b>Enveloppe biologique (EFN)</b> : Corridor biologique contraint.",
-        'check-geo5': "<b>Enveloppe biogéochimique (EFN)</b> : Zone tampon minimale réglementaire de 5m.",
-        'check-bati': "<b>Enjeux Anthropiques</b> : Emprise du bâti et infrastructures.",
-        'check-hydro': "<b>Réseau Hydrographique</b>",
-        'check-communes': "<b>Limites Communales</b> : Frontières administratives des communes."
-    };
-
-    function bind(id, layer, file) {
-        document.getElementById(id).addEventListener('change', function() {
+    // --- 5. BINDINGS ET CHARGEMENT ---
+    function bindCheckbox(id, layer, file) {
+        const el = document.getElementById(id);
+        if(!el) return;
+        el.addEventListener('change', function() {
             if (this.checked) { 
-                fetch(file).then(r => r.json()).then(data => {
-                    layer.addData(data);
-                    if (id !== 'check-hydro' && !id.startsWith('check-plui') && id !== 'check-communes') {
-                        layer.eachLayer(l => l.bindPopup(definitions[id] || "Couche modélisée"));
-                    }
-                    layer.addTo(map); 
-                }).catch(e => console.log(`Erreur de chargement pour ${file}`));
+                fetch(file).then(r => r.json()).then(data => { layer.addData(data); layer.addTo(map); }).catch(e => console.log(`Erreur chargement ${file}`));
             } else { map.removeLayer(layer); }
         });
     }
 
-    bind('check-efo', ebfLayers.efo, 'EFO_FINAL_WGS.geojson');
-    bind('check-efn', ebfLayers.efn, 'EFN_FINAL_WGS.geojson');
-    bind('check-buf-ero-efo', ebfLayers.bufEroEfo, 'Buffer_Erosion_EFO.geojson');
-    bind('check-buf-ero-efn', ebfLayers.bufEroEfn, 'Buffer_Erosion_EFN.geojson');
-    bind('check-mrvbf', ebfLayers.mrvbf, 'MRVBF_LISSER.geojson');
-    bind('check-azi-efn', ebfLayers.aziEfn, 'Crues_AZI.geojson');
-    bind('check-geol', ebfLayers.geol, 'Geologie.geojson');
-    bind('check-geol-efn', ebfLayers.geolEfn, 'Geologie.geojson');
-    bind('check-zdh', ebfLayers.zdh, 'ZDH_Global.geojson');
-    bind('check-geo25', ebfLayers.geo25, 'EBF_Geochimique_25m.geojson');
-    bind('check-perche', ebfLayers.perche, 'LIT_perche_WGS.geojson');
-    bind('check-perche-efn', ebfLayers.percheEfn, 'LIT_perche_WGS.geojson');
-    bind('check-zhe-efo', ebfLayers.zheEfo, 'ZH_Enjeux.geojson'); 
-    bind('check-zhe', ebfLayers.zhe, 'ZH_Enjeux.geojson');
-    bind('check-geo5', ebfLayers.geo5, 'EBF_Geochimique_5m.geojson');
-    bind('check-bati', ebfLayers.bati, 'Bati_route.geojson');
-    bind('check-hydro', ebfLayers.hydro, 'Hydro_HEM_WGS.geojson');
-    bind('check-plui-efo', ebfLayers.pluiEfo, 'EFO_PLUI.geojson'); 
-    bind('check-plui-efn', ebfLayers.pluiEfn, 'EFN_PLUI.geojson'); 
-    bind('check-communes', ebfLayers.communes, 'communes.geojson'); 
+    // Bindings EBF
+    bindCheckbox('check-efo', ebfLayers.efo, 'EFO_FINAL_WGS.geojson');
+    bindCheckbox('check-efn', ebfLayers.efn, 'EFN_FINAL_WGS.geojson');
+    bindCheckbox('check-buf-ero-efo', ebfLayers.bufEroEfo, 'Buffer_Erosion_EFO.geojson');
+    bindCheckbox('check-buf-ero-efn', ebfLayers.bufEroEfn, 'Buffer_Erosion_EFN.geojson');
+    bindCheckbox('check-mrvbf', ebfLayers.mrvbf, 'MRVBF_LISSER.geojson');
+    bindCheckbox('check-azi-efn', ebfLayers.aziEfn, 'Crues_AZI.geojson');
+    bindCheckbox('check-geol', ebfLayers.geol, 'Geologie.geojson');
+    bindCheckbox('check-geol-efn', ebfLayers.geolEfn, 'Geologie.geojson');
+    bindCheckbox('check-zdh', ebfLayers.zdh, 'ZDH_Global.geojson');
+    bindCheckbox('check-geo25', ebfLayers.geo25, 'EBF_Geochimique_25m.geojson');
+    bindCheckbox('check-perche', ebfLayers.perche, 'LIT_perche_WGS.geojson');
+    bindCheckbox('check-perche-efn', ebfLayers.percheEfn, 'LIT_perche_WGS.geojson');
+    bindCheckbox('check-zhe-efo', ebfLayers.zheEfo, 'ZH_Enjeux.geojson'); 
+    bindCheckbox('check-zhe', ebfLayers.zhe, 'ZH_Enjeux.geojson');
+    bindCheckbox('check-geo5', ebfLayers.geo5, 'EBF_Geochimique_5m.geojson');
+    bindCheckbox('check-bati', ebfLayers.bati, 'Bati_route.geojson');
+    bindCheckbox('check-hydro', ebfLayers.hydro, 'Hydro_HEM_WGS.geojson');
+    bindCheckbox('check-plui-efo', ebfLayers.pluiEfo, 'EFO_PLUI.geojson'); 
+    bindCheckbox('check-plui-efn', ebfLayers.pluiEfn, 'EFN_PLUI.geojson'); 
+    bindCheckbox('check-communes', ebfLayers.communes, 'communes.geojson'); 
 
-    function zoomToCommune(nomCommune) {
-        const pdfDiv = document.getElementById('pdf-downloads');
-        const pdfTitle = document.getElementById('pdf-title');
-        
-        if (!nomCommune) {
-            pdfDiv.style.display = 'none';
-            map.setView([50.78, 2.05], 11); 
-            return;
-        }
+    // Bindings Diagnostic
+    for (let id in diagExtraLayers) {
+        bindCheckbox(id, diagExtraLayers[id].layer, diagExtraLayers[id].file);
+    }
 
-        let found = false;
-        searchCommunesLayer.eachLayer(l => {
-            const props = l.feature.properties;
-            const cNom = props.nom || props.NOM || props.NOM_COM || props.Nom || "";
+    // --- 6. GESTION DES VUES ---
+    function switchView(view) {
+        document.getElementById('map-title').style.display = 'block';
+
+        if (view === 'diagnostic') {
+            document.getElementById('diag-sidebar').style.display = 'block';
+            document.getElementById('ebf-sidebar').style.display = 'none';
+            document.getElementById('modal-diagnostic').style.display = 'block';
+            document.getElementById('modal-ebf').style.display = 'none';
+            document.getElementById('main-title-text').innerText = "Diagnostic Morphodynamique & PRHYMO";
             
-            if (cNom.toLowerCase() === nomCommune.toLowerCase()) {
-                map.flyToBounds(l.getBounds(), { padding: [20, 20], duration: 1.5, maxZoom: 15 });
-                found = true;
-            }
-        });
-
-        if (!found) console.warn("Commune non trouvée dans le fichier communes.geojson");
-
-        pdfTitle.innerHTML = `Cartes réglementaires : <b>${nomCommune}</b>`;
-        pdfDiv.style.display = 'block';
-
-        const documents = [
-            { id: 'link-efo', url: `EFO/${nomCommune}_EFO.png`, filename: `${nomCommune}_EFO.png` },
-            { id: 'link-efn', url: `EFN/${nomCommune}_EFN.png`, filename: `${nomCommune}_EFN.png` },
-            { id: 'link-synth', url: `Complet/${nomCommune}_EBF_Global.png`, filename: `${nomCommune}_EBF_Global.png` }
-        ];
-
-        documents.forEach(async (doc) => {
-            const btn = document.getElementById(doc.id);
+            info.addTo(map);
+            legend.addTo(map);
             
-            btn.style.opacity = "0.5";
-            btn.onclick = (e) => { e.preventDefault(); };
-
-            try {
-                const response = await fetch(doc.url, { method: 'HEAD' });
-
-                if (response.ok) {
-                    btn.href = doc.url;
-                    btn.download = doc.filename;
-                    btn.style.opacity = "1";
-                    btn.onclick = null; 
-                } else {
-                    throw new Error("Fichier introuvable");
-                }
-            } catch (error) {
-                btn.removeAttribute('href');
-                btn.removeAttribute('download');
-                btn.style.opacity = "0.6"; 
-                btn.onclick = (e) => {
-                    e.preventDefault();
-                    alert(` Carte non disponible pour la commune de ${nomCommune}.\n\nIl n'y a pas d'EFO ou d'EFN défini sur ce secteur.`);
-                };
+            // Afficher la crue active sélectionnée dans les radios
+            layersQ[currentActiveQ].addTo(map);
+            
+            // Afficher les autres couches diag si cochées
+            for (let id in diagExtraLayers) {
+                if(document.getElementById(id).checked) diagExtraLayers[id].layer.addTo(map);
             }
-        });
-    }
 
-    const chartData = {
-        'EFO': {
-            labels: ['Agricole (A)', 'Naturel (N)', 'Urbain (U)', 'A urbaniser (AU)'],
-            data: [60.6, 33.3, 6.0, 0.1]
-        },
-        'EFN': {
-            labels: ['Agricole (A)', 'Naturel (N)', 'Urbain (U)', 'A urbaniser (AU)'],
-            data: [64.0, 32.0, 4.1, 0.0]
+            for (let l in ebfLayers) { map.removeLayer(ebfLayers[l]); }
+            
+        } else {
+            document.getElementById('diag-sidebar').style.display = 'none';
+            document.getElementById('ebf-sidebar').style.display = 'block';
+            document.getElementById('modal-diagnostic').style.display = 'none';
+            document.getElementById('modal-ebf').style.display = 'block';
+            document.getElementById('main-title-text').innerText = "Modélisation de l'Espace de Bon Fonctionnement";
+
+            info.remove();
+            legend.remove();
+            
+            // Nettoyage des couches Diag
+            for (let q in layersQ) { map.removeLayer(layersQ[q]); }
+            for (let id in diagExtraLayers) { map.removeLayer(diagExtraLayers[id].layer); }
+
+            // Réaffichage des couches EBF cochées
+            const inputs = document.getElementById('ebf-sidebar').querySelectorAll('input[type="checkbox"]');
+            inputs.forEach(input => {
+                if(input.checked) {
+                    const layerKey = input.id.replace('check-', ''); // approximation rapide, géré via les events bindés
+                    // Le plus simple est de déclencher l'événement change pour forcer l'affichage
+                    input.dispatchEvent(new Event('change'));
+                }
+            });
         }
-    };
-
-    const chartColors = [
-        '#a6da59', 
-        'rgb(51, 160, 44)',   
-        'rgb(217, 217, 217)', 
-        'rgb(250, 172, 76)'   
-    ];
-
-    let pluiChart;
-
-    function initChart() {
-        const ctx = document.getElementById('pluiChart').getContext('2d');
-        pluiChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: chartData['EFO'].labels,
-                datasets: [{
-                    data: chartData['EFO'].data,
-                    backgroundColor: chartColors,
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'right', labels: { boxWidth: 12, font: {size: 10} } },
-                    tooltip: { callbacks: { label: function(context) { return ' ' + context.label + ': ' + context.raw + '%'; } } }
-                }
-            }
-        });
     }
 
-    function updateChart(type, btnElement) {
-        document.querySelectorAll('.chart-btn').forEach(btn => btn.classList.remove('active'));
-        btnElement.classList.add('active');
-        pluiChart.data.datasets[0].data = chartData[type].data;
-        pluiChart.update();
-    }
-
+    // --- 7. CHARGEMENT INITIAL GLOBAL ---
     fetch('hem_troncons_homogenes_finaux_1.geojson').then(r => r.json()).then(data => {
         for (let q in layersQ) { layersQ[q].addData(data); }
         
-        fetch('Station.geojson').then(r => r.json()).then(d => layerStation.addData(d));
-        fetch('Ouvrage_WGS.geojson').then(r => r.json()).then(d => layerOuvrages.addData(d));
-        
-        fetch('Hydro_HEM_WGS.geojson').then(r => r.json()).then(d => {
-            layerHydroDiag.addData(d);
-            ebfLayers.hydro.addData(d); 
-        });
-        
-        fetch('communes.geojson')
-            .then(r => r.json())
-            .then(data => {
-                searchCommunesLayer.addData(data);
-                ebfLayers.communes.addData(data); 
-                
-                const select = document.getElementById('commune-selector');
-                select.innerHTML = '<option value="">-- Zoomer sur une commune --</option>'; 
-                
-                let communesNoms = [];
-                data.features.forEach(f => {
-                    const props = f.properties;
-                    const nom = props.nom || props.NOM || props.NOM_COM || props.Nom;
-                    if (nom) communesNoms.push(nom);
-                });
-                
-                communesNoms = [...new Set(communesNoms)].sort((a, b) => a.localeCompare(b, 'fr'));
-                
-                communesNoms.forEach(nom => {
-                    const option = document.createElement('option');
-                    option.value = nom;
-                    option.textContent = nom;
-                    select.appendChild(option);
-                });
-            })
-            .catch(e => {
-                console.log("Erreur lors du chargement des polygones pour la recherche.", e);
-                document.getElementById('commune-selector').innerHTML = '<option value="">Erreur chargement des communes</option>';
+        fetch('Hydro_HEM_WGS.geojson').then(r => r.json()).then(d => { ebfLayers.hydro.addData(d); });
+        fetch('communes.geojson').then(r => r.json()).then(data => {
+            searchCommunesLayer.addData(data);
+            ebfLayers.communes.addData(data); 
+            
+            const select = document.getElementById('commune-selector');
+            let communesNoms = [];
+            data.features.forEach(f => {
+                const nom = f.properties.nom || f.properties.NOM || f.properties.NOM_COM || f.properties.Nom;
+                if (nom) communesNoms.push(nom);
             });
+            communesNoms = [...new Set(communesNoms)].sort((a, b) => a.localeCompare(b, 'fr'));
+            communesNoms.forEach(nom => {
+                const option = document.createElement('option');
+                option.value = nom; option.textContent = nom; select.appendChild(option);
+            });
+        });
 
-        switchView('ebf');
-        initChart();
+        // Appliquer la vue par défaut
+        switchView(document.getElementById('view-selector').value);
     });
-
-    map.on('overlayadd', (e) => { for(let q in layersQ){ if(layersQ[q]===e.layer) currentActiveQ = q; } });
-
-    L.control.scale({position: 'bottomright', imperial: false}).addTo(map);
 
     const InfoControl = L.Control.extend({
         options: { position: 'topleft' },
