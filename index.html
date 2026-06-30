@@ -36,7 +36,6 @@
         .leaflet-top.leaflet-right { margin-top: 140px; }
         .leaflet-top.leaflet-left { margin-top: 70px; }
 
-        /* Rendu plus professionnel des contrôles Leaflet */
         .leaflet-control-layers, .leaflet-control-custom-info, .info, .legend {
             border-radius: 8px !important;
             box-shadow: var(--shadow-card) !important;
@@ -72,7 +71,6 @@
             background: white; z-index: 2000; box-shadow: -3px 0 10px rgba(0,0,0,0.1);
             padding: 20px; overflow-y: auto; box-sizing: border-box; display: none;
         }
-        /* Custom Scrollbar */
         #ebf-sidebar::-webkit-scrollbar { width: 8px; }
         #ebf-sidebar::-webkit-scrollbar-thumb { background-color: #bdc3c7; border-radius: 4px; }
         
@@ -119,7 +117,6 @@
         .rmc-badge { display: inline-block; padding: 2px 6px; border-radius: 3px; font-weight: bold; font-size: 10px; text-transform: uppercase; margin-bottom: 5px; }
         .badge-efo { background: #fff3cd; color: #d35400; border: 1px solid #ffeeba; }
         .badge-efn { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .rmc-note { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 10px; border-radius: 5px; margin-top: 15px; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -146,7 +143,7 @@
         <span style="position:absolute; right:20px; top:15px; cursor:pointer; font-size:28px; color:#777;" onclick="closeModal()">&times;</span>
         
         <div id="modal-diagnostic" style="display:none;">
-            <h2 style="margin-top:0; color:#2c3e50;">Méthodologie & Seuils (Diagnostic)</h2>
+            <h2 style="margin-top:0; color:#2c3e50;">Méthodologie & Légende (Diagnostic)</h2>
             <div class="modal-body">
                 <p><strong>Typologie géodynamique (Malavoi, 2007) :</strong></p>
                 <ul>
@@ -156,14 +153,28 @@
                     <li><span style="color:#de2d26; font-weight:bold;">E4 (> 100 W/m²)</span> : Érosion active. Risque maximal d'incision du lit et d'érosion latérale sévère.</li>
                 </ul>
 
-                <h3 style="margin-top:20px; color:#2c3e50;">Analyse PRHYMO & Ruissellements</h3>
-                <p>Afin de proposer un diagnostic territorial complet, cette section intègre l'analyse des dynamiques de versant et des vulnérabilités associées au ruissellement :</p>
+                <h3 style="margin-top:20px; color:#2c3e50;">Indice de Dégradation PRHYMO</h3>
+                <p>L’application du protocole PRHYMO indique un niveau de dégradation physique moyen de <strong>32,3 %</strong> à l’échelle du bassin de la Hem. Les valeurs extrêmes s’étendent de 12,7 % pour les secteurs les plus préservés jusqu’à un maximum réel de 62,5 %.</p>
+                <p>Aucun secteur n’atteint la note maximale de 100 % de dégradation, car les indicateurs de dynamique et de quantité d’eau affichent partout la note de 1/5, traduisant un fonctionnement hydrologique préservé.</p>
+                <p>Pour s’adapter aux réalités du terrain, le réseau a été divisé en trois classes de dégradation distinctes :</p>
                 <ul>
-                    <li><b>Analyse PRHYMO (USRA_HEM) :</b> Modélisation des Unités Spatiales de Référence Anthropisées pour identifier les secteurs contributifs.</li>
-                    <li><b>Axes de ruissellement :</b> Modélisation géomatique des chemins d'écoulement préférentiels hors lit principal, dictés par la pente.</li>
-                    <li><b>Parcelles agricoles impactées (HEM_TON_SOL) :</b> Mise en évidence des zones de cultures vulnérables à l'érosion des sols et aux ravinements.</li>
-                    <li><b>Bâti impacté :</b> Identification croisée des infrastructures et zones urbanisées directement exposées aux axes de ruissellement intenses.</li>
+                    <li><strong style="color:#27ae60;">Altération faible (Score de 0 à 25 %) :</strong> Elle regroupe 45 tronçons (32,6 % du linéaire). Ces secteurs très préservés constituent les zones refuges du bassin.</li>
+                    <li><strong style="color:#e67e22;">Altération modérée (Score de 25 à 45 %) :</strong> Dominante sur le plan spatial, elle concerne 71 tronçons (51,4 % du réseau). Elle représente le cœur de cible opérationnel des techniques de petite restauration.</li>
+                    <li><strong style="color:#c0392b;">Altération forte (Scores > 45 %) :</strong> Elle isole les 22 tronçons restants (15,9 % du réseau), dont les portions les plus dégradées culminent à 62,5 %. À l’échelle de la Hem, ces secteurs représentent les anomalies et les points noirs physiques les plus critiques.</li>
                 </ul>
+
+                <h3 style="margin-top:20px; color:#2c3e50;">Parcelles Agricoles Impactées & Ruissellement</h3>
+                <p>Grâce à la pente, une requête SQL a permis de croiser les axes de ruissellement avec les bases de données agricoles afin de classer les parcelles selon leur niveau de risque :</p>
+                <ul>
+                    <li><strong style="color:#c0392b;">Priorité absolue (Urgence) :</strong> L’algorithme a isolé 168 parcelles (terres arables) interceptant un axe de ruissellement majeur sur des pentes extrêmes (> 10 % avec une moyenne de 18,9 %). Ces parcelles représentent un foncier de 644,12 ha. Elles constituent les principales sources potentielles de coulées boueuses et de transferts rapides de polluants vers le cours d’eau.</li>
+                    <li><strong style="color:#e67e22;">Vulnérabilité modérée :</strong> Le croisement a identifié 166 parcelles supplémentaires exposées à des pentes modérées (moyenne de 6,8 %).</li>
+                    <li><strong style="color:#f39c12;">Veille :</strong> 229 parcelles (701,74 ha) situées sur des secteurs à faible pente (moyenne à 3,1 %) nécessitant une surveillance des pratiques agronomiques.</li>
+                    <li><strong style="color:#27ae60;">Zone non vulnérable :</strong> À l’inverse, 165 parcelles situées sur des axes de flux bénéficient déjà d’une prairie permanente. Couvrant 412,17 ha, ces surfaces jouent un rôle tampon fondamental.</li>
+                </ul>
+                <p><em>Sur la carte : les parcelles spécifiquement ciblées par la couche HEM_TON_SOL sont mises en évidence en orange, tandis que les autres parcelles agricoles apparaissent en vert clair.</em></p>
+
+                <h3 style="margin-top:20px; color:#2c3e50;">Bâti Impacté par le Ruissellement</h3>
+                <p>La couche croise les infrastructures et le bâti avec les axes de ruissellement modélisés. Elle permet de mettre en lumière la vulnérabilité directe des habitations face aux événements de ruissellement intenses hors lit principal.</p>
             </div>
         </div>
 
@@ -386,10 +397,7 @@
         const highlightClass = (q) => q === currentActiveQ ? 'val-focus' : '';
         const largeur = props.Largeur_moy || props.largeur_moy || props.LARGEUR_MOY || "N/A";
         
-        // Affichage de la largeur avec 2 décimales
         const largeurText = (largeur !== "N/A") ? parseFloat(largeur).toFixed(2) + ' m' : 'N/A';
-
-        // Petite fonction sécurisée pour formater correctement les Q et Ps à 2 décimales
         const safeVal = (val) => val ? parseFloat(val).toFixed(2) : '?';
 
         this._div.innerHTML = `<h4>Secteur : ${props.Typologie || 'N/A'}</h4>
@@ -462,9 +470,27 @@
         onEachFeature: (f, l) => l.bindPopup(`<b>Axe de Ruissellement</b><br>Modélisation de l'écoulement hors lit (pente).`)
     });
 
+    // DISTINCTION DE STYLE SELON LE CHAMP Agri_Nom
     const layerParcellesAgr = L.geoJSON(null, {
-        style: { color: "#e67e22", weight: 1, fillColor: "#f39c12", fillOpacity: 0.4 },
-        onEachFeature: (f, l) => l.bindPopup(`<b>Parcelle Agricole Impactée</b><br>Zone de culture sensible au ruissellement.`)
+        style: (f) => {
+            if (f.properties.Agri_Nom) {
+                // Style spécifique pour HEM_TON_SOL (en évidence, orange vif)
+                return { color: "#d35400", weight: 2, fillColor: "#f39c12", fillOpacity: 0.5 };
+            } else {
+                // Style par défaut pour les autres parcelles (vert discret)
+                return { color: "#27ae60", weight: 1, fillColor: "#2ecc71", fillOpacity: 0.2 };
+            }
+        },
+        onEachFeature: (f, l) => {
+            if (f.properties.Agri_Nom) {
+                l.bindPopup(`<b>Parcelle ciblée (HEM_TON_SOL)</b><br>
+                             <i>Nom :</i> ${f.properties.Agri_Nom}<br>
+                             <span style="color:#d35400; font-size:11px;">Zone de vulnérabilité au ruissellement / érosion</span>`);
+            } else {
+                l.bindPopup(`<b>Parcelle Agricole</b><br>
+                             <span style="color:#555; font-size:11px;">Parcelle non ciblée par l'analyse HEM_TON_SOL</span>`);
+            }
+        }
     });
 
     const layerBatiImpacte = L.geoJSON(null, {
@@ -506,7 +532,6 @@
             layerStation.addTo(map);
             layerOuvrages.addTo(map);
             
-            // Suppression des couches EBF
             for (let l in ebfLayers) { map.removeLayer(ebfLayers[l]); }
             
         } else {
@@ -520,7 +545,6 @@
             info.remove();
             legend.remove();
             
-            // Nettoyage des couches Diagnostic
             for (let q in layersQ) { map.removeLayer(layersQ[q]); }
             map.removeLayer(layerStation);
             map.removeLayer(layerOuvrages);
@@ -791,11 +815,10 @@
             ebfLayers.hydro.addData(d); 
         }).catch(e => console.log(e));
         
-        // Chargement des nouvelles couches de Diagnostic (silencieux si elles n'existent pas encore)
-        fetch('USRA_HEM.geojson').then(r => r.json()).then(d => layerPrhymo.addData(d)).catch(e => console.log("Info: USRA_HEM manquant", e));
-        fetch('Axe_ruissellement_hors_lit_pente.geojson').then(r => r.json()).then(d => layerRuissellement.addData(d)).catch(e => console.log("Info: Axes ruissellement manquant", e));
-        fetch('HEM_TON_SOL.geojson').then(r => r.json()).then(d => layerParcellesAgr.addData(d)).catch(e => console.log("Info: HEM_TON_SOL manquant", e));
-        fetch('Zone_Bati.geojson').then(r => r.json()).then(d => layerBatiImpacte.addData(d)).catch(e => console.log("Info: Zone_bati manquant", e));
+        fetch('USRA_HEM.geojson').then(r => r.json()).then(d => layerPrhymo.addData(d)).catch(e => console.log(e));
+        fetch('Axe_ruissellement_hors_lit_pente.geojson').then(r => r.json()).then(d => layerRuissellement.addData(d)).catch(e => console.log(e));
+        fetch('HEM_TON_SOL.geojson').then(r => r.json()).then(d => layerParcellesAgr.addData(d)).catch(e => console.log(e));
+        fetch('Zone_Bati.geojson').then(r => r.json()).then(d => layerBatiImpacte.addData(d)).catch(e => console.log(e));
 
         fetch('communes.geojson')
             .then(r => r.json())
