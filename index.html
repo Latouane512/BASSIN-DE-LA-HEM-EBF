@@ -795,7 +795,7 @@
         fetch('USRA_HEM.geojson').then(r => r.json()).then(d => layerPrhymo.addData(d)).catch(e => console.log("Info: USRA_HEM manquant", e));
         fetch('Axe_ruissellement_hors_lit_pente.geojson').then(r => r.json()).then(d => layerRuissellement.addData(d)).catch(e => console.log("Info: Axes ruissellement manquant", e));
         fetch('HEM_TON_SOL.geojson').then(r => r.json()).then(d => layerParcellesAgr.addData(d)).catch(e => console.log("Info: HEM_TON_SOL manquant", e));
-        fetch('Zone_bati.geojson').then(r => r.json()).then(d => layerBatiImpacte.addData(d)).catch(e => console.log("Info: Zone_bati manquant", e));
+        fetch('Zone_Bati.geojson').then(r => r.json()).then(d => layerBatiImpacte.addData(d)).catch(e => console.log("Info: Zone_bati manquant", e));
 
         fetch('communes.geojson')
             .then(r => r.json())
