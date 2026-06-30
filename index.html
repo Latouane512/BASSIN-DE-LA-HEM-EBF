@@ -46,6 +46,9 @@
             font-size: 13px;
             color: #333;
         }
+        .legend-section { margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .legend-item { display: flex; align-items: center; margin: 3px 0; font-size: 11px; }
+        .legend-color { width: 14px; height: 14px; margin-right: 8px; border: 1px solid #999; }
 
         .info { padding: 15px; font: 13px/16px Arial, Helvetica, sans-serif; background: rgba(255,255,255,0.98); min-width: 320px; }
         .info h4 { margin: 0 0 10px; color: #333; font-size: 15px; border-bottom: 2px solid var(--color-primary); padding-bottom: 5px; text-transform: uppercase; }
@@ -415,14 +418,35 @@
             </table>`;
     };
     
-    const legend = L.control({position: 'bottomleft'});
-    legend.onAdd = function() {
-        const div = L.DomUtil.create('div', 'legend');
-        div.innerHTML = `<h4>Énergie (Ps)</h4>
+ const legend = L.control({position: 'bottomleft'});
+legend.onAdd = function() { this._div = L.DomUtil.create('div', 'legend'); return this._div; };
+
+legend.update = function(type) {
+    if (type === 'diagnostic') {
+        this._div.innerHTML = `
+            <h4>Diagnostic</h4>
+            <div class="legend-section">
+                <b>PRHYMO (Score)</b>
+                <div class="legend-item"><div class="legend-color" style="background:#27ae60"></div>Faible (<25%)</div>
+                <div class="legend-item"><div class="legend-color" style="background:#e67e22"></div>Modéré (25-45%)</div>
+                <div class="legend-item"><div class="legend-color" style="background:#c0392b"></div>Fort (>45%)</div>
+            </div>
+            <div class="legend-section">
+                <b>Parcelles (Ruissellement)</b>
+                <div class="legend-item"><div class="legend-color" style="background:#f39c12"></div>Priorité absolue</div>
+                <div class="legend-item"><div class="legend-color" style="background:#2ecc71"></div>Prairie (Tampon)</div>
+            </div>
+            <div class="legend-section">
+                <b>Bâti</b>
+                <div class="legend-item"><div class="legend-color" style="background:#e74c3c"></div>Zone impactée</div>
+            </div>`;
+    } else {
+        this._div.innerHTML = `<h4>Énergie (Ps)</h4>
             <i style="background:var(--color-e1)"></i> E1<br><i style="background:var(--color-e2)"></i> E2<br>
             <i style="background:var(--color-e3)"></i> E3<br><i style="background:var(--color-e4)"></i> E4`;
-        return div;
-    };
+    }
+};
+legend.addTo(map);
 
     function createQLayer(qField) {
         return L.geoJSON(null, {
@@ -460,44 +484,31 @@
     });
 
     /* --- NOUVELLES COUCHES : DIAGNOSTIC & RUISSELLEMENT --- */
-    const layerPrhymo = L.geoJSON(null, {
-        style: { color: "#9b59b6", weight: 2, fillOpacity: 0.2, dashArray: "5, 5" },
-        onEachFeature: (f, l) => l.bindPopup(`<b>Analyse PRHYMO (USRA)</b><br>Zone de vulnérabilité anthropisée.`)
-    });
 
-    const layerRuissellement = L.geoJSON(null, {
+const layerPrhymo = L.geoJSON(null, {
+    style: (f) => {
+        const s = f.properties.Score || 0;
+        return { color: s > 45 ? '#c0392b' : (s > 25 ? '#e67e22' : '#27ae60'), weight: 2, fillOpacity: 0.5 };
+    }
+});
+
+// HEM_TON_SOL (Parcelles)
+const layerParcellesAgr = L.geoJSON(null, {
+    style: (f) => {
+        if (f.properties.Agri_Nom) {
+            return { color: "#d35400", weight: 2, fillColor: "#f39c12", fillOpacity: 0.6 };
+        }
+        return { color: "#27ae60", weight: 1, fillColor: "#2ecc71", fillOpacity: 0.3 };
+    }
+});
+  const layerRuissellement = L.geoJSON(null, {
         style: { color: "#3498db", weight: 2, dashArray: "3, 6", opacity: 0.9 },
         onEachFeature: (f, l) => l.bindPopup(`<b>Axe de Ruissellement</b><br>Modélisation de l'écoulement hors lit (pente).`)
     });
-
-    // DISTINCTION DE STYLE SELON LE CHAMP Agri_Nom
-    const layerParcellesAgr = L.geoJSON(null, {
-        style: (f) => {
-            if (f.properties.Agri_Nom) {
-                // Style spécifique pour HEM_TON_SOL (en évidence, orange vif)
-                return { color: "#d35400", weight: 2, fillColor: "#f39c12", fillOpacity: 0.5 };
-            } else {
-                // Style par défaut pour les autres parcelles (vert discret)
-                return { color: "#27ae60", weight: 1, fillColor: "#2ecc71", fillOpacity: 0.2 };
-            }
-        },
-        onEachFeature: (f, l) => {
-            if (f.properties.Agri_Nom) {
-                l.bindPopup(`<b>Parcelle ciblée (HEM_TON_SOL)</b><br>
-                             <i>Nom :</i> ${f.properties.Agri_Nom}<br>
-                             <span style="color:#d35400; font-size:11px;">Zone de vulnérabilité au ruissellement / érosion</span>`);
-            } else {
-                l.bindPopup(`<b>Parcelle Agricole</b><br>
-                             <span style="color:#555; font-size:11px;">Parcelle non ciblée par l'analyse HEM_TON_SOL</span>`);
-            }
-        }
-    });
-
-    const layerBatiImpacte = L.geoJSON(null, {
-        style: { color: "#c0392b", weight: 1, fillColor: "#e74c3c", fillOpacity: 0.7 },
-        onEachFeature: (f, l) => l.bindPopup(`<b>Bâti Impacté</b><br>Infrastructure vulnérable au ruissellement.`)
-    });
-    /* ----------------------------------------------------- */
+// Bati
+const layerBatiImpacte = L.geoJSON(null, {
+    style: { color: "#c0392b", weight: 1, fillColor: "#e74c3c", fillOpacity: 0.7 }
+});
 
     const diagLayerControl = L.control.layers({ 
         "Plan Clair (Voyager)": basemapLight, 
@@ -521,7 +532,7 @@
         if (view === 'diagnostic') {
             document.getElementById('diag-ui').style.display = 'block';
             document.getElementById('ebf-sidebar').style.display = 'none';
-            
+            legend.update('diagnostic');
             document.getElementById('modal-diagnostic').style.display = 'block';
             document.getElementById('modal-ebf').style.display = 'none';
 
@@ -540,7 +551,7 @@
             
             document.getElementById('modal-diagnostic').style.display = 'none';
             document.getElementById('modal-ebf').style.display = 'block';
-
+            legend.update('ebf');
             diagLayerControl.remove();
             info.remove();
             legend.remove();
