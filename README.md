@@ -22,7 +22,8 @@ L'application est structurée en deux vues distinctes, accessibles via un menu d
 
 ### 1️ Vue Diagnostic (Puissance Spécifique & Energie cinétique)
 * **Cartographie interactive** : Visualisation des tronçons homogènes selon la typologie de Malavoi. La sémiologie graphique a été spécifiquement optimisée pour distinguer clairement les dynamiques d'équilibre (E3 - Orange adouci) et d'érosion active (E4 - Rouge intense) lors de la superposition des crues.
-* **Sélecteur de crues** : Bascule dynamique entre les périodes de retour (Q2, Q5, Q10, Q20, Q50, Q100).
+*  **Indice de Dégradation PRHYMO**: Visualisation cartographique de l'état de dégradation physique des cours d'eau (Altération faible, modérée, forte), basée sur l'agrégation d'indicateurs hydromorphologiques locaux.
+* **Risque de Ruissellement** : Analyse croisée entre les axes de flux de surface (modélisés par pente) et l'occupation du sol (RPG et BD TOPO). Le diagnostic permet d'identifier les secteurs à "Priorité absolue" (Urgence) pour la mise en place de Solutions Fondées sur la Nature (SFN).
 * **Fonds de plan enrichis & UI** : Choix entre *CartoDB Voyager* (clair, contrasté et routier), *OSM Topo* (naturaliste/relief) et *Esri Satellite*. Intégration d'une échelle cartographique dynamique.
 
 ### 2️ Vue Modélisation EBF & Urbanisme (Aide à la décision)
