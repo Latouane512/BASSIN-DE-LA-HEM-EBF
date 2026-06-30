@@ -483,20 +483,21 @@
     };
 
     // Légende pour Action_SFN
-    const legendActionSfn = L.control({position: 'bottomleft'});
-    legendActionSfn.onAdd = function() {
-        const div = L.DomUtil.create('div', 'legend');
-        div.innerHTML = `<h4>Action SFN</h4>
-            <i style="background:#1abc9c"></i> Restauration<br>
-            <i style="background:#3498db"></i> Protection<br>
-            <i style="background:#2ecc71"></i> Végétation / Haie<br>
-            <i style="background:#9b59b6"></i> Bande enherbée<br>
-            <i style="background:#f1c40f"></i> Drainage<br>
-            <i style="background:#95a5a6"></i> Fossé<br>
-            <i style="background:#2c3e50"></i> Digue<br>
-            <i style="background:#bdc3c7"></i> Autre`;
-        return div;
-    };
+const legendActionSfn = L.control({position: 'bottomleft'});
+legendActionSfn.onAdd = function() {
+    const div = L.DomUtil.create('div', 'legend');
+    // On liste les actions pour générer la légende automatiquement
+    div.innerHTML = `<h4>Action SFN (Sol & Bâti)</h4>
+        <i style="background:#1abc9c"></i> Restauration<br>
+        <i style="background:#3498db"></i> Protection<br>
+        <i style="background:#2ecc71"></i> Végétation / Haie<br>
+        <i style="background:#9b59b6"></i> Bande enherbée<br>
+        <i style="background:#f1c40f"></i> Drainage<br>
+        <i style="background:#95a5a6"></i> Fossé<br>
+        <i style="background:#2c3e50"></i> Digue<br>
+        <i style="background:#bdc3c7"></i> Autre`;
+    return div;
+};
 
     function createQLayer(qField) {
         return L.geoJSON(null, {
