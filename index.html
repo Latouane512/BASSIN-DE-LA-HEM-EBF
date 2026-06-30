@@ -433,14 +433,6 @@ function getBatiStyle(feature) {
     return { color: "#f1c40f", fillColor: "#f1c40f", fillOpacity: 0.8 }; // Surveillance
 }
 
-        for (let key in sfnColors) {
-            if (action.includes(key)) {
-                return sfnColors[key];
-            }
-        }
-
-        return { color: "#7f8c8d", weight: 1, fillColor: "#bdc3c7", fillOpacity: 0.4 };
-    }
 
     function getActionSfnLabel(action) {
         if (!action) return "Non définie";
