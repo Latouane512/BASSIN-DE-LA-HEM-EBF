@@ -87,6 +87,49 @@
         .header-search input::placeholder { color: var(--color-text-light); }
         .search-icon { color: var(--color-text-muted); flex-shrink: 0; }
 
+        #search-dropdown {
+            position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+            background: #fff; border: 1px solid var(--color-border);
+            border-radius: 8px; box-shadow: var(--shadow-md);
+            list-style: none; max-height: 220px; overflow-y: auto;
+            z-index: 4000; display: none;
+        }
+        #search-dropdown.open { display: block; }
+        #search-dropdown li {
+            padding: 8px 14px; cursor: pointer; font-size: 13px;
+            color: var(--color-text); transition: background 0.1s;
+            display: flex; align-items: center; gap: 8px;
+        }
+        #search-dropdown li:hover { background: var(--color-primary-light); color: var(--color-primary); }
+        #search-dropdown li .sdrop-icon { color: var(--color-text-muted); flex-shrink: 0; }
+        #search-dropdown .sdrop-empty { color: var(--color-text-muted); font-style: italic; cursor: default; }
+        #search-dropdown .sdrop-empty:hover { background: none; color: var(--color-text-muted); }
+
+        /* Legend tab */
+        .legend-section { padding: 14px 14px 6px; }
+        .legend-section-title {
+            font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.6px; color: var(--color-text-muted);
+            margin-bottom: 8px; padding-bottom: 4px;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .legend-item {
+            display: flex; align-items: center; gap: 8px;
+            padding: 4px 0; font-size: 12px; color: var(--color-text);
+        }
+        .legend-swatch {
+            width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0;
+        }
+        .legend-line {
+            width: 22px; height: 4px; border-radius: 2px; flex-shrink: 0;
+        }
+        .legend-line-dashed {
+            width: 22px; height: 0; border-top: 3px dashed; flex-shrink: 0;
+        }
+        .legend-circle {
+            width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;
+        }
+
         .header-btn {
             display: flex; align-items: center; gap: 6px;
             padding: 7px 12px; border-radius: 7px; cursor: pointer;
@@ -560,9 +603,10 @@
 
     <div class="header-divider"></div>
 
-    <div class="header-search">
+    <div class="header-search" style="position:relative;">
         <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        <input type="text" placeholder="Rechercher un lieu, une commune, un cours d'eau...">
+        <input id="header-search-input" type="text" placeholder="Rechercher une commune..." autocomplete="off" oninput="filterCommuneSearch(this.value)" onfocus="filterCommuneSearch(this.value)" onblur="setTimeout(()=>hideSearchDropdown(),200)">
+        <ul id="search-dropdown"></ul>
     </div>
 
     <button class="header-btn">
@@ -848,6 +892,123 @@
                         <label for="check-hydro-diag">Réseau Hydrographique</label>
                         <div class="layer-info-btn">i</div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LÉGENDE TAB -->
+    <div class="sidebar-body" id="sideContent-legende" style="display:none;">
+
+        <!-- EBF legend (shown in EBF view) -->
+        <div id="legend-ebf">
+            <div class="legend-section">
+                <div class="legend-section-title">EBF Optimal (EFO)</div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#FFAA00;opacity:0.5;border:2px solid #FFAA00;"></div>
+                    EBF Optimal Définitif
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#FFAA00;opacity:0.4;"></div>
+                    Espace morphologique
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#3498db;opacity:0.5;"></div>
+                    Enveloppe hydraulique (MRVBF)
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#a6cee3;opacity:0.6;"></div>
+                    Enveloppe hydrogéologique
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#f1c40f;opacity:0.5;"></div>
+                    Enveloppe biogéochimique (25m)
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#27ae60;opacity:0.7;"></div>
+                    Enveloppe biologique (ZHE)
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#2ecc71;opacity:0.6;"></div>
+                    Zones à dominante humide
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#8e44ad;opacity:0.7;"></div>
+                    Lits perchés
+                </div>
+            </div>
+            <div class="legend-section">
+                <div class="legend-section-title">EBF Nécessaire (EFN)</div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:transparent;border:2px dashed #e67e22;"></div>
+                    EBF Nécessaire Définitif
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:transparent;border:2px solid #3498db;opacity:0.7;"></div>
+                    Enveloppe hydraulique (AZI)
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:transparent;border:2px solid #f1c40f;opacity:0.7;"></div>
+                    Enveloppe biogéochimique (5m)
+                </div>
+            </div>
+            <div class="legend-section">
+                <div class="legend-section-title">Zonage PLUi</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#a6da59;opacity:0.8;border:1px solid #888;"></div> A – Agricole</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:rgb(51,160,44);opacity:0.8;border:1px solid #888;"></div> N – Naturel</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:rgb(217,217,217);border:1px solid #888;"></div> U – Urbain</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:rgb(250,172,76);opacity:0.8;border:1px solid #888;"></div> AU – À urbaniser</div>
+            </div>
+            <div class="legend-section">
+                <div class="legend-section-title">Contexte géographique</div>
+                <div class="legend-item">
+                    <div class="legend-line" style="background:#3498db;"></div>
+                    Réseau hydrographique
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:transparent;border:2px dashed #444;"></div>
+                    Limites communales
+                </div>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background:#e74c3c;opacity:0.8;"></div>
+                    Bâti &amp; Infrastructures
+                </div>
+            </div>
+        </div>
+
+        <!-- Diagnostic legend (shown in diagnostic view) -->
+        <div id="legend-diagnostic" style="display:none;">
+            <div class="legend-section">
+                <div class="legend-section-title">Puissance spécifique (Ps)</div>
+                <div class="legend-item"><div class="legend-line" style="background:#3182bd;"></div> E1 – Dépôt dominant (&lt;10 W/m²)</div>
+                <div class="legend-item"><div class="legend-line" style="background:#31a354;"></div> E2 – Ajustements lents (10–30)</div>
+                <div class="legend-item"><div class="legend-line" style="background:#fd8d3c;"></div> E3 – Équilibre dynamique (30–100)</div>
+                <div class="legend-item"><div class="legend-line" style="background:#de2d26;"></div> E4 – Érosion active (&gt;100)</div>
+            </div>
+            <div class="legend-section">
+                <div class="legend-section-title">Dégradation PRHYMO</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#2ecc71;opacity:0.7;"></div> Altération faible (&lt;25%)</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#f39c12;opacity:0.7;"></div> Altération modérée (25–45%)</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#e74c3c;opacity:0.7;"></div> Altération forte (&gt;45%)</div>
+            </div>
+            <div class="legend-section">
+                <div class="legend-section-title">Parcelles agricoles &amp; bâti</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#27ae60;opacity:0.7;"></div> Préservation (Couvert herbeux)</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#c0392b;opacity:0.8;"></div> Urgence – Haie / Fascine</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#e67e22;opacity:0.8;"></div> Consolidation (MAEC)</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#f39c12;opacity:0.7;"></div> Surveillance agronomique</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#9b59b6;opacity:0.7;"></div> Bande enherbée existante</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#bdc3c7;"></div> Non impacté / Risque faible</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#e74c3c;opacity:0.9;"></div> Sécurité bâti – Urgence</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#f1c40f;opacity:0.9;"></div> Veille inondation bâti</div>
+            </div>
+            <div class="legend-section">
+                <div class="legend-section-title">Infrastructure</div>
+                <div class="legend-item"><div class="legend-circle" style="background:#0078A8;border:2px solid #fff;box-shadow:0 0 0 1px #0078A8;"></div> Stations hydrométriques</div>
+                <div class="legend-item"><div class="legend-circle" style="background:#222;border:1px solid #fff;box-shadow:0 0 0 1px #555;"></div> Ouvrages / Obstacles</div>
+                <div class="legend-item">
+                    <div class="legend-line-dashed" style="border-color:#3498db;"></div>
+                    Axes de ruissellement
                 </div>
             </div>
         </div>
@@ -1395,6 +1556,12 @@ function switchView(view) {
     document.getElementById('rp-ebf').style.display = view === 'ebf' ? 'flex' : 'none';
     document.getElementById('rp-diag').style.display = view === 'diagnostic' ? 'flex' : 'none';
 
+    // Sync legend panels
+    const legendEbf  = document.getElementById('legend-ebf');
+    const legendDiag = document.getElementById('legend-diagnostic');
+    if (legendEbf)  legendEbf.style.display  = view === 'ebf' ? 'block' : 'none';
+    if (legendDiag) legendDiag.style.display = view === 'diagnostic' ? 'block' : 'none';
+
     document.getElementById('modal-ebf').style.display = view === 'ebf' ? 'block' : 'none';
     document.getElementById('modal-diagnostic').style.display = view === 'diagnostic' ? 'block' : 'none';
 
@@ -1445,6 +1612,54 @@ function showSideTab(tab) {
     document.getElementById('sideTab-couches').classList.toggle('active', tab === 'couches');
     document.getElementById('sideTab-legende').classList.toggle('active', tab === 'legende');
     document.getElementById('sideContent-couches').style.display = tab === 'couches' ? '' : 'none';
+    document.getElementById('sideContent-legende').style.display = tab === 'legende' ? '' : 'none';
+}
+
+// ===== HEADER SEARCH AUTOCOMPLETE =====
+let allCommuneNames = [];
+
+function filterCommuneSearch(val) {
+    const dropdown = document.getElementById('search-dropdown');
+    const term = val.trim().toLowerCase();
+    if (!allCommuneNames.length) { dropdown.classList.remove('open'); return; }
+
+    const matches = term
+        ? allCommuneNames.filter(n => n.toLowerCase().includes(term)).slice(0, 10)
+        : allCommuneNames.slice(0, 10);
+
+    if (!matches.length) {
+        dropdown.innerHTML = '<li class="sdrop-empty">Aucune commune trouvée</li>';
+        dropdown.classList.add('open');
+        return;
+    }
+
+    dropdown.innerHTML = matches.map(n => `
+        <li onclick="selectCommune('${n.replace(/'/g, "\\'")}')">
+            <svg class="sdrop-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            ${n}
+        </li>`).join('');
+    dropdown.classList.add('open');
+}
+
+function hideSearchDropdown() {
+    document.getElementById('search-dropdown').classList.remove('open');
+}
+
+function selectCommune(name) {
+    document.getElementById('header-search-input').value = name;
+    hideSearchDropdown();
+    // Sync panel selector
+    const sel = document.getElementById('commune-selector');
+    for (let i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].value === name) { sel.selectedIndex = i; break; }
+    }
+    // Switch to EBF view if needed and open panel
+    if (currentView !== 'ebf') { switchView('ebf'); }
+    openRightPanel();
+    // Switch to Communes tab in panel
+    const communeTab = document.querySelector('#rp-ebf .rp-tab');
+    if (communeTab) showRpTab(communeTab, 'rpt-commune');
+    zoomToCommune(name);
 }
 
 // ===== LAYER GROUPS =====
@@ -1570,7 +1785,8 @@ fetch('hem_troncons_homogenes_finaux_1.geojson').then(r => r.json()).then(data =
             const n = f.properties.nom || f.properties.NOM || f.properties.NOM_COM || f.properties.Nom;
             if (n) noms.push(n);
         });
-        [...new Set(noms)].sort((a,b)=>a.localeCompare(b,'fr')).forEach(nom => {
+        allCommuneNames = [...new Set(noms)].sort((a,b)=>a.localeCompare(b,'fr'));
+        allCommuneNames.forEach(nom => {
             const o = document.createElement('option');
             o.value = nom; o.textContent = nom;
             sel.appendChild(o);
