@@ -1582,7 +1582,7 @@
 
 <!-- ========== BOTTOM BAR ========== -->
 <footer id="bottom-bar">
-    <span class="bottom-version">Vallée de la Hem – Outil de gestion intégrée du bassin versant &nbsp;|&nbsp;  Dernière mise à jour : 02/07/2026</span>
+    <span class="bottom-version">Vallée de la Hem – Outil de gestion intégrée du bassin versant &nbsp;|&nbsp; Version 2.4.1 – Dernière mise à jour : 24/05/2024</span>
     <div class="bottom-attribution">
         &copy; OpenStreetMap contributors &nbsp;|&nbsp; &copy; IGN BD Topo &nbsp;|&nbsp; &copy; Agence de l'eau Artois-Picardie
     </div>
@@ -1907,7 +1907,7 @@ function switchView(view) {
 
     // Map layer management
     if (view === 'diagnostic') {
-        info.addTo(map); legend.addTo(map); legendUsra.addTo(map); legendActionSfn.addTo(map);
+        info.addTo(map);
         layersQ['Q100'].addTo(map); layerStation.addTo(map); layerOuvrages.addTo(map);
         for (let l in ebfLayers) map.removeLayer(ebfLayers[l]);
         for (let l in presLayers) map.removeLayer(presLayers[l]);
@@ -1916,7 +1916,7 @@ function switchView(view) {
         document.getElementById('check-hydro-diag').checked = true;
         layerHydroDiag.addTo(map);
     } else if (view === 'presentation') {
-        info.remove(); legend.remove(); legendUsra.remove(); legendActionSfn.remove();
+        info.remove();
         for (let q in layersQ) map.removeLayer(layersQ[q]);
         map.removeLayer(layerStation); map.removeLayer(layerOuvrages);
         map.removeLayer(layerHydroDiag); map.removeLayer(layerPrhymo);
@@ -1926,7 +1926,7 @@ function switchView(view) {
         activatePresLayers();
     } else {
         // EBF view
-        info.remove(); legend.remove(); legendUsra.remove(); legendActionSfn.remove();
+        info.remove();
         for (let q in layersQ) map.removeLayer(layersQ[q]);
         map.removeLayer(layerStation); map.removeLayer(layerOuvrages);
         map.removeLayer(layerHydroDiag); map.removeLayer(layerPrhymo);
@@ -1935,6 +1935,7 @@ function switchView(view) {
         if (document.getElementById('check-hydro').checked) ebfLayers.hydro.addTo(map);
         if (document.getElementById('check-communes').checked) ebfLayers.communes.addTo(map);
     }
+    
     setTimeout(() => map.invalidateSize(), 300);
 }
 
@@ -2121,7 +2122,7 @@ const presLayerDefs = [
       style: { color: '#3b82f6', weight: 1, fillColor: '#3b82f6', fillOpacity: 0.35 },
       popup: f => `<b>PPRI</b>` },
     { id: 'pres-azi',
-      file: 'Crues_AZI.geojson',
+      file: 'CRUES_AZI.geojson',
       style: { color: '#93c5fd', weight: 1, fillColor: '#93c5fd', fillOpacity: 0.35 },
       popup: f => `<b>Atlas zones inondables</b><br><b>Année :</b> ${f.properties.ANNEE||'?'}<br><b>Nature :</b> ${f.properties.NATURE||'?'}` },
     { id: 'pres-reperes-crues',
