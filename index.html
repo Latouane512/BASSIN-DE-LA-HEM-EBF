@@ -1582,15 +1582,13 @@
 
 <!-- ========== BOTTOM BAR ========== -->
 <footer id="bottom-bar">
-    <span class="bottom-version">Vallée de la Hem – Outil de gestion intégrée du bassin versant &nbsp;|&nbsp; Version 2.4.1 – Dernière mise à jour : 24/05/2024</span>
+    <span class="bottom-version">Vallée de la Hem – Outil de gestion intégrée du bassin versant &nbsp;|&nbsp;  Dernière mise à jour : 02/07/2026</span>
     <div class="bottom-attribution">
         &copy; OpenStreetMap contributors &nbsp;|&nbsp; &copy; IGN BD Topo &nbsp;|&nbsp; &copy; Agence de l'eau Artois-Picardie
     </div>
     <div class="bottom-user">
         <div class="user-avatar">CM</div>
         <div class="user-info">
-            <b>Claire Martin</b>
-            <span>Agence de l'eau Artois-Picardie</span>
         </div>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
@@ -1672,39 +1670,6 @@ info.update = function(props) {
             <tr class="${h(q)}"><td>${q}</td><td>${v(props['Q_'+q+'_m3s'])}</td><td>${v(props['Ps_'+q])}</td>
             <td><b style="color:${getClassColor(props['Cl_'+q])}">${props['Cl_'+q]||'?'}</b></td></tr>`).join('')}
         </table>`;
-};
-
-// ===== LEGENDS =====
-const legend = L.control({ position: 'bottomleft' });
-legend.onAdd = function() {
-    const d = L.DomUtil.create('div', 'legend');
-    d.innerHTML = `<h4>Énergie (Ps)</h4>
-        <i style="background:#3182bd"></i> E1 &lt;10 W/m²<br>
-        <i style="background:#31a354"></i> E2 10–30<br>
-        <i style="background:#fd8d3c"></i> E3 30–100<br>
-        <i style="background:#de2d26"></i> E4 &gt;100`;
-    return d;
-};
-const legendUsra = L.control({ position: 'bottomleft' });
-legendUsra.onAdd = function() {
-    const d = L.DomUtil.create('div', 'legend');
-    d.innerHTML = `<h4>PRHYMO – Dégradation</h4>
-        <i style="background:#2ecc71"></i> Faible (&lt;25%)<br>
-        <i style="background:#f39c12"></i> Modérée (25–45%)<br>
-        <i style="background:#e74c3c"></i> Forte (&gt;45%)`;
-    return d;
-};
-const legendActionSfn = L.control({ position: 'bottomleft' });
-legendActionSfn.onAdd = function() {
-    const d = L.DomUtil.create('div', 'legend');
-    d.innerHTML = `<h4>Parcelles & Bâti</h4>
-        <i style="background:#27ae60"></i> Préservation<br>
-        <i style="background:#c0392b"></i> Urgence / Sécurité<br>
-        <i style="background:#e67e22"></i> Consolidation<br>
-        <i style="background:#f39c12"></i> Surveillance<br>
-        <i style="background:#9b59b6"></i> Bande enherbée<br>
-        <i style="background:#bdc3c7"></i> Non impacté`;
-    return d;
 };
 
 // ===== Q LAYERS =====
