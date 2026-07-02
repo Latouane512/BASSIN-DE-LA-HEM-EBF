@@ -907,7 +907,7 @@
                         <path d="M3 12h1m16 0h1M5.6 5.6l.7.7m12.1-.7-.7.7M12 3v1m0 16v1M8 16c0 2.2 1.8 4 4 4s4-1.8 4-4c0-3-4-7-4-7s-4 4-4 7z"/>
                     </svg>
                     <span class="group-title">Inondation</span>
-                    <span class="group-count">3</span>
+                    <span class="group-count">4</span>
                     <span class="group-chevron">&#9654;</span>
                 </div>
                 <div class="layer-group-body">
@@ -929,6 +929,12 @@
                         <label for="pres-reperes-crues">Repères de crues</label>
                         <div class="layer-info-btn">i</div>
                     </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="background:#bfdbfe;border:1px solid #3b82f6;"></div>
+                        <input type="checkbox" id="pres-bassins">
+                        <label for="pres-bassins">Bassins versants</label>
+                        <div class="layer-info-btn">i</div>
+                    </div>
                 </div>
             </div>
 
@@ -940,7 +946,7 @@
                         <path d="M8 14c0 2.2 1.8 4 4 4" stroke-dasharray="2 1"/>
                     </svg>
                     <span class="group-title">Ruissellement</span>
-                    <span class="group-count">4</span>
+                    <span class="group-count">1</span>
                     <span class="group-chevron">&#9654;</span>
                 </div>
                 <div class="layer-group-body">
@@ -948,24 +954,6 @@
                         <div class="layer-swatch" style="background:#06b6d4;height:3px;border-radius:0;margin-top:5px;"></div>
                         <input type="checkbox" id="pres-axes-ruiss" checked>
                         <label for="pres-axes-ruiss">Axes de ruissellement</label>
-                        <div class="layer-info-btn">i</div>
-                    </div>
-                    <div class="layer-item">
-                        <div class="layer-swatch" style="background:#0891b2;opacity:0.6;"></div>
-                        <input type="checkbox" id="pres-zones-acc" checked>
-                        <label for="pres-zones-acc">Zones d'accumulation</label>
-                        <div class="layer-info-btn">i</div>
-                    </div>
-                    <div class="layer-item">
-                        <div class="layer-swatch" style="background:#22d3ee;height:3px;border-radius:0;margin-top:5px;"></div>
-                        <input type="checkbox" id="pres-sens-ecoul" checked>
-                        <label for="pres-sens-ecoul">Sens d'écoulement</label>
-                        <div class="layer-info-btn">i</div>
-                    </div>
-                    <div class="layer-item">
-                        <div class="layer-swatch" style="background:#a5f3fc;border:1px solid #0891b2;"></div>
-                        <input type="checkbox" id="pres-bassins">
-                        <label for="pres-bassins">Bassins versants</label>
                         <div class="layer-info-btn">i</div>
                     </div>
                 </div>
@@ -980,7 +968,7 @@
                         <line x1="12" y1="12" x2="12" y2="22"/>
                     </svg>
                     <span class="group-title">Biodiversité</span>
-                    <span class="group-count">6</span>
+                    <span class="group-count">10</span>
                     <span class="group-chevron">&#9654;</span>
                 </div>
                 <div class="layer-group-body">
@@ -993,7 +981,7 @@
                     <div class="layer-item">
                         <div class="layer-swatch" style="background:#16a34a;opacity:0.7;"></div>
                         <input type="checkbox" id="pres-natura2000" checked>
-                        <label for="pres-natura2000">Natura 2000</label>
+                        <label for="pres-natura2000">ZCS – Natura 2000</label>
                         <div class="layer-info-btn">i</div>
                     </div>
                     <div class="layer-item">
@@ -1015,49 +1003,33 @@
                         <div class="layer-info-btn">i</div>
                     </div>
                     <div class="layer-item">
-                        <div class="layer-swatch" style="background:#84cc16;height:3px;border-radius:0;margin-top:5px;border-top:2px dashed #84cc16;background:transparent;"></div>
-                        <input type="checkbox" id="pres-corridors">
-                        <label for="pres-corridors">Corridors écologiques</label>
-                        <div class="layer-info-btn">i</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Hydraulique douce -->
-            <div class="layer-group open">
-                <div class="layer-group-header" onclick="toggleGroup(this)">
-                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2">
-                        <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5s2.5 2 5 2 2.5-2 5-2 1.9.5 2.5 1"/>
-                        <path d="M2 12c.6.5 1.2 1 2.5 1C7 13 7 11 9.5 11s2.5 2 5 2 2.5-2 5-2 1.9.5 2.5 1"/>
-                        <path d="M2 18c.6.5 1.2 1 2.5 1C7 19 7 17 9.5 17s2.5 2 5 2 2.5-2 5-2 1.9.5 2.5 1"/>
-                    </svg>
-                    <span class="group-title">Hydraulique douce</span>
-                    <span class="group-count">4</span>
-                    <span class="group-chevron">&#9654;</span>
-                </div>
-                <div class="layer-group-body">
-                    <div class="layer-item">
-                        <div class="layer-swatch" style="background:#FFAA00;opacity:0.6;border:2px solid #FFAA00;"></div>
-                        <input type="checkbox" id="pres-bon-fonc" checked>
-                        <label for="pres-bon-fonc">Zones de bon fonctionnement</label>
+                        <div class="layer-swatch" style="background:#fbbf24;opacity:0.7;border:1px solid #d97706;"></div>
+                        <input type="checkbox" id="pres-sites-classes">
+                        <label for="pres-sites-classes">Sites classés</label>
                         <div class="layer-info-btn">i</div>
                     </div>
                     <div class="layer-item">
-                        <div class="layer-swatch" style="background:#e67e22;opacity:0.5;border:2px dashed #e67e22;background:transparent;"></div>
-                        <input type="checkbox" id="pres-espaces-mob" checked>
-                        <label for="pres-espaces-mob">Espaces de mobilité</label>
+                        <div class="layer-swatch" style="background:#a78bfa;opacity:0.6;"></div>
+                        <input type="checkbox" id="pres-reserve-bio">
+                        <label for="pres-reserve-bio">Réserve de biosphère</label>
                         <div class="layer-info-btn">i</div>
                     </div>
                     <div class="layer-item">
-                        <div class="layer-swatch" style="background:#3498db;opacity:0.6;"></div>
-                        <input type="checkbox" id="pres-restauration">
-                        <label for="pres-restauration">Restauration hydromorphologique</label>
+                        <div class="layer-swatch" style="background:#84cc16;opacity:0.6;"></div>
+                        <input type="checkbox" id="pres-trame-vert">
+                        <label for="pres-trame-vert">Trame verte</label>
                         <div class="layer-info-btn">i</div>
                     </div>
                     <div class="layer-item">
-                        <div class="layer-swatch" style="background:#222;border-radius:50%;"></div>
-                        <input type="checkbox" id="pres-franchiss">
-                        <label for="pres-franchiss">Franchissabilité ouvrages</label>
+                        <div class="layer-swatch" style="background:#0ea5e9;opacity:0.5;border:1px dashed #0284c7;"></div>
+                        <input type="checkbox" id="pres-trame-bleu">
+                        <label for="pres-trame-bleu">Trame bleue</label>
+                        <div class="layer-info-btn">i</div>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="background:#6ee7b7;border-radius:50%;border:1px solid #059669;"></div>
+                        <input type="checkbox" id="pres-mares">
+                        <label for="pres-mares">Mares</label>
                         <div class="layer-info-btn">i</div>
                     </div>
                 </div>
@@ -1118,6 +1090,46 @@
                         <div class="layer-swatch" style="background:#d97706;opacity:0.5;"></div>
                         <input type="checkbox" id="pres-amenagements">
                         <label for="pres-amenagements">Aménagements anciens</label>
+                        <div class="layer-info-btn">i</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Travaux hydraulique douce -->
+            <div class="layer-group">
+                <div class="layer-group-header" onclick="toggleGroup(this)">
+                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2">
+                        <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5s2.5 2 5 2 2.5-2 5-2 1.9.5 2.5 1"/>
+                        <path d="M2 12c.6.5 1.2 1 2.5 1C7 13 7 11 9.5 11s2.5 2 5 2 2.5-2 5-2 1.9.5 2.5 1"/>
+                        <path d="M2 18c.6.5 1.2 1 2.5 1C7 19 7 17 9.5 17s2.5 2 5 2 2.5-2 5-2 1.9.5 2.5 1"/>
+                    </svg>
+                    <span class="group-title">Travaux hydraulique douce</span>
+                    <span class="group-count">4</span>
+                    <span class="group-chevron">&#9654;</span>
+                </div>
+                <div class="layer-group-body">
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="background:#FFAA00;opacity:0.5;border:2px solid #FFAA00;"></div>
+                        <input type="checkbox" id="pres-bon-fonc">
+                        <label for="pres-bon-fonc">Zones de bon fonctionnement</label>
+                        <div class="layer-info-btn">i</div>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="background:transparent;border:2px dashed #e67e22;"></div>
+                        <input type="checkbox" id="pres-espaces-mob">
+                        <label for="pres-espaces-mob">Espaces de mobilité</label>
+                        <div class="layer-info-btn">i</div>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="background:#3498db;opacity:0.6;"></div>
+                        <input type="checkbox" id="pres-restauration">
+                        <label for="pres-restauration">Restauration hydromorphologique</label>
+                        <div class="layer-info-btn">i</div>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="background:#222;border-radius:50%;border:1px solid #999;"></div>
+                        <input type="checkbox" id="pres-franchiss">
+                        <label for="pres-franchiss">Franchissabilité ouvrages</label>
                         <div class="layer-info-btn">i</div>
                     </div>
                 </div>
@@ -1250,29 +1262,24 @@
                 <div class="legend-item"><div class="legend-swatch" style="background:#3b82f6;opacity:0.7;"></div> Zones inondables (PPRI)</div>
                 <div class="legend-item"><div class="legend-swatch" style="background:#93c5fd;opacity:0.7;"></div> Atlas des zones inondables</div>
                 <div class="legend-item"><div class="legend-circle" style="background:#1d4ed8;border:2px solid #fff;box-shadow:0 0 0 1px #1d4ed8;"></div> Repères de crues</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#bfdbfe;border:1px solid #3b82f6;"></div> Bassins versants</div>
             </div>
             <div class="legend-section">
                 <div class="legend-section-title">Ruissellement</div>
                 <div class="legend-item"><div class="legend-line" style="background:#06b6d4;"></div> Axes de ruissellement</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#0891b2;opacity:0.6;"></div> Zones d'accumulation</div>
-                <div class="legend-item"><div class="legend-line-dashed" style="border-color:#22d3ee;"></div> Sens d'écoulement</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#a5f3fc;border:1px solid #0891b2;"></div> Bassins versants</div>
             </div>
             <div class="legend-section">
                 <div class="legend-section-title">Biodiversité</div>
                 <div class="legend-item"><div class="legend-swatch" style="background:#4ade80;opacity:0.7;"></div> Zones humides</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#16a34a;opacity:0.7;"></div> Natura 2000</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#16a34a;opacity:0.7;"></div> ZCS – Natura 2000</div>
                 <div class="legend-item"><div class="legend-swatch" style="background:#a3e635;opacity:0.8;"></div> ZNIEFF type 1</div>
                 <div class="legend-item"><div class="legend-swatch" style="background:#86efac;opacity:0.8;"></div> ZNIEFF type 2</div>
                 <div class="legend-item"><div class="legend-swatch" style="background:#f97316;opacity:0.6;"></div> Réservoirs de biodiversité</div>
-                <div class="legend-item"><div class="legend-line-dashed" style="border-color:#84cc16;"></div> Corridors écologiques</div>
-            </div>
-            <div class="legend-section">
-                <div class="legend-section-title">Hydraulique douce</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#FFAA00;opacity:0.5;border:2px solid #FFAA00;"></div> Zones de bon fonctionnement</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:transparent;border:2px dashed #e67e22;"></div> Espaces de mobilité</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#3498db;opacity:0.6;"></div> Restauration hydromorphologique</div>
-                <div class="legend-item"><div class="legend-circle" style="background:#222;border:1px solid #fff;box-shadow:0 0 0 1px #555;"></div> Franchissabilité ouvrages</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#fbbf24;opacity:0.7;border:1px solid #d97706;"></div> Sites classés</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#a78bfa;opacity:0.6;"></div> Réserve de biosphère</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#84cc16;opacity:0.6;"></div> Trame verte</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#0ea5e9;opacity:0.5;border:1px dashed #0284c7;"></div> Trame bleue</div>
+                <div class="legend-item"><div class="legend-circle" style="background:#6ee7b7;border:1.5px solid #059669;"></div> Mares</div>
             </div>
             <div class="legend-section">
                 <div class="legend-section-title">Suivi piscicole</div>
@@ -1284,6 +1291,13 @@
                 <div class="legend-section-title">Travaux historiques</div>
                 <div class="legend-item"><div class="legend-circle" style="background:#f59e0b;opacity:0.9;"></div> Travaux réalisés</div>
                 <div class="legend-item"><div class="legend-swatch" style="background:#d97706;opacity:0.5;"></div> Aménagements anciens</div>
+            </div>
+            <div class="legend-section">
+                <div class="legend-section-title">Travaux hydraulique douce</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#FFAA00;opacity:0.5;border:2px solid #FFAA00;"></div> Zones de bon fonctionnement</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:transparent;border:2px dashed #e67e22;"></div> Espaces de mobilité</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#3498db;opacity:0.6;"></div> Restauration hydromorphologique</div>
+                <div class="legend-item"><div class="legend-circle" style="background:#555;border:1px solid #fff;box-shadow:0 0 0 1px #555;"></div> Franchissabilité ouvrages</div>
             </div>
         </div>
     </div>
@@ -1463,7 +1477,7 @@
                 <img src="public/images/presentation_de_la_vallee/image.png" alt="Présentation de la vallée" style="width:100%;border-radius:8px;margin-bottom:14px;object-fit:cover;max-height:160px;">
                 <p class="rp-section-title">Le bassin versant de la Hem</p>
                 <p class="rp-description">
-                    La Hem est un cours d'eau côtier du Pas-de-Calais d'environ <b>100 km</b>, prenant sa source près d'Ardres et se jetant dans la baie de l'Aa à Gravelines. Son bassin versant couvre environ <b>150 km²</b>, intégralement en zone de plaine agricole.
+                    La Hem est un cours d'eau côtier du Pas-de-Calais d'environ <b>45 km</b>, prenant sa source près d'Ardres et se jetant dans la baie de l'Aa à Gravelines. Son bassin versant couvre environ <b>480 km²</b>, intégralement en zone de plaine agricole.
                 </p>
                 <p class="rp-section-title" style="margin-top:14px;">Enjeux du territoire</p>
                 <div style="font-size:12px;line-height:1.8;color:var(--color-text-muted);">
@@ -1489,11 +1503,11 @@
                 <p class="rp-section-title">Données du bassin</p>
                 <div style="font-size:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
                     <div style="background:var(--color-bg);border-radius:8px;padding:10px;text-align:center;">
-                        <div style="font-size:20px;font-weight:700;color:var(--color-primary);">150</div>
+                        <div style="font-size:20px;font-weight:700;color:var(--color-primary);">480</div>
                         <div style="color:var(--color-text-muted);font-size:11px;">km² de bassin versant</div>
                     </div>
                     <div style="background:var(--color-bg);border-radius:8px;padding:10px;text-align:center;">
-                        <div style="font-size:20px;font-weight:700;color:#3b82f6;">100</div>
+                        <div style="font-size:20px;font-weight:700;color:#3b82f6;">45</div>
                         <div style="color:var(--color-text-muted);font-size:11px;">km de linéaire (Hem)</div>
                     </div>
                     <div style="background:var(--color-bg);border-radius:8px;padding:10px;text-align:center;">
@@ -1595,7 +1609,7 @@
     <div class="bottom-user">
         <div class="user-avatar">CM</div>
         <div class="user-info">
-            <b></b>
+            <b>Claire Martin</b>
             <span>Agence de l'eau Artois-Picardie</span>
         </div>
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
@@ -2156,42 +2170,130 @@ function updateChart(type, btnEl) {
 // ===== PRESENTATION LAYERS =====
 // Placeholder layers — bind to GeoJSON files when data is ready
 const presLayerDefs = [
-    { id: 'pres-ppri',          file: 'PPRI.geojson',              style: { color: '#3b82f6', weight: 1, fillColor: '#3b82f6', fillOpacity: 0.35 } },
-    { id: 'pres-azi',           file: 'AZI_pres.geojson',          style: { color: '#93c5fd', weight: 1, fillColor: '#93c5fd', fillOpacity: 0.35 } },
-    { id: 'pres-reperes-crues', file: 'Reperes_crues.geojson',     pointStyle: { radius: 6, fillColor: '#1d4ed8', color: '#fff', weight: 2, fillOpacity: 0.9 } },
-    { id: 'pres-axes-ruiss',    file: 'Axe_ruissellement_hors_lit_pente.geojson', lineStyle: { color: '#06b6d4', weight: 2, opacity: 0.85 } },
-    { id: 'pres-zones-acc',     file: 'Zones_accumulation.geojson',style: { color: '#0891b2', weight: 0, fillColor: '#0891b2', fillOpacity: 0.4 } },
-    { id: 'pres-sens-ecoul',    file: 'Sens_ecoulement.geojson',   lineStyle: { color: '#22d3ee', weight: 2, dashArray: '5,4', opacity: 0.85 } },
-    { id: 'pres-bassins',       file: 'Bassins_versants.geojson',  style: { color: '#0891b2', weight: 2, fillColor: '#a5f3fc', fillOpacity: 0.15 } },
-    { id: 'pres-zh',            file: 'ZH_Enjeux.geojson',         style: { color: '#16a34a', weight: 0, fillColor: '#4ade80', fillOpacity: 0.4 } },
-    { id: 'pres-natura2000',    file: 'Natura2000.geojson',        style: { color: '#16a34a', weight: 2, fillColor: '#16a34a', fillOpacity: 0.2 } },
-    { id: 'pres-znieff1',       file: 'ZNIEFF1.geojson',           style: { color: '#65a30d', weight: 1, fillColor: '#a3e635', fillOpacity: 0.3 } },
-    { id: 'pres-znieff2',       file: 'ZNIEFF2.geojson',           style: { color: '#4d7c0f', weight: 1, fillColor: '#86efac', fillOpacity: 0.25 } },
-    { id: 'pres-reservoirs',    file: 'Reservoirs_biodiversite.geojson', style: { color: '#f97316', weight: 0, fillColor: '#f97316', fillOpacity: 0.35 } },
-    { id: 'pres-corridors',     file: 'Corridors_ecologiques.geojson',   lineStyle: { color: '#84cc16', weight: 3, dashArray: '6,4', opacity: 0.8 } },
-    { id: 'pres-bon-fonc',      file: 'EFO_FINAL_WGS.geojson',    style: { color: '#FFAA00', weight: 2, fillColor: '#FFAA00', fillOpacity: 0.12 } },
-    { id: 'pres-espaces-mob',   file: 'EFN_FINAL_WGS.geojson',    style: { color: '#e67e22', weight: 2, fillColor: 'transparent', fillOpacity: 0, dashArray: '5,8' } },
-    { id: 'pres-restauration',  file: 'Restauration_hydro.geojson',style: { color: '#3498db', weight: 0, fillColor: '#3498db', fillOpacity: 0.4 } },
-    { id: 'pres-franchiss',     file: 'Franchissabilite.geojson',  pointStyle: { radius: 6, fillColor: '#555', color: '#fff', weight: 2, fillOpacity: 0.9 } },
-    { id: 'pres-stations-suivi',file: 'Station.geojson',           pointStyle: { radius: 7, fillColor: '#0891b2', color: '#fff', weight: 2, fillOpacity: 0.9 } },
-    { id: 'pres-peuplements',   file: 'Peuplements_piscicoles.geojson', style: { color: '#0891b2', weight: 0, fillColor: '#22d3ee', fillOpacity: 0.4 } },
-    { id: 'pres-obstacles',     file: 'Ouvrage_WGS.geojson',       pointStyle: { radius: 5, fillColor: '#222', color: '#fff', weight: 1, fillOpacity: 0.85 } },
-    { id: 'pres-travaux',       file: 'Travaux_realises.geojson',  pointStyle: { radius: 6, fillColor: '#f59e0b', color: '#fff', weight: 2, fillOpacity: 0.9 } },
-    { id: 'pres-amenagements',  file: 'Amenagements_anciens.geojson', style: { color: '#d97706', weight: 1, fillColor: '#d97706', fillOpacity: 0.25 } }
+    // --- Inondation ---
+    { id: 'pres-ppri',
+      file: 'PPRI_ancien.geojson',
+      style: { color: '#3b82f6', weight: 1, fillColor: '#3b82f6', fillOpacity: 0.35 },
+      popup: f => `<b>PPRI</b>` },
+    { id: 'pres-azi',
+      file: 'CRUES_AZI.geojson',
+      style: { color: '#93c5fd', weight: 1, fillColor: '#93c5fd', fillOpacity: 0.35 },
+      popup: f => `<b>Atlas zones inondables</b><br><b>Année :</b> ${f.properties.ANNEE||'?'}<br><b>Nature :</b> ${f.properties.NATURE||'?'}` },
+    { id: 'pres-reperes-crues',
+      file: 'lieux_inondes.geojson',
+      pointStyle: { radius: 7, fillColor: '#1d4ed8', color: '#fff', weight: 2, fillOpacity: 0.9 },
+      popup: f => `<b>Lieu inondé</b><br>${Object.entries(f.properties||{}).slice(0,3).map(([k,v])=>`<b>${k}:</b> ${v}`).join('<br>')}` },
+    { id: 'pres-bassins',
+      file: 'bassin_hem.geojson',
+      style: { color: '#3b82f6', weight: 2, fillColor: '#bfdbfe', fillOpacity: 0.15 },
+      popup: f => `<b>Bassin versant</b>` },
+
+    // --- Ruissellement ---
+    { id: 'pres-axes-ruiss',
+      file: 'Axe_ruissellement_hors_lit_pente.geojson',
+      lineStyle: { color: '#06b6d4', weight: 2, opacity: 0.85 },
+      popup: f => `<b>Axe de ruissellement</b>` },
+
+    // --- Biodiversité ---
+    { id: 'pres-zh',
+      file: 'ZH_Enjeux.geojson',
+      style: { color: '#16a34a', weight: 1, fillColor: '#4ade80', fillOpacity: 0.4 },
+      popup: f => `<b>Zone humide</b>` },
+    { id: 'pres-natura2000',
+      file: 'ZCS_HEM.geojson',
+      style: { color: '#16a34a', weight: 2, fillColor: '#16a34a', fillOpacity: 0.2 },
+      popup: f => `<b>ZCS – Natura 2000</b><br>${f.properties.sitename||''}` },
+    { id: 'pres-znieff1',
+      file: 'ZNIEFF1.geojson',
+      style: { color: '#65a30d', weight: 1, fillColor: '#a3e635', fillOpacity: 0.3 },
+      popup: f => `<b>ZNIEFF type 1</b><br>${f.properties.NOM||''}` },
+    { id: 'pres-znieff2',
+      file: 'ZNIEFF2.geojson',
+      style: { color: '#4d7c0f', weight: 1, fillColor: '#86efac', fillOpacity: 0.25 },
+      popup: f => `<b>ZNIEFF type 2</b><br>${f.properties.NOM||''}` },
+    { id: 'pres-reservoirs',
+      file: 'reservoir_biodiversite.geojson',
+      style: { color: '#f97316', weight: 1, fillColor: '#f97316', fillOpacity: 0.35 },
+      popup: f => `<b>Réservoir de biodiversité</b><br>${f.properties.MILMAJ_REG||''}` },
+    { id: 'pres-sites-classes',
+      file: 'site_classe_hem.geojson',
+      style: { color: '#d97706', weight: 2, fillColor: '#fbbf24', fillOpacity: 0.4 },
+      popup: f => `<b>Site classé</b><br>${f.properties.ref_site_5||''}` },
+    { id: 'pres-reserve-bio',
+      file: 'reserve_biosphere.geojson',
+      style: { color: '#7c3aed', weight: 2, fillColor: '#a78bfa', fillOpacity: 0.3 },
+      popup: f => `<b>Réserve de biosphère</b><br>${f.properties.NOM_SITE||''}` },
+    { id: 'pres-trame-vert',
+      file: 'trame_vert.geojson',
+      style: { color: '#65a30d', weight: 1, fillColor: '#84cc16', fillOpacity: 0.35 },
+      popup: f => `<b>Trame verte</b><br>${f.properties.MILMAJ_REG||''}` },
+    { id: 'pres-trame-bleu',
+      file: 'trame_bleu.geojson',
+      style: { color: '#0284c7', weight: 1, fillColor: '#0ea5e9', fillOpacity: 0.3 },
+      popup: f => `<b>Trame bleue</b>` },
+    { id: 'pres-mares',
+      file: 'mares.geojson',
+      pointStyle: { radius: 5, fillColor: '#6ee7b7', color: '#059669', weight: 1.5, fillOpacity: 0.9 },
+      popup: f => `<b>Mare</b><br>${Object.entries(f.properties||{}).slice(0,3).map(([k,v])=>`<b>${k}:</b> ${v}`).join('<br>')}` },
+
+    // --- Suivi piscicole ---
+    { id: 'pres-stations-suivi',
+      file: 'Station.geojson',
+      pointStyle: { radius: 7, fillColor: '#0891b2', color: '#fff', weight: 2, fillOpacity: 0.9 },
+      popup: f => `<b>Station de suivi</b><br>${f.properties.station||f.properties.nom||''}` },
+    { id: 'pres-peuplements',
+      file: 'Peuplements_piscicoles.geojson',
+      style: { color: '#0891b2', weight: 1, fillColor: '#22d3ee', fillOpacity: 0.4 },
+      popup: f => `<b>Peuplements piscicoles</b>` },
+    { id: 'pres-obstacles',
+      file: 'Ouvrage_WGS.geojson',
+      pointStyle: { radius: 5, fillColor: '#222', color: '#fff', weight: 1, fillOpacity: 0.85 },
+      popup: f => `<b>Obstacle à l'écoulement</b><br>${f.properties.NomPrincipalObstEcoul||''}` },
+
+    // --- Travaux historiques ---
+    { id: 'pres-travaux',
+      file: 'Travaux_realises.geojson',
+      pointStyle: { radius: 6, fillColor: '#f59e0b', color: '#fff', weight: 2, fillOpacity: 0.9 },
+      popup: f => `<b>Travaux réalisés</b>` },
+    { id: 'pres-amenagements',
+      file: 'Amenagements_anciens.geojson',
+      style: { color: '#d97706', weight: 1, fillColor: '#d97706', fillOpacity: 0.25 },
+      popup: f => `<b>Aménagement ancien</b>` },
+
+    // --- Travaux hydraulique douce ---
+    { id: 'pres-bon-fonc',
+      file: 'EFO_FINAL_WGS.geojson',
+      style: { color: '#FFAA00', weight: 2, fillColor: '#FFAA00', fillOpacity: 0.12 },
+      popup: f => `<b>Zone de bon fonctionnement (EFO)</b>` },
+    { id: 'pres-espaces-mob',
+      file: 'EFN_FINAL_WGS.geojson',
+      style: { color: '#e67e22', weight: 2, fillColor: 'transparent', fillOpacity: 0, dashArray: '5,8' },
+      popup: f => `<b>Espace de mobilité (EFN)</b>` },
+    { id: 'pres-restauration',
+      file: 'Restauration_hydro.geojson',
+      style: { color: '#3498db', weight: 1, fillColor: '#3498db', fillOpacity: 0.4 },
+      popup: f => `<b>Restauration hydromorphologique</b>` },
+    { id: 'pres-franchiss',
+      file: 'Franchissabilite.geojson',
+      pointStyle: { radius: 6, fillColor: '#555', color: '#fff', weight: 2, fillOpacity: 0.9 },
+      popup: f => `<b>Franchissabilité ouvrage</b>` }
 ];
 
 const presLayers = {};
 
 presLayerDefs.forEach(def => {
+    const onEach = (f, l) => {
+        if (def.popup) l.bindPopup(def.popup(f));
+    };
     if (def.pointStyle) {
         presLayers[def.id] = L.geoJSON(null, {
             pointToLayer: (f, latlng) => L.circleMarker(latlng, def.pointStyle),
-            onEachFeature: (f, l) => l.bindPopup(Object.entries(f.properties||{}).slice(0,4).map(([k,v])=>`<b>${k}:</b> ${v}`).join('<br>'))
+            onEachFeature: onEach
         });
     } else if (def.lineStyle) {
-        presLayers[def.id] = L.geoJSON(null, { style: def.lineStyle });
+        presLayers[def.id] = L.geoJSON(null, { style: def.lineStyle, onEachFeature: onEach });
     } else {
-        presLayers[def.id] = L.geoJSON(null, { style: def.style });
+        presLayers[def.id] = L.geoJSON(null, { style: def.style, onEachFeature: onEach });
     }
 
     const el = document.getElementById(def.id);
