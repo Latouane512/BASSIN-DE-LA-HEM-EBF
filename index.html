@@ -1076,7 +1076,7 @@
                         <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
                     </svg>
                     <span class="group-title">Travaux historiques</span>
-                    <span class="group-count">2</span>
+                    <span class="group-count">3</span>
                     <span class="group-chevron">&#9654;</span>
                 </div>
                 <div class="layer-group-body">
@@ -1092,44 +1092,10 @@
                         <label for="pres-amenagements">Aménagements anciens</label>
                         <div class="layer-info-btn">i</div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Travaux hydraulique douce -->
-            <div class="layer-group">
-                <div class="layer-group-header" onclick="toggleGroup(this)">
-                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2">
-                        <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5s2.5 2 5 2 2.5-2 5-2 1.9.5 2.5 1"/>
-                        <path d="M2 12c.6.5 1.2 1 2.5 1C7 13 7 11 9.5 11s2.5 2 5 2 2.5-2 5-2 1.9.5 2.5 1"/>
-                        <path d="M2 18c.6.5 1.2 1 2.5 1C7 19 7 17 9.5 17s2.5 2 5 2 2.5-2 5-2 1.9.5 2.5 1"/>
-                    </svg>
-                    <span class="group-title">Travaux hydraulique douce</span>
-                    <span class="group-count">4</span>
-                    <span class="group-chevron">&#9654;</span>
-                </div>
-                <div class="layer-group-body">
                     <div class="layer-item">
-                        <div class="layer-swatch" style="background:#FFAA00;opacity:0.5;border:2px solid #FFAA00;"></div>
-                        <input type="checkbox" id="pres-bon-fonc">
-                        <label for="pres-bon-fonc">Zones de bon fonctionnement</label>
-                        <div class="layer-info-btn">i</div>
-                    </div>
-                    <div class="layer-item">
-                        <div class="layer-swatch" style="background:transparent;border:2px dashed #e67e22;"></div>
-                        <input type="checkbox" id="pres-espaces-mob">
-                        <label for="pres-espaces-mob">Espaces de mobilité</label>
-                        <div class="layer-info-btn">i</div>
-                    </div>
-                    <div class="layer-item">
-                        <div class="layer-swatch" style="background:#3498db;opacity:0.6;"></div>
-                        <input type="checkbox" id="pres-restauration">
-                        <label for="pres-restauration">Restauration hydromorphologique</label>
-                        <div class="layer-info-btn">i</div>
-                    </div>
-                    <div class="layer-item">
-                        <div class="layer-swatch" style="background:#222;border-radius:50%;border:1px solid #999;"></div>
-                        <input type="checkbox" id="pres-franchiss">
-                        <label for="pres-franchiss">Franchissabilité ouvrages</label>
+                        <div class="layer-swatch" style="background:#0ea5e9;opacity:0.6;border:1px solid #0284c7;"></div>
+                        <input type="checkbox" id="pres-travaux-hydro">
+                        <label for="pres-travaux-hydro">Travaux hydraulique douce</label>
                         <div class="layer-info-btn">i</div>
                     </div>
                 </div>
@@ -1291,13 +1257,7 @@
                 <div class="legend-section-title">Travaux historiques</div>
                 <div class="legend-item"><div class="legend-circle" style="background:#f59e0b;opacity:0.9;"></div> Travaux réalisés</div>
                 <div class="legend-item"><div class="legend-swatch" style="background:#d97706;opacity:0.5;"></div> Aménagements anciens</div>
-            </div>
-            <div class="legend-section">
-                <div class="legend-section-title">Travaux hydraulique douce</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#FFAA00;opacity:0.5;border:2px solid #FFAA00;"></div> Zones de bon fonctionnement</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:transparent;border:2px dashed #e67e22;"></div> Espaces de mobilité</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#3498db;opacity:0.6;"></div> Restauration hydromorphologique</div>
-                <div class="legend-item"><div class="legend-circle" style="background:#555;border:1px solid #fff;box-shadow:0 0 0 1px #555;"></div> Franchissabilité ouvrages</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#0ea5e9;opacity:0.6;border:1px solid #0284c7;"></div> Travaux hydraulique douce</div>
             </div>
         </div>
     </div>
@@ -2216,7 +2176,7 @@ const presLayerDefs = [
       style: { color: '#f97316', weight: 1, fillColor: '#f97316', fillOpacity: 0.35 },
       popup: f => `<b>Réservoir de biodiversité</b><br>${f.properties.MILMAJ_REG||''}` },
     { id: 'pres-sites-classes',
-      file: 'site_classe_hem.geojson',
+      file: 'Sites_classe_hem.geojson',
       style: { color: '#d97706', weight: 2, fillColor: '#fbbf24', fillOpacity: 0.4 },
       popup: f => `<b>Site classé</b><br>${f.properties.ref_site_5||''}` },
     { id: 'pres-reserve-bio',
@@ -2260,23 +2220,11 @@ const presLayerDefs = [
       style: { color: '#d97706', weight: 1, fillColor: '#d97706', fillOpacity: 0.25 },
       popup: f => `<b>Aménagement ancien</b>` },
 
-    // --- Travaux hydraulique douce ---
-    { id: 'pres-bon-fonc',
-      file: 'EFO_FINAL_WGS.geojson',
-      style: { color: '#FFAA00', weight: 2, fillColor: '#FFAA00', fillOpacity: 0.12 },
-      popup: f => `<b>Zone de bon fonctionnement (EFO)</b>` },
-    { id: 'pres-espaces-mob',
-      file: 'EFN_FINAL_WGS.geojson',
-      style: { color: '#e67e22', weight: 2, fillColor: 'transparent', fillOpacity: 0, dashArray: '5,8' },
-      popup: f => `<b>Espace de mobilité (EFN)</b>` },
-    { id: 'pres-restauration',
-      file: 'Restauration_hydro.geojson',
-      style: { color: '#3498db', weight: 1, fillColor: '#3498db', fillOpacity: 0.4 },
-      popup: f => `<b>Restauration hydromorphologique</b>` },
-    { id: 'pres-franchiss',
-      file: 'Franchissabilite.geojson',
-      pointStyle: { radius: 6, fillColor: '#555', color: '#fff', weight: 2, fillOpacity: 0.9 },
-      popup: f => `<b>Franchissabilité ouvrage</b>` }
+    // --- Travaux hydraulique douce (couche unique) ---
+    { id: 'pres-travaux-hydro',
+      file: 'Travaux_hydraulique_douce.geojson',
+      style: { color: '#0284c7', weight: 1.5, fillColor: '#0ea5e9', fillOpacity: 0.35 },
+      popup: f => `<b>Travaux hydraulique douce</b><br>${Object.entries(f.properties||{}).slice(0,3).map(([k,v])=>`<b>${k}:</b> ${v}`).join('<br>')}` }
 ];
 
 const presLayers = {};
