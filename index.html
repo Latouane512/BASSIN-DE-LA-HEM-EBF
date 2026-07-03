@@ -819,11 +819,14 @@
             <!-- Urbanisme -->
             <div class="layer-group">
                 <div class="layer-group-header" onclick="toggleGroup(this)">
-                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#8e44ad" stroke-width="2"><rect x="3" y="10" width="18" height="11"/><path d="M3 10l9-7 9 7"/></svg>
-                    <span class="group-title">Enjeux & Urbanisme</span>
-                    <span class="group-count">4</span>
-                    <span class="group-chevron">&#9654;</span>
-                </div>
+    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#8e44ad" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+    </svg>
+    <span class="group-title">Enjeux & Urbanisme</span>
+    <span class="group-count">4</span>
+    <span class="group-chevron">&#9654;</span>
+</div>
                 <div class="layer-group-body">
                     <div class="layer-item">
                         <div class="layer-swatch" style="background:#e74c3c;"></div>
@@ -876,22 +879,29 @@
             <!-- Hydrologie -->
             <div class="layer-group open">
                 <div class="layer-group-header" onclick="toggleGroup(this)">
-                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#3182bd" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                    <span class="group-title">Hydrologie (Ps)</span>
-                    <span class="group-count">6</span>
-                    <span class="group-chevron">&#9654;</span>
-                </div>
+    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#3182bd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 6c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1"/>
+        <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1"/>
+        <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1"/>
+    </svg>
+    <span class="group-title">Hydrologie (Ps)</span>
+    <span class="group-count">6</span>
+    <span class="group-chevron">&#9654;</span>
+</div>
                 <div class="layer-group-body" id="q-layer-controls">
                     <!-- filled by JS -->
                 </div>
             </div>
 
-            <!-- Ruissellement -->
+           <!-- Altération du réseau -->
             <div class="layer-group open">
                 <div class="layer-group-header" onclick="toggleGroup(this)">
-                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#e67e22" stroke-width="2"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="5"/></svg>
-                    <span class="group-title">Diagnostic Ruissellement</span>
-                    <span class="group-count">4</span>
+                    <!-- Icône d'électrocardiogramme / altération -->
+                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                    <span class="group-title">Diagnostic altération du réseau</span>
+                    <span class="group-count">1</span>
                     <span class="group-chevron">&#9654;</span>
                 </div>
                 <div class="layer-group-body">
@@ -901,6 +911,23 @@
                         <label for="check-prhymo">Analyse PRHYMO (USRA_HEM)</label>
                         <div class="layer-info-btn">i</div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Ruissellement -->
+            <div class="layer-group open">
+               <div class="layer-group-header" onclick="toggleGroup(this)">
+                    <!-- Symbole Pente et flèche d'écoulement -->
+                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#e67e22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 6v14h16Z"/>
+                        <line x1="8" y1="5" x2="17" y2="13"/>
+                        <polyline points="12 13 17 13 17 8"/>
+                    </svg>
+                    <span class="group-title">Diagnostic Ruissellement</span>
+                    <span class="group-count">3</span>
+                    <span class="group-chevron">&#9654;</span>
+                </div>
+                <div class="layer-group-body">
                     <div class="layer-item">
                         <div class="layer-swatch" style="background:#3498db;border-radius:0;height:3px;margin-top:4px;"></div>
                         <input type="checkbox" id="check-ruissellement">
@@ -997,9 +1024,11 @@
             <!-- Ruissellement -->
             <div class="layer-group open">
                 <div class="layer-group-header" onclick="toggleGroup(this)">
-                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2">
-                        <path d="M12 2c0 0-6 5.5-6 10a6 6 0 0 0 12 0c0-4.5-6-10-6-10z"/>
-                        <path d="M8 14c0 2.2 1.8 4 4 4" stroke-dasharray="2 1"/>
+                    <!-- Symbole Pente et flèche d'écoulement -->
+                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 6v14h16Z"/>
+                        <line x1="8" y1="5" x2="17" y2="13"/>
+                        <polyline points="12 13 17 13 17 8"/>
                     </svg>
                     <span class="group-title">Ruissellement</span>
                     <span class="group-count">1</span>
@@ -2006,38 +2035,6 @@ info.update = function(props) {
         </table>`;
 };
 
-// ===== LEGENDS =====
-const legend = L.control({ position: 'bottomleft' });
-legend.onAdd = function() {
-    const d = L.DomUtil.create('div', 'legend');
-    d.innerHTML = `<h4>Énergie (Ps)</h4>
-        <i style="background:#3182bd"></i> E1 &lt;10 W/m²<br>
-        <i style="background:#31a354"></i> E2 10–30<br>
-        <i style="background:#fd8d3c"></i> E3 30–100<br>
-        <i style="background:#de2d26"></i> E4 &gt;100`;
-    return d;
-};
-const legendUsra = L.control({ position: 'bottomleft' });
-legendUsra.onAdd = function() {
-    const d = L.DomUtil.create('div', 'legend');
-    d.innerHTML = `<h4>PRHYMO – Dégradation</h4>
-        <i style="background:#2ecc71"></i> Faible (&lt;25%)<br>
-        <i style="background:#f39c12"></i> Modérée (25–45%)<br>
-        <i style="background:#e74c3c"></i> Forte (&gt;45%)`;
-    return d;
-};
-const legendActionSfn = L.control({ position: 'bottomleft' });
-legendActionSfn.onAdd = function() {
-    const d = L.DomUtil.create('div', 'legend');
-    d.innerHTML = `<h4>Parcelles & Bâti</h4>
-        <i style="background:#27ae60"></i> Préservation<br>
-        <i style="background:#c0392b"></i> Urgence / Sécurité<br>
-        <i style="background:#e67e22"></i> Consolidation<br>
-        <i style="background:#f39c12"></i> Surveillance<br>
-        <i style="background:#9b59b6"></i> Bande enherbée<br>
-        <i style="background:#bdc3c7"></i> Non impacté`;
-    return d;
-};
 
 // ===== Q LAYERS =====
 function createQLayer(qField) {
@@ -2302,8 +2299,10 @@ function switchView(view) {
     openRightPanel();
 
     // Map layer management
+  
+        // Map layer management
     if (view === 'diagnostic') {
-        info.addTo(map); legend.addTo(map); legendUsra.addTo(map); legendActionSfn.addTo(map);
+        info.addTo(map);
         layersQ['Q100'].addTo(map); layerStation.addTo(map); layerOuvrages.addTo(map);
         for (let l in ebfLayers) map.removeLayer(ebfLayers[l]);
         for (let l in presLayers) map.removeLayer(presLayers[l]);
@@ -2312,7 +2311,7 @@ function switchView(view) {
         document.getElementById('check-hydro-diag').checked = true;
         layerHydroDiag.addTo(map);
     } else if (view === 'presentation') {
-        info.remove(); legend.remove(); legendUsra.remove(); legendActionSfn.remove();
+        info.remove();
         for (let q in layersQ) map.removeLayer(layersQ[q]);
         map.removeLayer(layerStation); map.removeLayer(layerOuvrages);
         map.removeLayer(layerHydroDiag); map.removeLayer(layerPrhymo);
@@ -2322,7 +2321,7 @@ function switchView(view) {
         activatePresLayers();
     } else {
         // EBF view
-        info.remove(); legend.remove(); legendUsra.remove(); legendActionSfn.remove();
+        info.remove();
         for (let q in layersQ) map.removeLayer(layersQ[q]);
         map.removeLayer(layerStation); map.removeLayer(layerOuvrages);
         map.removeLayer(layerHydroDiag); map.removeLayer(layerPrhymo);
@@ -2331,8 +2330,6 @@ function switchView(view) {
         if (document.getElementById('check-hydro').checked) ebfLayers.hydro.addTo(map);
         if (document.getElementById('check-communes').checked) ebfLayers.communes.addTo(map);
     }
-    setTimeout(() => map.invalidateSize(), 300);
-}
 
 // ===== RIGHT PANEL =====
 function openRightPanel() {
