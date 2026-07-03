@@ -2330,7 +2330,7 @@ function switchView(view) {
         if (document.getElementById('check-hydro').checked) ebfLayers.hydro.addTo(map);
         if (document.getElementById('check-communes').checked) ebfLayers.communes.addTo(map);
     }
-
+}
 // ===== RIGHT PANEL =====
 function openRightPanel() {
     const panel = document.getElementById('right-panel');
@@ -2913,4 +2913,3 @@ map.on('overlayadd', (e) => { for(let q in layersQ){ if(layersQ[q]===e.layer) cu
 </script>
 </body>
 </html>
-
