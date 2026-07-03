@@ -505,7 +505,7 @@
         .badge-efn { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
 
         /* Panel info modal (methodology) */
-        #infoModal {
+        .modal, #infoModal {
             display: none; position: fixed; z-index: 4000;
             left: 0; top: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.45); backdrop-filter: blur(4px);
@@ -2013,7 +2013,29 @@ const definitions = {
     'check-geo5': '<b>Enveloppe biogéochimique (EFN)</b> – Zone tampon 5m.',
     'check-bati': '<b>Enjeux Anthropiques</b> – Bâti et infrastructures.',
     'check-hydro': '<b>Réseau Hydrographique</b>',
-    'check-communes': '<b>Limites Communales</b>'
+    'check-communes': '<b>Limites Communales</b>',
+    // Presentation layer definitions
+    'pres-ppri': '<b>PPRI – Plan de Prévention des Risques d\'Inondation</b>\n\nDocument réglementaire opposable qui délimite les zones exposées au risque d\'inondation. Il impose des règles d\'urbanisme spécifiques pour les constructions.',
+    'pres-azi': '<b>AZI – Atlas des Zones Inondables</b>\n\nCartographie des secteurs inondables basée sur des études hydrauliques. Outil de connaissance du risque non opposable.',
+    'pres-reperes-crues': '<b>Repères de crues</b>\n\nPoints de marquage des niveaux atteints par les plus hautes eaux connues. Servent de mémoire des événements passés.',
+    'pres-bassins': '<b>Bassins versants</b>\n\nEnsemble du territoire drainé par un cours d\'eau. Unité hydrographique de base pour la gestion de l\'eau.',
+    'pres-axes-ruiss': '<b>Axes de ruissellement</b>\n\nChemins préférentiels d\'écoulement des eaux de surface lors des pluies. Identifiés par modélisation topographique.',
+    'pres-zh': '<b>Zones humides</b>\n\nMilieux caractérisés par la présence d\'eau proximité de la surface. Rôle majeur dans l\'épuration, le stockage de l\'eau et la biodiversité.',
+    'pres-natura2000': '<b>Natura 2000 – ZSC</b>\n\nZone Spéciale de Conservation (directive européenne Habitats). Réseau de sites naturels d\'importance européenne.',
+    'pres-znieff1': '<b>ZNIEFF type 1</b>\n\nZone Naturelle d\'Intérêt Faunistique et Floristique. Périmètre restreint de haute valeur biologique ou écologique.',
+    'pres-znieff2': '<b>ZNIEFF type 2</b>\n\nZNIEFF de grand ensemble naturel. Unités de paysage cohérentes à valeur fonctionnelle.',
+    'pres-reservoirs': '<b>Réservoirs de biodiversité</b>\n\nZones identifiées par le SRADDET comme zones sources d\'espèces et milieux naturels remarquables.',
+    'pres-sites-classes': '<b>Sites classés</b>\n\nSites à protéger en raison de leur caractère artistique, historique, scientifique, légendaire ou pittoresque (loi 1930).',
+    'pres-reserve-bio': '<b>Réserve de biosphère</b>\n\nDésignation UNESCO reconnaissant un territoire modelé par l\'interaction homme-nature.',
+    'pres-trame-vert': '<b>Trame verte</b>\n\nRéseau de corridors écologiques terrestres permettant la dispersion des espèces entre réservoirs de biodiversité.',
+    'pres-trame-bleu': '<b>Trame bleue</b>\n\nRéseau de corridors écologiques aquatiques et humides (cours d\'eau, zones humides, ripisylves).',
+    'pres-mares': '<b>Mares</b>\n\nPoints d\'eau stagnante de petite taille. Habitats remarquables pour amphibiens, odonates et flore hygrophile.',
+    'pres-stations-suivi': '<b>Stations de suivi piscicole</b>\n\nPoints de pêche électrique permettant d\'évaluer la population de poissons et l\'indice biotique.',
+    'pres-peuplements': '<b>Peuplements piscicoles</b>\n\nZones de répartition des communautés de poissons (truite, chabot, vandoise, etc.).',
+    'pres-obstacles': '<b>Obstacles à l\'écoulement</b>\n\nOuvrages (seuils, barrages, buses) fragmentant le cours d\'eau et le transit sédimentaire.',
+    'pres-travaux': '<b>Travaux réalisés</b>\n\nLocalisation des opérations de restauration hydromorphologique effectuées.',
+    'pres-amenagements': '<b>Aménagements anciens</b>\n\nOuvrages hydrauliques historiques (berges artificielles, calibrage).',
+    'pres-travaux-hydro': '<b>Travaux hydraulique douce</b>\n\nAménagements utilisant le génie végétal pour stabiliser les berges sans durcissement.'
 };
 
 function bindEbf(id, layer, file) {
@@ -2228,7 +2250,25 @@ function toggleGroup(header) {
 // ===== LAYER INFO =====
 function showLayerInfo(id) {
     const msg = definitions[id];
-    if (msg) alert(msg.replace(/<[^>]+>/g, ''));
+    if (msg) {
+        // Create a custom modal for layer info
+        const existingModal = document.getElementById('layerInfoModal');
+        if (existingModal) existingModal.remove();
+
+        const modal = document.createElement('div');
+        modal.id = 'layerInfoModal';
+        modal.className = 'modal';
+        modal.style.display = 'block';
+        modal.onclick = function(e) { if(e.target === modal) modal.remove(); };
+        modal.innerHTML = `
+            <div class="modal-card" style="max-width:500px;">
+                <div class="modal-close" onclick="document.getElementById('layerInfoModal').remove()">&#215;</div>
+                <h2 style="font-size:14px;margin-bottom:16px;">Description de la couche</h2>
+                <div style="font-size:13px;line-height:1.7;color:#444;">${msg.replace(/\n/g, '<br>').replace(/<b>/g, '<b style="color:var(--color-primary)">')}</div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
 }
 
 // ===== RESET LAYERS =====
@@ -2690,6 +2730,18 @@ fetch('hem_troncons_homogenes_finaux_1.geojson').then(r => r.json()).then(data =
     // Initialize public mode (hide diagnostic tab and download button)
     document.getElementById('tab-diagnostic').style.display = 'none';
     document.getElementById('btn-download-data').style.display = 'none';
+
+    // Bind onclick to all layer info buttons
+    document.querySelectorAll('.layer-info-btn').forEach(btn => {
+        const layerItem = btn.closest('.layer-item');
+        if (layerItem) {
+            const checkbox = layerItem.querySelector('input[type="checkbox"]');
+            if (checkbox && checkbox.id) {
+                btn.onclick = () => showLayerInfo(checkbox.id);
+                btn.style.cursor = 'pointer';
+            }
+        }
+    });
 });
 
 map.on('overlayadd', (e) => { for(let q in layersQ){ if(layersQ[q]===e.layer) currentActiveQ=q; } });
