@@ -92,7 +92,20 @@
 
         }
 
-
+<div id="login-overlay">
+    <div class="login-card">
+        <svg width="48" height="48" viewBox="0 0 36 36" fill="none" style="margin-bottom:16px;">
+            <path d="M4 22 Q9 14 18 18 Q27 22 32 14" stroke="#1a7a4a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <path d="M4 27 Q9 19 18 23 Q27 27 32 19" stroke="#2d9e63" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <path d="M4 17 Q9 9 18 13 Q27 17 32 9" stroke="#68c197" stroke-width="2" stroke-linecap="round" fill="none"/>
+        </svg>
+        <h1>Vallée de la Hem</h1>
+        <p>Outil de gestion intégrée du bassin versant</p>
+        <input type="text" id="login-username" class="login-input" placeholder="Entrez vos initiales (ex: CM)">
+        <button class="login-btn" onclick="performLogin()">Accéder à l'application</button>
+        <p id="login-error" class="login-error">Veuillez entrer vos initiales.</p>
+    </div>
+</div>
 
         /* =========== HEADER =========== */
 
@@ -1167,7 +1180,16 @@
         #map-title h1 { font-size: 13px; color: var(--color-text); letter-spacing: 0.5px; font-weight: 600; margin: 0; }
 
         #map-title p  { font-size: 10px; color: var(--color-text-muted); margin: 2px 0 0; }
-
+        
+        #login-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--color-primary-light); display: flex; align-items: center; justify-content: center; z-index: 5000; }
+        .login-card { background: #fff; border-radius: 16px; padding: 40px; box-shadow: var(--shadow-lg); max-width: 420px; width: 90%; text-align: center; }
+        .login-card h1 { color: var(--color-primary); font-size: 22px; margin-bottom: 8px; }
+        .login-card p { color: var(--color-text-muted); font-size: 13px; margin-bottom: 24px; }
+        .login-input { width: 100%; padding: 12px 16px; border: 1px solid var(--color-border); border-radius: 8px; font-size: 14px; margin-bottom: 16px; font-family: inherit; }
+        .login-input:focus { outline: none; border-color: var(--color-primary); }
+        .login-btn { width: 100%; padding: 12px; background: var(--color-primary); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+        .login-btn:hover { background: #156038; }
+        .login-error { color: #dc2626; font-size: 12px; margin-top: 12px; display: none; }
     </style>
 
 </head>
@@ -2706,7 +2728,7 @@
 
         </button>
 
-        <button class="footer-action-btn btn-download" id="btn-download-data" onclick="downloadData()" style="display:none;">
+        <button class="footer-action-btn btn-download" id="btn-download-data" onclick="openDownloadModal()" style="display:none;">
 
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
 
@@ -3443,439 +3465,244 @@
 
 
 <!-- ========== INFO MODAL ========== -->
-
 <div id="infoModal" class="modal" onclick="if(event.target===this)closeInfoModal()">
-
     <div class="modal-card">
-
         <div class="modal-close" onclick="closeInfoModal()">&#215;</div>
-
         <div id="modal-diagnostic" style="display:none;">
-
             <h2>Méthodologie – Diagnostic Morphodynamique</h2>
-
             <div class="modal-body-scroll">
-
                 <p>L'évaluation de la résilience du cours d'eau et de sa capacité d'ajustement repose sur la quantification de son <strong>énergie morphogène</strong> (capacité d'érosion et de transport).</p>
 
-
-
                 <h3>1. Calcul de la Puissance Spécifique (méthode Malavoi, 2007)</h3>
-
                 <p>Pour chaque tronçon et chaque crue, la puissance spécifique (Ps, en W/m²) est calculée selon la formule :</p>
-
                 <div style="background:#f0f0f0;padding:10px;border-radius:6px;margin:8px 0;font-family:monospace;text-align:center;">
-
                     Ps = (ρ × g × Q_local × J) / L
-
                 </div>
-
                 <p style="font-size:12px;">Avec : ρ = 1000 kg/m³, g = 9.81 m/s², J = pente locale, L = largeur au plein bord</p>
 
-
-
                 <h4>Discrétisation en 4 classes d'énergie</h4>
-
                 <table class="rmc-table" style="margin:10px 0;">
-
                     <thead><tr><th>Classe</th><th>Puissance</th><th>Description</th></tr></thead>
-
                     <tbody>
-
                         <tr><td style="color:#3182bd;font-weight:bold;">E1</td><td>&lt; 10 W/m²</td><td>Sédimentation, dépôts fins, atterrissement</td></tr>
-
                         <tr><td style="color:#31a354;font-weight:bold;">E2</td><td>10 – 30 W/m²</td><td>Ajustements lents, transit modéré</td></tr>
-
                         <tr><td style="color:#fd8d3c;font-weight:bold;">E3</td><td>30 – 100 W/m²</td><td>Équilibre dynamique morphologique</td></tr>
-
                         <tr><td style="color:#de2d26;font-weight:bold;">E4</td><td>&gt; 100 W/m²</td><td>Érosion active, risque d'incision</td></tr>
-
                     </tbody>
-
                 </table>
-
-
 
                 <h3>2. Délimitation des périmètres morphologiques</h3>
-
                 <p>L'identification des classes d'énergie préalable à la mise en géométrie de l'enveloppe morphologique :</p>
-
                 <table class="rmc-table" style="margin:10px 0;font-size:11px;">
-
                     <thead><tr><th>Type de secteur</th><th>EBFO (Optimal)</th><th>EBFN (Nécessaire)</th></tr></thead>
-
                     <tbody>
-
                         <tr><td>Secteurs mobiles (E3/E4)</td><td>15 × Largeur (Amplitude max)</td><td>10 × Largeur (Amplitude moy)</td></tr>
-
                         <tr><td>Secteurs peu mobiles (E1/E2)</td><td>6 × Largeur</td><td>3 × Largeur</td></tr>
-
                         <tr><td>Petits cours d'eau (Strahler 1/2)</td><td>+ 10 m de part et d'autre</td><td>+ 5 m de part et d'autre</td></tr>
-
                     </tbody>
-
                 </table>
-
                 <p style="font-size:11px;color:#666;"><em>Note : Contrairement à la zone inondable, les enveloppes de mobilité n'ont pas été découpées par les limites du fond de vallée. Lorsqu'un cours d'eau divague et vient frôler un versant, sa puissance énergétique provoque une érosion par sapement basal.</em></p>
 
-
-
                 <h3>3. Enveloppe Biogéochimique – Bandes tampons dynamiques</h3>
-
                 <p>L'objectif est d'évaluer la capacité de filtration du bassin versant. Deux scénarios basés sur la réglementation des ZNT (Zones Non Traitées) :</p>
-
                 <ul>
-
                     <li><strong>EBFN (5 m)</strong> : Distance minimale des ZNT pour protéger des pesticides. Formule : Rayon = (w_moy)/2 + 5</li>
-
                     <li><strong>EBFO (25 m)</strong> : Zone de protection élargie pour une meilleure filtration. Formule : Rayon = (w_moy)/2 + 25</li>
-
                 </ul>
-
-
 
                 <h4>Reclassification de l'occupation du sol (OCSGE + RPG)</h4>
-
                 <ul style="font-size:12px;">
-
                     <li><strong>Classe « Urbain »</strong> (efficacité nulle) : bâti, infrastructures, surfaces imperméabilisées</li>
-
                     <li><strong>Classe « Fonctionnel »</strong> : forêts, zones humides, prairies permanentes (PPH)</li>
-
                     <li><strong>Classe « Potentiel restaurable »</strong> : cultures, prairies temporaires (gisement foncier mobilisable)</li>
-
                 </ul>
-
-
 
                 <h3>4. Protocole PRHYMO – Score de dégradation</h3>
-
                 <p>Le protocole PRHYMO (Agence de l'Eau Artois-Picardie) génère un <strong>Score_100</strong> de 0 à 100% évaluant le niveau de dégradation physique.</p>
 
-
-
                 <h4>9 indicateurs qualitatifs (1 à 5 points chacun)</h4>
-
                 <ul style="font-size:12px;">
-
                     <li><strong>mor_pll</strong> : Altération du profil en long (seuils, rupture de pente)</li>
-
                     <li><strong>mor_ssl</strong> : Altération de la section du lit (calibrage, encaissement)</li>
-
                     <li><strong>mor_riv</strong> : Dégradation des rives et berges</li>
-
                     <li><strong>mor_rip</strong> : État de la ripisylve</li>
-
                     <li><strong>con_pro</strong> : Rupture de continuité biologique (obstacles)</li>
-
                     <li><strong>con_sed</strong> : Blocage du transit sédimentaire</li>
-
                     <li><strong>con_amp</strong> : Perte de connectivité avec les annexes</li>
-
                     <li><strong>hyd_dyn</strong> : Perturbation de la dynamique hydrologique</li>
-
                     <li><strong>hyd_qte</strong> : Altération quantitative des volumes d'eau</li>
-
                 </ul>
-
-
 
                 <h4>2 variables quantitatives continues (jusqu'à 20 pts chacune)</h4>
-
                 <ul style="font-size:12px;">
-
                     <li><strong>Malus Agricole</strong> = agri3w_v × 0,2 (pression des cultures en bordure)</li>
-
                     <li><strong>Malus Aménagement</strong> = txamg_v × 0,2 (taux d'artificialisation des berges)</li>
-
                 </ul>
-
-
 
                 <h4>Formule de normalisation</h4>
-
                 <div style="background:#f0f0f0;padding:8px;border-radius:6px;margin:8px 0;font-family:monospace;font-size:12px;">
-
                     Score_100 = (Score_Brut − 9) / (85 − 9) × 100
-
                 </div>
 
-
-
                 <h4>Classes d'altération</h4>
-
                 <ul>
-
                     <li><strong>&lt; 25%</strong> : Altération faible – secteurs fonctionnels, zones refuges</li>
-
                     <li><strong>25 – 45%</strong> : Altération modérée – cœur cible de la petite restauration</li>
-
                     <li><strong>&gt; 45%</strong> : Altération forte – anomalies physiques maximales</li>
-
                 </ul>
-
-
 
                 <h3>5. Outil d'Aide à la Décision (OAD) pour le PPRE</h3>
-
                 <p>L'OAD traduit le diagnostic en programme de travaux opérationnel (Programme Pluriannuel de Restauration et d'Entretien).</p>
 
-
-
                 <h4>Vague 1 : Urgence (alertes critiques ≥ 4)</h4>
-
                 <p>Restauration lourde : effacement d'ouvrages, désimperméabilisation, confortement de berges.</p>
 
-
-
                 <h4>Vague 2 : Consolidation (alertes modérées = 3)</h4>
-
                 <p>Génie végétal souple : fascinages, densification ripisylve, curage léger des annexes.</p>
 
-
-
                 <h3>6. Modélisation de l'aléa ruissellement</h3>
-
                 <p>Approche probabiliste inspirée d'Exzeco avec 50 simulations Monte-Carlo sur MNT pour identifier les « autoroutes de ruissellement » persistantes.</p>
-
                 <ul style="font-size:12px;">
-
                     <li><strong>Bâti exposé pente ≥ 5%</strong> → Priorité sécurité (noues, batardeaux)</li>
-
                     <li><strong>Cultures pente > 10%</strong> → Urgence : fascines vivantes</li>
-
                     <li><strong>Cultures pente modérée</strong> → Bandes enherbées, MAEC</li>
-
                 </ul>
-
-
 
                 <h3>Sources des données</h3>
-
                 <ul style="font-size:11px;color:#666;">
-
                     <li>MNT – RGE ALTI 5m (IGN)</li>
-
                     <li>Réseau hydrographique – BD Topage / BD CARTHAGE</li>
-
                     <li>Géologie – Carte BRGM</li>
-
                     <li>Occupation du sol – OCS GE (IGN) + RPG (ASP)</li>
-
                     <li>PRHYMO – Agence de l'Eau Artois-Picardie (référentiel juin 2025)</li>
-
                 </ul>
-
             </div>
-
         </div>
-
         <div id="modal-ebf">
-
             <h2>Cadre Conceptuel – Espace de Bon Fonctionnement (EBF)</h2>
-
             <div class="modal-body-scroll">
-
                 <p><strong>De l'espace de liberté à l'EBF :</strong> Le concept d'<strong>Espace de Bon Fonctionnement (EBF)</strong> englobe la mobilité latérale et intègre l'intégralité des fonctionnalités de l'hydrosystème. Deux périmètres sont modélisés : l'<strong>EBF Optimal</strong> (enveloppe théorique maximale) et l'<strong>EBF Nécessaire</strong> (corridor vital de compromis).</p>
 
-
-
                 <h3>Matrice Technique (Guide RMC)</h3>
-
                 <table class="rmc-table">
-
                     <thead><tr><th>Catégorie</th><th>EFO (Optimal)</th><th>EFN (Nécessaire)</th><th>Outils SIG</th></tr></thead>
-
                     <tbody>
-
                         <tr><td class="rmc-cat">Philosophie</td><td class="rmc-efo"><span class="rmc-badge badge-efo">EFO</span> Enveloppe théorique maximale. La rivière y a tout l'espace nécessaire.</td><td class="rmc-efn"><span class="rmc-badge badge-efn">EFN</span> Enveloppe réaliste, respecte les usages humains incompressibles.</td><td class="rmc-sig">Concepts EBF fluvial</td></tr>
-
                         <tr><td class="rmc-cat">Aménagement</td><td class="rmc-efo">Sans contrainte de bâti.</td><td class="rmc-efn">Rabotage : soustraction routes + bâtiments (BD Topo).</td><td class="rmc-sig">Corine Land Cover, BD Topo, ROE</td></tr>
-
                         <tr><td class="rmc-cat">Hydraulique</td><td class="rmc-efo">MRVBF – plaine inondable théorique.</td><td class="rmc-efn">AZI – Atlas zones inondation.</td><td class="rmc-sig">RGE ALTI 5m, PPRi, TRI</td></tr>
-
                         <tr><td class="rmc-cat">Hydrogéologie</td><td class="rmc-efo">Alluvions récentes – emprise maximale.</td><td class="rmc-efn">Alluvions contraintes (BRGM).</td><td class="rmc-sig">Carte géologique BRGM, HGM</td></tr>
-
                         <tr><td class="rmc-cat">Écologie</td><td class="rmc-efo">ZDH + ZHE stratégiques.</td><td class="rmc-efn">ZHE – zones stratégiques seulement.</td><td class="rmc-sig">RHOMEO, PIFH, TVB, SRADDET</td></tr>
-
                         <tr><td class="rmc-cat">Biogéochimie</td><td class="rmc-efo">Filtre anti-pesticides 25m.</td><td class="rmc-efn">Filtre réglementaire 5m.</td><td class="rmc-sig">RPG, buffer linéaire</td></tr>
-
                     </tbody>
-
                 </table>
 
-
-
                 <h3>Les 5 dimensions écologiques de l'EBF</h3>
-
                 <ul>
-
                     <li><strong>Morphologie :</strong> Dynamique hydrosédimentaire et habitats.</li>
-
                     <li><strong>Hydraulique :</strong> Laminage des crues par expansion.</li>
-
                     <li><strong>Biogéochimie :</strong> Auto-épuration, qualité physico-chimique.</li>
-
                     <li><strong>Hydrogéologie :</strong> Échanges rivière/nappes superficielles.</li>
-
                     <li><strong>Biologie :</strong> Zones Humides, habitats de reproduction.</li>
-
                 </ul>
-
-
 
                 <h3>Croisement avec le PLUi</h3>
-
                 <p>L'algorithme intersecte les enveloppes EBF avec le PLUi et regroupe les entités en 4 catégories : Urbain (U), À Urbaniser (AU), Agricole (A), Naturel (N). Cette approche permet d'identifier les surfaces de conflits d'usage et les zones d'opportunités pour la révision des documents d'urbanisme.</p>
 
-
-
                 <h3>Outil réglementaire – DCE</h3>
-
                 <p>Le <strong>SDAGE Artois-Picardie</strong> impose sa cartographie. Intégration dans le <strong>PLUi</strong> pour sanctuariser les parcelles (classement en zone N/A ou OAP).</p>
 
-
-
                 <h3>Sources des données</h3>
-
                 <ul style="font-size:11px;color:#666;">
-
                     <li>BD Topo / IGN – Réseau hydrographique et bâti</li>
-
                     <li>BRGM – Carte géologique</li>
-
                     <li>DREAL – ZNIEFF, Natura 2000</li>
-
                     <li>Agence de l'Eau Artois-Picardie</li>
-
                     <li>RPG / ASP – Parcellaire agricole</li>
-
                     <li>RGE ALTI – MNT 5m (IGN)</li>
-
                 </ul>
-
             </div>
-
         </div>
-
         <div id="modal-presentation" style="display:none;">
-
             <h2>Légende des couches – Présentation de la vallée</h2>
-
             <div class="modal-body-scroll">
 
-
-
                 <h3 style="color:#3b82f6;">Inondation</h3>
-
                 <ul>
-
                     <li><strong>PPRI</strong> – Plan de Prévention des Risques d'Inondation. Document réglementaire opposable délimitant les zones exposées au risque d'inondation et imposant des règles d'urbanisme spécifiques.</li>
-
                     <li><strong>AZI</strong> – Atlas des Zones Inondables. Cartographie des secteurs inondables basée sur des études hydrauliques (non opposable réglementairement).</li>
-
                     <li><strong>Repères de crues</strong> – Points de marquage des niveaux atteints par les plus hautes eaux connues (PHEC). Mémoire des événements passés.</li>
-
                     <li><strong>Bassins versants</strong> – Ensemble du territoire drainé par un cours d'eau. Unité hydrographique de base pour la gestion de l'eau.</li>
-
                 </ul>
-
-
 
                 <h3 style="color:#06b6d4;">Ruissellement</h3>
-
                 <ul>
-
                     <li><strong>Axes de ruissellement</strong> – Chemins préférentiels d'écoulement des eaux de surface lors des pluies. Identifiés par modélisation topographique (MNT + simulation Monte-Carlo).</li>
-
                 </ul>
-
-
 
                 <h3 style="color:#16a34a;">Biodiversité</h3>
-
                 <ul>
-
                     <li><strong>Zones humides</strong> – Milieux caractérisés par la présence d'eau à proximité de la surface. Rôle majeur dans l'épuration naturelle, le stockage de l'eau et la biodiversité.</li>
-
                     <li><strong>Natura 2000 (ZCS)</strong> – Zone Spéciale de Conservation, réseau européen de sites naturels d'importance communautaire (directive Habitats).</li>
-
                     <li><strong>ZNIEFF type 1</strong> – Zone Naturelle d'Intérêt Faunistique et Floristique à périmètre restreint, de haute valeur biologique ou écologique.</li>
-
                     <li><strong>ZNIEFF type 2</strong> – ZNIEFF de grand ensemble naturel, unités de paysage cohérentes à valeur fonctionnelle.</li>
-
                     <li><strong>Réservoirs de biodiversité</strong> – Zones identifiées par le SRADDET comme zones sources d'espèces et milieux remarquables.</li>
-
                     <li><strong>Sites classés</strong> – Sites à protéger pour leur caractère artistique, historique, scientifique ou pittoresque (loi 1930).</li>
-
                     <li><strong>Réserve de biosphère</strong> – Désignation UNESCO reconnaissant un territoire modelé par l'interaction homme-nature.</li>
-
                     <li><strong>Trame verte</strong> – Réseau de corridors écologiques terrestres permettant la dispersion des espèces.</li>
-
                     <li><strong>Trame bleue</strong> – Réseau de corridors écologiques aquatiques et humides (cours d'eau, zones humides).</li>
-
                     <li><strong>Mares</strong> – Points d'eau stagnante, habitats remarquables pour amphibiens et flore hygrophile.</li>
-
                 </ul>
-
-
 
                 <h3 style="color:#0891b2;">Suivi piscicole</h3>
-
                 <ul>
-
                     <li><strong>Stations de suivi</strong> – Points de pêche électrique permettant d'évaluer la population de poissons et l'indice biotique.</li>
-
                     <li><strong>Peuplements piscicoles</strong> – Zones de répartition des communautés de poissons (truite fario, chabot, vandoise, etc.).</li>
-
                     <li><strong>Obstacles à l'écoulement</strong> – Ouvrages (seuils, barrages, buses) fragmentant le cours d'eau et le transit sédimentaire.</li>
-
                 </ul>
-
-
 
                 <h3 style="color:#f59e0b;">Travaux historiques</h3>
-
                 <ul>
-
                     <li><strong>Travaux réalisés</strong> – Localisation des opérations de restauration hydromorphologique effectuées par le SYMVAHEM.</li>
-
                     <li><strong>Aménagements anciens</strong> – Ouvrages hydrauliques historiques (berges artificielles, calibrage).</li>
-
                     <li><strong>Travaux hydraulique douce</strong> – Aménagements utilisant le génie végétal pour stabiliser les berges.</li>
-
                 </ul>
-
-
 
                 <h3>Sources des données</h3>
-
                 <ul style="font-size:11px;color:#666;">
-
                     <li>PPRI / AZI – DDT Pas-de-Calais, DREAL Hauts-de-France</li>
-
                     <li>ZNIEFF / Natura 2000 – DREAL, INPN (MNHN)</li>
-
                     <li>Zones humides – Inventaire départemental</li>
-
                     <li>Trame verte et bleue – SRADDET, SRCE</li>
-
                     <li>Réservoirs de biodiversité – SRADDET</li>
-
                     <li>Suivi piscicole – FDAAPPMA 62, OFB</li>
-
                     <li>Travaux – SYMVAHEM</li>
-
                 </ul>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
 
+<div id="downloadModal" class="modal" onclick="if(event.target===this)closeDownloadModal()">
+    <div class="modal-card" style="max-width:550px;">
+        <div class="modal-close" onclick="closeDownloadModal()">&#215;</div>
+        <h2 style="font-size:16px;margin-bottom:16px;">Téléchargement des données</h2>
+        <p style="font-size:12px;color:#666;margin-bottom:16px;">Sélectionnez les couches que vous souhaitez télécharger :</p>
+        <div class="modal-body-scroll" style="max-height:45vh;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--color-bg);border-radius:8px;cursor:pointer;font-size:13px;"><input type="checkbox" id="dl-efo"> EBF Optimal (EFO)</label>
+                <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--color-bg);border-radius:8px;cursor:pointer;font-size:13px;"><input type="checkbox" id="dl-efn"> EBF Nécessaire (EFN)</label>
+                <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--color-bg);border-radius:8px;cursor:pointer;font-size:13px;"><input type="checkbox" id="dl-hydro"> Réseau Hydrographique</label>
+                <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--color-bg);border-radius:8px;cursor:pointer;font-size:13px;"><input type="checkbox" id="dl-communes"> Limites Communales</label>
+                <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--color-bg);border-radius:8px;cursor:pointer;font-size:13px;"><input type="checkbox" id="dl-plui"> Zonage PLUi</label>
+                <label style="display:flex;align-items:center;gap:8px;padding:10px;background:var(--color-bg);border-radius:8px;cursor:pointer;font-size:13px;"><input type="checkbox" id="dl-zh"> Zones Humides</label>
+            </div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:10px;">
+            <button onclick="selectAllDownloadLayers()" style="flex:1;padding:10px;border:1px solid var(--color-border);background:#fff;border-radius:8px;cursor:pointer;font-size:12px;">Tout sélectionner</button>
+            <button onclick="executeDownload()" style="flex:2;padding:10px;background:var(--color-primary);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:12px;">Télécharger la sélection</button>
+        </div>
+    </div>
+</div>
 
 
 <!-- ========== BOTTOM BAR ========== -->
@@ -3909,15 +3736,29 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
+let currentUser = null;
 
+function performLogin() {
+    const input = document.getElementById('login-username');
+    const error = document.getElementById('login-error');
+    const value = input.value.trim();
+    if (!value) {
+        error.style.display = 'block';
+        return;
+    }
+    currentUser = value.toUpperCase().substring(0, 3);
+    document.getElementById('user-initials').textContent = currentUser;
+    document.getElementById('user-name').textContent = currentUser;
+    document.getElementById('login-overlay').style.display = 'none';
+}
+
+// =========================================================
+// 2. LAISSE LA SUITE DE TON CODE D'ORIGINE S'EXÉCUTER :
+// =========================================================
 // ===== MAP INIT =====
-
 const basemapLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-
     attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
-
 });
-
 const basemapSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
 
 const basemapTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17 });
@@ -5224,50 +5065,45 @@ function updateCommuneStats(nomCommune) {
 
 // ===== DOWNLOAD DATA =====
 
-function downloadData() {
+/* ... Toutes tes fonctions au-dessus (comme updateCommuneStats, etc.) ... */
 
+// =========================================================
+// REMPLACE L'ANCIENNE FONCTION downloadData() PAR CELLES-CI :
+// =========================================================
+function openDownloadModal() {
     if (currentMode !== 'tech') {
-
         alert('Accès réservé aux agents techniques.');
-
         return;
-
     }
-
-
-
-    // Create a simple CSV export demo
-
-    let csv = 'Commune,Surface_EFO_ha,Surface_EFN_ha,Zones_humides_ha,Bati_EBF_ha\n';
-
-    allCommuneNames.forEach(nom => {
-
-        const efo = Math.round(50 + Math.random() * 200);
-
-        const efn = Math.round(efo * 0.7);
-
-        const zh = Math.round(10 + Math.random() * 50);
-
-        const bati = Math.round(5 + Math.random() * 30);
-
-        csv += `"${nom}",${efo},${efn},${zh},${bati}\n`;
-
-    });
-
-
-
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-
-    const link = document.createElement('a');
-
-    link.href = URL.createObjectURL(blob);
-
-    link.download = 'EBF_stats_communes.csv';
-
-    link.click();
-
+    document.getElementById('downloadModal').style.display = 'block';
 }
 
+function closeDownloadModal() {
+    document.getElementById('downloadModal').style.display = 'none';
+}
+
+function selectAllDownloadLayers() {
+    const checkboxes = document.querySelectorAll('#downloadModal input[type="checkbox"]');
+    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+    checkboxes.forEach(cb => cb.checked = !allChecked);
+}
+
+function executeDownload() {
+    const selected = [];
+    if (document.getElementById('dl-efo').checked) selected.push('EFO_FINAL_WGS.geojson');
+    if (document.getElementById('dl-efn').checked) selected.push('EFN_FINAL_WGS.geojson');
+    if (document.getElementById('dl-hydro').checked) selected.push('Hydro_HEM_WGS.geojson');
+    if (document.getElementById('dl-communes').checked) selected.push('communes.geojson');
+    if (document.getElementById('dl-plui').checked) { selected.push('EFO_PLUI.geojson'); selected.push('EFN_PLUI.geojson'); }
+    if (document.getElementById('dl-zh').checked) selected.push('ZH_Enjeux.geojson');
+
+    if (selected.length === 0) {
+        alert('Veuillez sélectionner au moins une couche à télécharger.');
+        return;
+    }
+    alert('Téléchargement simulé de ' + selected.length + ' fichier(s) : ' + selected.join(', '));
+    closeDownloadModal();
+}
 
 
 // ===== COMMUNE ZOOM =====
