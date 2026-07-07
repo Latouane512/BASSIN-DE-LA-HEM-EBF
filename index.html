@@ -4795,65 +4795,81 @@ function setupPresentationLayers() {
 // ===== DATA LOADING =====
 
 function loadData() {
+    // 1. Tronçons (Réseau principal)
+    fetch('hem_troncons_homogenes_finaux_1.geojson')
+        .then(r => r.json())
+        .then(data => {
+            for (let q in layersQ) layersQ[q].addData(data);
+        }).catch(err => console.error("Erreur tronçons:", err));
 
-    fetch('hem_troncons_homogenes_finaux_1.geojson').then(r => r.json()).then(data => {
+    // 2. Stations
+    fetch('Station.geojson')
+        .then(r => r.json())
+        .then(d => layerStation.addData(d))
+        .catch(err => console.error("Erreur Stations:", err));
 
-        for (let q in layersQ) layersQ[q].addData(data);
+    // 3. Ouvrages
+    fetch('Ouvrage_WGS.geojson')
+        .then(r => r.json())
+        .then(d => layerOuvrages.addData(d))
+        .catch(err => console.error("Erreur Ouvrages:", err));
 
-        fetch('Station.geojson').then(r=>r.json()).then(d=>layerStation.addData(d)).catch(()=>{});
+    // 4. Hydro Réseau
+    fetch('Hydro_HEM_WGS.geojson')
+        .then(r => r.json())
+        .then(d => {
+            layerHydroDiag.addData(d); 
+            ebfLayers.hydro.addData(d);
+        }).catch(err => console.error("Erreur Hydro:", err));
 
-        fetch('Ouvrage_WGS.geojson').then(r=>r.json()).then(d=>layerOuvrages.addData(d)).catch(()=>{});
+    // 5. Prhymo
+    fetch('USRA_HEM.geojson')
+        .then(r => r.json())
+        .then(d => layerPrhymo.addData(d))
+        .catch(err => console.error("Erreur PRHYMO:", err));
 
-        fetch('Hydro_HEM_WGS.geojson').then(r=>r.json()).then(d=>{
+    // 6. Ruissellement
+    fetch('Axe_ruissellement_hors_lit_pente.geojson')
+        .then(r => r.json())
+        .then(d => layerRuissellement.addData(d))
+        .catch(err => console.error("Erreur Ruissellement:", err));
 
-            layerHydroDiag.addData(d); ebfLayers.hydro.addData(d);
+    // 7. Parcelles Agricoles
+    fetch('HEM_TON_SOL.geojson')
+        .then(r => r.json())
+        .then(d => layerParcellesAgr.addData(d))
+        .catch(err => console.error("Erreur Parcelles:", err));
 
-        }).catch(()=>{});
+    // 8. Bâti
+    fetch('Zone_Bati.geojson')
+        .then(r => r.json())
+        .then(d => layerBatiImpacte.addData(d))
+        .catch(err => console.error("Erreur Bâti:", err));
 
-        fetch('USRA_HEM.geojson').then(r=>r.json()).then(d=>layerPrhymo.addData(d)).catch(()=>{});
-
-        fetch('Axe_ruissellement_hors_lit_pente.geojson').then(r=>r.json()).then(d=>layerRuissellement.addData(d)).catch(()=>{});
-
-        fetch('HEM_TON_SOL.geojson').then(r=>r.json()).then(d=>layerParcellesAgr.addData(d)).catch(()=>{});
-
-        fetch('Zone_Bati.geojson').then(r=>r.json()).then(d=>layerBatiImpacte.addData(d)).catch(()=>{});
-
-        fetch('communes.geojson').then(r=>r.json()).then(data=>{
-
+    // 9. Communes
+    fetch('communes.geojson')
+        .then(r => r.json())
+        .then(data => {
             searchCommunesLayer.addData(data);
-
             ebfLayers.communes.addData(data);
-
+            
             const sel = document.getElementById('commune-selector');
-
             sel.innerHTML = '<option value="">-- Zoomer sur une commune --</option>';
-
             let noms = [];
-
             data.features.forEach(f => {
-
                 const n = f.properties.nom || f.properties.NOM || f.properties.NOM_COM || f.properties.Nom;
-
                 if (n) noms.push(n);
-
             });
-
-            allCommuneNames = [...new Set(noms)].sort((a,b)=>a.localeCompare(b,'fr'));
-
+            allCommuneNames = [...new Set(noms)].sort((a,b) => a.localeCompare(b,'fr'));
             allCommuneNames.forEach(nom => {
-
                 const o = document.createElement('option');
-
                 o.value = nom; o.textContent = nom;
-
                 sel.appendChild(o);
-
             });
-
-        }).catch(()=>{ document.getElementById('commune-selector').innerHTML = '<option>Erreur chargement</option>'; });
-
-    }).catch(() => {});
-
+        }).catch(err => {
+            console.error("Erreur Communes:", err);
+            document.getElementById('commune-selector').innerHTML = '<option>Erreur chargement</option>';
+        });
 }
 
 // ===== ACTIVATE PRES LAYERS =====
