@@ -4162,85 +4162,49 @@ let pluiChart;
 
 let allCommuneNames = [];
 
-
-
 function initApp() {
-
     basemapLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-
         attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
-
     });
-
     basemapSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
-
-    basemapTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17 });
-
-
+    basemapTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17 });Platform
 
     map = L.map('map', {
-
         center: [50.78, 2.05], zoom: 11, layers: [basemapLight],
-
         zoomControl: false
-
     });
-
     L.control.zoom({ position: 'topleft' }).addTo(map);
-
     L.control.scale({ position: 'bottomleft', imperial: false }).addTo(map);
 
-
-
     L.control.layers(
-
         { "Plan Clair": basemapLight, "Topographique": basemapTopo, "Satellite": basemapSat },
-
         {}, { position: 'topleft', collapsed: true }
-
     ).addTo(map);
-
-
 
     searchCommunesLayer = L.geoJSON();
 
-
-
     // Initialize all layers and setup
-
     setupLayers();
-
     setupInfoControl();
-
     setupQLayers();
-
     setupPointLayers();
-
     setupEbfLayers();
-
     setupPresentationLayers();
-
     setupBindings();
 
-    loadData();
-
-
-
-    // Initial view
-
-    switchView('ebf');
-
-    initChart();
-
-
+    // MODIFICATION ICI : On attend que les données soient chargées avant d'allumer la vue
+    loadData().then(() => {
+        // Vue initiale — s'exécute maintenant APPRÈS le chargement du GeoJSON
+        switchView('ebf');
+        initChart();
+    });
 
     // Initialize public mode (hide diagnostic tab and download button)
-
     document.getElementById('tab-diagnostic').style.display = 'none';
-
     document.getElementById('btn-download-data').style.display = 'none';
-
 }
+
+
 
 
 
@@ -5124,73 +5088,48 @@ function setupPresentationLayers() {
 
 // ===== DATA LOADING =====
 
+// ===== DATA LOADING (CORRIGÉ) =====
 function loadData() {
-
-    fetch('hem_troncons_homogenes_finaux_1.geojson').then(r => r.json()).then(data => {
-
+    // On retourne la promesse globale du premier fetch
+    return fetch('hem_troncons_homogenes_finaux_1.geojson').then(r => r.json()).then(data => {
         for (let q in layersQ) layersQ[q].addData(data);
 
+        // On crée un tableau de promesses pour s'assurer du chargement en parallèle
+        const promises = [
+            fetch('Station.geojson').then(r=>r.json()).then(d=>layerStation.addData(d)).catch(()=>{}),
+            fetch('Ouvrage_WGS.geojson').then(r=>r.json()).then(d=>layerOuvrages.addData(d)).catch(()=>{}),
+            fetch('Hydro_HEM_WGS.geojson').then(r=>r.json()).then(d=>{
+                layerHydroDiag.addData(d); ebfLayers.hydro.addData(d);
+            }).catch(()=>{}),
+            fetch('USRA_HEM.geojson').then(r=>r.json()).then(d=>layerPrhymo.addData(d)).catch(()=>{}),
+            fetch('Axe_ruissellement_hors_lit_pente.geojson').then(r=>r.json()).then(d=>layerRuissellement.addData(d)).catch(()=>{}),
+            fetch('HEM_TON_SOL.geojson').then(r=>r.json()).then(d=>layerParcellesAgr.addData(d)).catch(()=>{}),
+            fetch('Zone_Bati.geojson').then(r=>r.json()).then(d=>layerBatiImpacte.addData(d)).catch(()=>{}),
+            
+            // Le fetch des communes est indispensable pour l'affichage initial, on l'inclut
+            fetch('communes.geojson').then(r=>r.json()).then(data=>{
+                searchCommunesLayer.addData(data);
+                ebfLayers.communes.addData(data);
+                const sel = document.getElementById('commune-selector');
+                sel.innerHTML = '<option value="">-- Zoomer sur une commune --</option>';
+                let noms = [];
+                data.features.forEach(f => {
+                    const n = f.properties.nom || f.properties.NOM || f.properties.NOM_COM || f.properties.Nom;
+                    if (n) noms.push(n);
+                });
+                allCommuneNames = [...new Set(noms)].sort((a,b)=>a.localeCompare(b,'fr'));
+                allCommuneNames.forEach(nom => {
+                    const o = document.createElement('option');
+                    o.value = nom; o.textContent = nom;
+                    sel.appendChild(o);
+                });
+            }).catch(()=>{ document.getElementById('commune-selector').innerHTML = '<option>Erreur chargement</option>'; })
+        ];
 
-
-        fetch('Station.geojson').then(r=>r.json()).then(d=>layerStation.addData(d)).catch(()=>{});
-
-        fetch('Ouvrage_WGS.geojson').then(r=>r.json()).then(d=>layerOuvrages.addData(d)).catch(()=>{});
-
-        fetch('Hydro_HEM_WGS.geojson').then(r=>r.json()).then(d=>{
-
-            layerHydroDiag.addData(d); ebfLayers.hydro.addData(d);
-
-        }).catch(()=>{});
-
-        fetch('USRA_HEM.geojson').then(r=>r.json()).then(d=>layerPrhymo.addData(d)).catch(()=>{});
-
-        fetch('Axe_ruissellement_hors_lit_pente.geojson').then(r=>r.json()).then(d=>layerRuissellement.addData(d)).catch(()=>{});
-
-        fetch('HEM_TON_SOL.geojson').then(r=>r.json()).then(d=>layerParcellesAgr.addData(d)).catch(()=>{});
-
-        fetch('Zone_Bati.geojson').then(r=>r.json()).then(d=>layerBatiImpacte.addData(d)).catch(()=>{});
-
-
-
-        fetch('communes.geojson').then(r=>r.json()).then(data=>{
-
-            searchCommunesLayer.addData(data);
-
-            ebfLayers.communes.addData(data);
-
-            const sel = document.getElementById('commune-selector');
-
-            sel.innerHTML = '<option value="">-- Zoomer sur une commune --</option>';
-
-            let noms = [];
-
-            data.features.forEach(f => {
-
-                const n = f.properties.nom || f.properties.NOM || f.properties.NOM_COM || f.properties.Nom;
-
-                if (n) noms.push(n);
-
-            });
-
-            allCommuneNames = [...new Set(noms)].sort((a,b)=>a.localeCompare(b,'fr'));
-
-            allCommuneNames.forEach(nom => {
-
-                const o = document.createElement('option');
-
-                o.value = nom; o.textContent = nom;
-
-                sel.appendChild(o);
-
-            });
-
-        }).catch(()=>{ document.getElementById('commune-selector').innerHTML = '<option>Erreur chargement</option>'; });
-
+        // On attend que TOUTES les requêtes fetch secondaires soient terminées
+        return Promise.all(promises);
     }).catch(() => {});
-
 }
-
-
 
 // ===== ACTIVATE PRES LAYERS =====
 
