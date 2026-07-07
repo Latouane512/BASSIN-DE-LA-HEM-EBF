@@ -1,231 +1,361 @@
 <!DOCTYPE html>
+
 <html lang="fr">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Vallée de la Hem – Outil de gestion intégrée</title>
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
+
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         :root {
+
             --color-primary: #1a7a4a;
+
             --color-primary-light: #e8f5ee;
+
             --color-primary-mid: #2d9e63;
+
             --color-accent: #0ea5e9;
+
             --color-e1: #3182bd; --color-e2: #31a354; --color-e3: #fd8d3c; --color-e4: #de2d26;
+
             --color-bg: #f7f8fa;
+
             --color-sidebar: #ffffff;
+
             --color-border: #e5e7eb;
+
             --color-text: #1a202c;
+
             --color-text-muted: #6b7280;
+
             --color-text-light: #9ca3af;
+
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+
             --shadow-md: 0 4px 12px rgba(0,0,0,0.10);
+
             --shadow-lg: 0 8px 24px rgba(0,0,0,0.14);
+
             --header-h: 58px;
+
             --left-w: 240px;
+
             --right-w: 360px;
+
             --bottom-h: 36px;
+
             --color-a: #a6da59;
+
             --color-au: rgb(250, 172, 76);
+
             --color-n: rgb(51, 160, 44);
+
             --color-u: rgb(217, 217, 217);
 
         }
 
         body {
+
             font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+
             background: var(--color-bg);
+
             overflow: hidden;
+
             color: var(--color-text);
+
             font-size: 13px;
+
         }
-
-
 
         /* =========== HEADER =========== */
 
         #app-header {
+
             position: fixed; top: 0; left: 0; right: 0;
+
             height: var(--header-h);
+
             background: #fff;
+
             border-bottom: 1px solid var(--color-border);
+
             display: flex; align-items: center; gap: 12px;
+
             padding: 0 16px;
+
             z-index: 3000;
+
             box-shadow: var(--shadow-sm);
 
         }
+
         .header-logo {
+
             display: flex; align-items: center; gap: 10px;
+
             flex-shrink: 0;
+
             text-decoration: none;
+
         }
 
         .logo-icon {
+
             width: 36px; height: 36px;
 
         }
 
         .logo-text h1 { font-size: 15px; font-weight: 700; color: var(--color-primary); line-height: 1.2; }
+
         .logo-text p  { font-size: 10px; color: var(--color-text-muted); font-weight: 400; }
+
         .header-divider { width: 1px; height: 30px; background: var(--color-border); flex-shrink: 0; }
+
         .header-search {
+
             flex: 1; max-width: 420px;
+
             display: flex; align-items: center;
+
             background: var(--color-bg); border: 1px solid var(--color-border);
+
             border-radius: 8px; padding: 0 12px; gap: 8px;
+
             transition: border-color 0.2s;
+
         }
 
         .header-search:focus-within { border-color: var(--color-primary); }
+
         .header-search input {
+
             border: none; background: transparent; outline: none;
+
             font-size: 13px; color: var(--color-text); width: 100%; padding: 8px 0;
+
             font-family: inherit;
 
         }
 
         .header-search input::placeholder { color: var(--color-text-light); }
+
         .search-icon { color: var(--color-text-muted); flex-shrink: 0; }
+
         #search-dropdown {
 
             position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+
             background: #fff; border: 1px solid var(--color-border);
+
             border-radius: 8px; box-shadow: var(--shadow-md);
+
             list-style: none; max-height: 220px; overflow-y: auto;
+
             z-index: 4000; display: none;
 
         }
 
         #search-dropdown.open { display: block; }
+
         #search-dropdown li {
+
             padding: 8px 14px; cursor: pointer; font-size: 13px;
+
             color: var(--color-text); transition: background 0.1s;
+
             display: flex; align-items: center; gap: 8px;
 
         }
+
         #search-dropdown li:hover { background: var(--color-primary-light); color: var(--color-primary); }
+
         #search-dropdown li .sdrop-icon { color: var(--color-text-muted); flex-shrink: 0; }
+
         #search-dropdown .sdrop-empty { color: var(--color-text-muted); font-style: italic; cursor: default; }
+
         #search-dropdown .sdrop-empty:hover { background: none; color: var(--color-text-muted); }
 
         /* Legend tab */
 
         .legend-section { padding: 14px 14px 6px; }
+
         .legend-section-title {
 
             font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+
             letter-spacing: 0.6px; color: var(--color-text-muted);
+
             margin-bottom: 8px; padding-bottom: 4px;
+
             border-bottom: 1px solid var(--color-border);
 
         }
 
         .legend-item {
+
             display: flex; align-items: center; gap: 8px;
+
             padding: 4px 0; font-size: 12px; color: var(--color-text);
 
         }
 
         .legend-swatch {
+
             width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0;
 
         }
 
         .legend-line {
+
             width: 22px; height: 4px; border-radius: 2px; flex-shrink: 0;
 
         }
 
         .legend-line-dashed {
+
             width: 22px; height: 0; border-top: 3px dashed; flex-shrink: 0;
 
         }
 
         .legend-circle {
+
             width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;
 
         }
 
         .header-btn {
+
             display: flex; align-items: center; gap: 6px;
+
             padding: 7px 12px; border-radius: 7px; cursor: pointer;
+
             border: 1px solid var(--color-border); background: #fff;
+
             font-size: 12px; font-weight: 500; color: var(--color-text);
+
             transition: all 0.15s; white-space: nowrap; font-family: inherit;
+
         }
 
         .header-btn:hover { background: var(--color-bg); border-color: #c4c9d4; }
+
         .header-mode-group {
+
             display: flex; align-items: center; gap: 0;
+
             border: 1px solid var(--color-border); border-radius: 7px; overflow: hidden;
+
             flex-shrink: 0;
 
         }
 
         .header-mode-label { font-size: 11px; color: var(--color-text-muted); padding: 0 10px; white-space: nowrap; }
+
         .mode-btn {
+
             padding: 7px 14px; font-size: 12px; font-weight: 500;
+
             cursor: pointer; border: none; background: #fff;
+
             color: var(--color-text-muted); transition: all 0.15s;
+
             font-family: inherit; border-left: 1px solid var(--color-border);
 
         }
+
         .mode-btn.active { background: var(--color-bg); color: var(--color-text); font-weight: 600; }
+
         .mode-btn:hover:not(.active) { background: #fafafa; }
+
         .header-btn-primary {
+
             display: flex; align-items: center; gap: 6px;
+
             padding: 8px 16px; border-radius: 7px; cursor: pointer;
+
             border: none; background: var(--color-primary);
+
             font-size: 12px; font-weight: 600; color: #fff;
+
             transition: background 0.15s; white-space: nowrap; font-family: inherit;
 
         }
 
         .header-btn-primary:hover { background: #156038; }
+
         .header-icon-btn {
 
             width: 34px; height: 34px; border-radius: 7px; cursor: pointer;
+
             border: 1px solid var(--color-border); background: #fff;
+
             display: flex; align-items: center; justify-content: center;
+
             color: var(--color-text-muted); transition: all 0.15s; flex-shrink: 0;
 
         }
 
         .header-icon-btn:hover { background: var(--color-bg); color: var(--color-text); }
+
         .header-view-select {
 
             display: flex; align-items: center; gap: 0;
+
             border: 1px solid var(--color-border); border-radius: 7px; overflow: hidden;
+
             flex-shrink: 0; margin-left: auto;
 
         }
 
         .view-tab {
+
             padding: 7px 13px; font-size: 11px; font-weight: 500;
+
             cursor: pointer; border: none; background: #fff;
+
             color: var(--color-text-muted); transition: all 0.15s;
+
             font-family: inherit; white-space: nowrap;
 
         }
 
         .view-tab + .view-tab { border-left: 1px solid var(--color-border); }
+
         .view-tab.active { background: var(--color-primary-light); color: var(--color-primary); font-weight: 600; }
+
         .view-tab:hover:not(.active) { background: var(--color-bg); }
-        
+
         /* =========== MAP =========== */
 
         #map {
+
             position: fixed;
+
             top: var(--header-h);
+
             left: var(--left-w);
+
             right: 0;
+
             bottom: var(--bottom-h);
+
             z-index: 1;
 
         }
@@ -235,113 +365,177 @@
         /* =========== LEFT SIDEBAR =========== */
 
         #left-sidebar {
-              position: fixed;
+
+            position: fixed;
+
             top: var(--header-h); left: 0; bottom: var(--bottom-h);
+
             width: var(--left-w);
+
             background: var(--color-sidebar);
+
             border-right: 1px solid var(--color-border);
+
             display: flex; flex-direction: column;
+
             z-index: 2000;
+
             overflow: hidden;
+
         }
+
         .sidebar-tabs {
+
             display: flex; border-bottom: 1px solid var(--color-border);
+
             flex-shrink: 0;
 
         }
+
         .sidebar-tab {
+
             flex: 1; padding: 12px 0; text-align: center;
+
             font-size: 13px; font-weight: 500; cursor: pointer;
+
             color: var(--color-text-muted); border-bottom: 2px solid transparent;
+
             transition: all 0.15s; background: none; border: none;
+
             border-bottom: 2px solid transparent; font-family: inherit;
 
         }
 
         .sidebar-tab.active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+
         .sidebar-tab:hover:not(.active) { color: var(--color-text); }
+
         .sidebar-body {
+
             flex: 1; overflow-y: auto; padding: 8px 0;
 
         }
 
         .sidebar-body::-webkit-scrollbar { width: 4px; }
+
         .sidebar-body::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+
         .layer-group { margin-bottom: 2px; }
+
         .layer-group-header {
+
             display: flex; align-items: center; gap: 8px;
+
             padding: 9px 14px; cursor: pointer;
+
             transition: background 0.1s; user-select: none;
 
         }
 
         .layer-group-header:hover { background: var(--color-bg); }
+
         .group-icon { width: 20px; height: 20px; flex-shrink: 0; }
+
         .group-title { font-weight: 600; font-size: 12.5px; color: var(--color-text); flex: 1; }
+
         .group-count {
 
             background: var(--color-primary-light); color: var(--color-primary);
+
             font-size: 10px; font-weight: 700; padding: 2px 6px;
+
             border-radius: 10px; flex-shrink: 0;
 
         }
 
         .group-chevron {
+
             color: var(--color-text-light); transition: transform 0.2s; flex-shrink: 0;
+
             font-size: 10px;
 
         }
 
         .layer-group.open .group-chevron { transform: rotate(90deg); }
+
         .layer-group-body { display: none; padding: 2px 0 6px 0; }
+
         .layer-group.open .layer-group-body { display: block; }
+
         .layer-item {
+
             display: flex; align-items: center; gap: 8px;
+
             padding: 6px 14px 6px 36px;
+
             cursor: pointer; transition: background 0.1s;
 
         }
 
         .layer-item:hover { background: var(--color-bg); }
+
         .layer-item label { flex: 1; font-size: 12px; color: var(--color-text); cursor: pointer; line-height: 1.3; }
+
         .layer-item input[type="checkbox"] {
+
             width: 15px; height: 15px; flex-shrink: 0; cursor: pointer;
+
             accent-color: var(--color-primary);
 
         }
 
         .layer-info-btn {
+
             width: 16px; height: 16px; border-radius: 50%;
+
             border: 1px solid var(--color-border); background: #fff;
+
             display: flex; align-items: center; justify-content: center;
+
             color: var(--color-text-muted); font-size: 9px; font-weight: 700;
+
             cursor: pointer; flex-shrink: 0; transition: all 0.15s;
 
         }
 
         .layer-info-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
         .layer-swatch {
+
             width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0;
+
         }
 
         .sidebar-footer {
+
             flex-shrink: 0; border-top: 1px solid var(--color-border); padding: 10px 12px;
+
             display: flex; flex-direction: column; gap: 6px;
 
         }
+
         .footer-action-btn {
+
             display: flex; align-items: center; justify-content: center; gap: 6px;
+
             padding: 8px 12px; border-radius: 7px; cursor: pointer;
+
             font-size: 12px; font-weight: 500; transition: all 0.15s; font-family: inherit;
+
             width: 100%;
+
         }
 
         .btn-reset {
+
             border: 1px solid var(--color-border); background: #fff; color: var(--color-text-muted);
+
         }
 
         .btn-reset:hover { border-color: #c4c9d4; color: var(--color-text); }
+
         .btn-download {
+
             border: 1px solid var(--color-primary); background: var(--color-primary-light);
 
             color: var(--color-primary);
@@ -350,8 +544,6 @@
 
         .btn-download:hover { background: #d4eddf; }
 
-
-
         /* =========== MAP CONTROLS (override leaflet) =========== */
 
         .leaflet-top.leaflet-left { top: 12px; left: 12px; }
@@ -359,8 +551,6 @@
         .leaflet-bottom.leaflet-right { bottom: 16px; right: 12px; }
 
         .leaflet-bottom.leaflet-left { bottom: 16px; left: 12px; }
-
-
 
         .leaflet-control-zoom { border: none !important; box-shadow: var(--shadow-md) !important; }
 
@@ -382,13 +572,9 @@
 
         .leaflet-control-zoom-out { border-radius: 7px !important; }
 
-
-
         .leaflet-control-scale { margin-bottom: 8px !important; }
 
         .leaflet-control-scale-line { border-color: #999 !important; border-radius: 0 0 3px 3px !important; background: rgba(255,255,255,0.85) !important; }
-
-
 
         /* =========== MAP CONTROLS CUSTOM =========== */
 
@@ -415,8 +601,6 @@
         }
 
         .map-ctrl-btn:hover { background: var(--color-bg); color: var(--color-text); }
-
-
 
         /* =========== INFO HOVER PANEL =========== */
 
@@ -472,8 +656,6 @@
 
         .val-focus { font-weight: 700; background: var(--color-primary-light); }
 
-
-
         /* =========== LEGEND =========== */
 
         .legend {
@@ -514,8 +696,6 @@
 
         .legend br { clear: left; }
 
-
-
         /* =========== RIGHT DETAIL PANEL =========== */
 
         #right-panel {
@@ -543,8 +723,6 @@
         }
 
         #right-panel.open { display: flex; }
-
-
 
         .rp-header {
 
@@ -580,8 +758,6 @@
 
         .rp-close:hover { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
 
-
-
         .rp-tags { display: flex; gap: 6px; flex-wrap: wrap; }
 
         .rp-tag {
@@ -596,13 +772,9 @@
 
         .tag-orange{ background: #fff7ed; color: #c2410c; }
 
-
-
         .rp-meta { margin-top: 10px; font-size: 12px; color: var(--color-text-muted); display: flex; gap: 16px; }
 
         .rp-meta span b { color: var(--color-text); }
-
-
 
         .rp-tabs {
 
@@ -630,8 +802,6 @@
 
         .rp-tab:hover:not(.active) { color: var(--color-text); }
 
-
-
         .rp-body {
 
             flex: 1; overflow-y: auto; padding: 16px 18px;
@@ -646,8 +816,6 @@
 
         .rp-tab-content.active { display: block; }
 
-
-
         .rp-section-title {
 
             font-size: 12.5px; font-weight: 700; color: var(--color-text);
@@ -658,13 +826,9 @@
 
         .rp-section-title:first-child { margin-top: 0; }
 
-
-
         .rp-description { font-size: 12px; color: var(--color-text-muted); line-height: 1.6; }
 
         .rp-description b { color: var(--color-text); }
-
-
 
         /* EBF commune search */
 
@@ -679,8 +843,6 @@
         }
 
         .commune-search-box:focus { border-color: var(--color-primary); }
-
-
 
         .dl-link {
 
@@ -697,8 +859,6 @@
         }
 
         .dl-link:hover { background: #eff6ff; border-color: #93c5fd; }
-
-
 
         /* Charts */
 
@@ -722,8 +882,6 @@
 
         .chart-btn.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
 
-
-
         /* Zonage legend inline */
 
         .plui-legend {
@@ -737,8 +895,6 @@
         .plui-legend-item { display: flex; align-items: center; gap: 4px; }
 
         .plui-swatch { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
-
-
 
         /* RMC table */
 
@@ -763,8 +919,6 @@
         .badge-efo { background: #fff3cd; color: #d35400; border: 1px solid #ffeeba; }
 
         .badge-efn { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-
-
 
         /* Panel info modal (methodology) */
 
@@ -828,8 +982,6 @@
 
         .modal-close:hover { background: #fee2e2; color: #dc2626; }
 
-
-
         /* =========== BOTTOM BAR =========== */
 
         #bottom-bar {
@@ -874,15 +1026,11 @@
 
         .bottom-version { font-size: 10px; color: var(--color-text-light); }
 
-
-
         /* =========== SCROLLBARS =========== */
 
         ::-webkit-scrollbar { width: 5px; }
 
         ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
-
-
 
         /* =========== LEAFLET LAYER CONTROL =========== */
 
@@ -904,8 +1052,6 @@
 
         .leaflet-control-layers-overlays label { margin: 4px 0 !important; }
 
-
-
         /* Map title pill */
 
         #map-title {
@@ -925,8 +1071,6 @@
         #map-title h1 { font-size: 13px; color: var(--color-text); letter-spacing: 0.5px; font-weight: 600; margin: 0; }
 
         #map-title p  { font-size: 10px; color: var(--color-text-muted); margin: 2px 0 0; }
-
-
 
         /* Login modal overlay */
 
@@ -988,8 +1132,6 @@
 
 <body>
 
-
-
 <!-- ========== LOGIN OVERLAY ========== -->
 
 <div id="login-overlay">
@@ -1020,8 +1162,6 @@
 
 </div>
 
-
-
 <!-- ========== HEADER ========== -->
 
 <header id="app-header">
@@ -1048,11 +1188,7 @@
 
     </a>
 
-
-
     <div class="header-divider"></div>
-
-
 
     <div class="header-search" style="position:relative;">
 
@@ -1064,8 +1200,6 @@
 
     </div>
 
-
-
     <button class="header-btn" onclick="openFilterModal()">
 
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
@@ -1073,8 +1207,6 @@
         Statistiques communales
 
     </button>
-
-
 
     <div class="header-mode-group">
 
@@ -1086,8 +1218,6 @@
 
     </div>
 
-
-
     <div class="header-view-select" id="view-tabs">
 
         <button class="view-tab" id="tab-presentation" onclick="switchView('presentation')">Présentation de la vallée</button>
@@ -1097,8 +1227,6 @@
         <button class="view-tab" id="tab-diagnostic" onclick="switchView('diagnostic')">Diagnostic Morpho</button>
 
     </div>
-
-
 
     <div class="header-icon-btn" onclick="openInfoModal()" title="Aide méthodologique">
 
@@ -1113,8 +1241,6 @@
     </div>
 
 </header>
-
-
 
 <!-- ========== AUTH MODAL ========== -->
 
@@ -1137,8 +1263,6 @@
     </div>
 
 </div>
-
-
 
 <!-- ========== DOWNLOAD LAYER SELECTION MODAL ========== -->
 
@@ -1244,8 +1368,6 @@
 
 </div>
 
-
-
 <!-- ========== ADVANCED FILTER MODAL ========== -->
 
 <div id="filterModal" class="modal" onclick="if(event.target===this)closeFilterModal()">
@@ -1332,8 +1454,6 @@
 
 </div>
 
-
-
 <!-- ========== LEFT SIDEBAR ========== -->
 
 <aside id="left-sidebar">
@@ -1346,13 +1466,9 @@
 
     </div>
 
-
-
     <!-- COUCHES TAB -->
 
     <div class="sidebar-body" id="sideContent-couches">
-
-
 
         <!-- EBF LAYERS (shown in EBF view) -->
 
@@ -1476,8 +1592,6 @@
 
             </div>
 
-
-
             <!-- EBF Nécessaire -->
 
             <div class="layer-group">
@@ -1584,8 +1698,6 @@
 
             </div>
 
-
-
             <!-- Urbanisme -->
 
             <div class="layer-group">
@@ -1650,8 +1762,6 @@
 
             </div>
 
-
-
             <!-- Contexte géo -->
 
             <div class="layer-group open">
@@ -1700,8 +1810,6 @@
 
         </div>
 
-
-
         <!-- DIAGNOSTIC LAYERS (shown in diagnostic view) -->
 
         <div id="diagnostic-layers" style="display:none;">
@@ -1737,8 +1845,6 @@
                 </div>
 
             </div>
-
-
 
            <!-- Altération du réseau -->
 
@@ -1779,8 +1885,6 @@
                 </div>
 
             </div>
-
-
 
             <!-- Ruissellement -->
 
@@ -1850,8 +1954,6 @@
 
             </div>
 
-
-
             <!-- Infrastructure -->
 
             <div class="layer-group open">
@@ -1912,13 +2014,9 @@
 
         </div>
 
-
-
         <!-- PRESENTATION LAYERS (shown in presentation view) -->
 
         <div id="presentation-layers" style="display:none;">
-
-
 
             <!-- Inondation -->
 
@@ -1994,8 +2092,6 @@
 
             </div>
 
-
-
             <!-- Ruissellement -->
 
             <div class="layer-group open">
@@ -2039,8 +2135,6 @@
                 </div>
 
             </div>
-
-
 
             <!-- Biodiversité -->
 
@@ -2192,8 +2286,6 @@
 
             </div>
 
-
-
             <!-- Suivi piscicole -->
 
             <div class="layer-group open">
@@ -2260,8 +2352,6 @@
 
             </div>
 
-
-
             <!-- Travaux historiques -->
 
             <div class="layer-group">
@@ -2324,21 +2414,13 @@
 
             </div>
 
-
-
         </div>
 
-
-
     </div>
-
-
 
     <!-- LÉGENDE TAB -->
 
     <div class="sidebar-body" id="sideContent-legende" style="display:none;">
-
-
 
         <!-- EBF legend (shown in EBF view) -->
 
@@ -2490,8 +2572,6 @@
 
         </div>
 
-
-
         <!-- Diagnostic legend (shown in diagnostic view) -->
 
         <div id="legend-diagnostic" style="display:none;">
@@ -2563,8 +2643,6 @@
             </div>
 
         </div>
-
-
 
         <!-- Presentation legend -->
 
@@ -2646,8 +2724,6 @@
 
     </div>
 
-
-
     <div class="sidebar-footer">
 
         <button class="footer-action-btn btn-reset" onclick="resetAllLayers()">
@@ -2670,13 +2746,9 @@
 
 </aside>
 
-
-
 <!-- ========== MAP ========== -->
 
 <div id="map"></div>
-
-
 
 <!-- ========== RIGHT DETAIL PANEL ========== -->
 
@@ -2766,8 +2838,6 @@
 
             </div>
 
-
-
             <!-- PLUi Analysis Tab -->
 
             <div class="rp-tab-content" id="rpt-analyse">
@@ -2801,8 +2871,6 @@
                 </div>
 
             </div>
-
-
 
             <!-- Méthodologie Tab -->
 
@@ -2839,8 +2907,6 @@
         </div>
 
     </div>
-
-
 
     <!-- Diagnostic Panel -->
 
@@ -3136,8 +3202,6 @@
 
     </div>
 
-
-
     <!-- Presentation Panel -->
 
     <div id="rp-presentation" style="display:none;flex-direction:column;height:100%;">
@@ -3179,8 +3243,6 @@
             <div class="rp-tab-content active" id="rpt-pres-info">
 
                 <img src="IMAGE/HEM.jpg" alt="Présentation de la vallée" style="width:100%;border-radius:8px;margin-bottom:14px;object-fit:cover;max-height:160px;">
-
-
 
                 <p class="rp-section-title">Le bassin versant de la Hem</p>
 
@@ -3368,8 +3430,6 @@
 
 </aside>
 
-
-
 <!-- ========== INFO MODAL ========== -->
 
 <div id="infoModal" class="modal" onclick="if(event.target===this)closeInfoModal()">
@@ -3386,8 +3446,6 @@
 
                 <p>L'évaluation de la résilience du cours d'eau et de sa capacité d'ajustement repose sur la quantification de son <strong>énergie morphogène</strong> (capacité d'érosion et de transport).</p>
 
-
-
                 <h3>1. Calcul de la Puissance Spécifique (méthode Malavoi, 2007)</h3>
 
                 <p>Pour chaque tronçon et chaque crue, la puissance spécifique (Ps, en W/m²) est calculée selon la formule :</p>
@@ -3399,8 +3457,6 @@
                 </div>
 
                 <p style="font-size:12px;">Avec : ρ = 1000 kg/m³, g = 9.81 m/s², J = pente locale, L = largeur au plein bord</p>
-
-
 
                 <h4>Discrétisation en 4 classes d'énergie</h4>
 
@@ -3421,8 +3477,6 @@
                     </tbody>
 
                 </table>
-
-
 
                 <h3>2. Délimitation des périmètres morphologiques</h3>
 
@@ -3446,8 +3500,6 @@
 
                 <p style="font-size:11px;color:#666;"><em>Note : Contrairement à la zone inondable, les enveloppes de mobilité n'ont pas été découpées par les limites du fond de vallée. Lorsqu'un cours d'eau divague et vient frôler un versant, sa puissance énergétique provoque une érosion par sapement basal.</em></p>
 
-
-
                 <h3>3. Enveloppe Biogéochimique – Bandes tampons dynamiques</h3>
 
                 <p>L'objectif est d'évaluer la capacité de filtration du bassin versant. Deux scénarios basés sur la réglementation des ZNT (Zones Non Traitées) :</p>
@@ -3459,8 +3511,6 @@
                     <li><strong>EBFO (25 m)</strong> : Zone de protection élargie pour une meilleure filtration. Formule : Rayon = (w_moy)/2 + 25</li>
 
                 </ul>
-
-
 
                 <h4>Reclassification de l'occupation du sol (OCSGE + RPG)</h4>
 
@@ -3474,13 +3524,9 @@
 
                 </ul>
 
-
-
                 <h3>4. Protocole PRHYMO – Score de dégradation</h3>
 
                 <p>Le protocole PRHYMO (Agence de l'Eau Artois-Picardie) génère un <strong>Score_100</strong> de 0 à 100% évaluant le niveau de dégradation physique.</p>
-
-
 
                 <h4>9 indicateurs qualitatifs (1 à 5 points chacun)</h4>
 
@@ -3506,8 +3552,6 @@
 
                 </ul>
 
-
-
                 <h4>2 variables quantitatives continues (jusqu'à 20 pts chacune)</h4>
 
                 <ul style="font-size:12px;">
@@ -3518,8 +3562,6 @@
 
                 </ul>
 
-
-
                 <h4>Formule de normalisation</h4>
 
                 <div style="background:#f0f0f0;padding:8px;border-radius:6px;margin:8px 0;font-family:monospace;font-size:12px;">
@@ -3527,8 +3569,6 @@
                     Score_100 = (Score_Brut − 9) / (85 − 9) × 100
 
                 </div>
-
-
 
                 <h4>Classes d'altération</h4>
 
@@ -3542,25 +3582,17 @@
 
                 </ul>
 
-
-
                 <h3>5. Outil d'Aide à la Décision (OAD) pour le PPRE</h3>
 
                 <p>L'OAD traduit le diagnostic en programme de travaux opérationnel (Programme Pluriannuel de Restauration et d'Entretien).</p>
-
-
 
                 <h4>Vague 1 : Urgence (alertes critiques ≥ 4)</h4>
 
                 <p>Restauration lourde : effacement d'ouvrages, désimperméabilisation, confortement de berges.</p>
 
-
-
                 <h4>Vague 2 : Consolidation (alertes modérées = 3)</h4>
 
                 <p>Génie végétal souple : fascinages, densification ripisylve, curage léger des annexes.</p>
-
-
 
                 <h3>6. Modélisation de l'aléa ruissellement</h3>
 
@@ -3575,8 +3607,6 @@
                     <li><strong>Cultures pente modérée</strong> → Bandes enherbées, MAEC</li>
 
                 </ul>
-
-
 
                 <h3>Sources des données</h3>
 
@@ -3606,8 +3636,6 @@
 
                 <p><strong>De l'espace de liberté à l'EBF :</strong> Le concept d'<strong>Espace de Bon Fonctionnement (EBF)</strong> englobe la mobilité latérale et intègre l'intégralité des fonctionnalités de l'hydrosystème. Deux périmètres sont modélisés : l'<strong>EBF Optimal</strong> (enveloppe théorique maximale) et l'<strong>EBF Nécessaire</strong> (corridor vital de compromis).</p>
 
-
-
                 <h3>Matrice Technique (Guide RMC)</h3>
 
                 <table class="rmc-table">
@@ -3632,8 +3660,6 @@
 
                 </table>
 
-
-
                 <h3>Les 5 dimensions écologiques de l'EBF</h3>
 
                 <ul>
@@ -3650,19 +3676,13 @@
 
                 </ul>
 
-
-
                 <h3>Croisement avec le PLUi</h3>
 
                 <p>L'algorithme intersecte les enveloppes EBF avec le PLUi et regroupe les entités en 4 catégories : Urbain (U), À Urbaniser (AU), Agricole (A), Naturel (N). Cette approche permet d'identifier les surfaces de conflits d'usage et les zones d'opportunités pour la révision des documents d'urbanisme.</p>
 
-
-
                 <h3>Outil réglementaire – DCE</h3>
 
                 <p>Le <strong>SDAGE Artois-Picardie</strong> impose sa cartographie. Intégration dans le <strong>PLUi</strong> pour sanctuariser les parcelles (classement en zone N/A ou OAP).</p>
-
-
 
                 <h3>Sources des données</h3>
 
@@ -3692,8 +3712,6 @@
 
             <div class="modal-body-scroll">
 
-
-
                 <h3 style="color:#3b82f6;">Inondation</h3>
 
                 <ul>
@@ -3708,8 +3726,6 @@
 
                 </ul>
 
-
-
                 <h3 style="color:#06b6d4;">Ruissellement</h3>
 
                 <ul>
@@ -3717,8 +3733,6 @@
                     <li><strong>Axes de ruissellement</strong> – Chemins préférentiels d'écoulement des eaux de surface lors des pluies. Identifiés par modélisation topographique (MNT + simulation Monte-Carlo).</li>
 
                 </ul>
-
-
 
                 <h3 style="color:#16a34a;">Biodiversité</h3>
 
@@ -3746,8 +3760,6 @@
 
                 </ul>
 
-
-
                 <h3 style="color:#0891b2;">Suivi piscicole</h3>
 
                 <ul>
@@ -3760,8 +3772,6 @@
 
                 </ul>
 
-
-
                 <h3 style="color:#f59e0b;">Travaux historiques</h3>
 
                 <ul>
@@ -3773,8 +3783,6 @@
                     <li><strong>Travaux hydraulique douce</strong> – Aménagements utilisant le génie végétal pour stabiliser les berges.</li>
 
                 </ul>
-
-
 
                 <h3>Sources des données</h3>
 
@@ -3804,8 +3812,6 @@
 
 </div>
 
-
-
 <!-- ========== BOTTOM BAR ========== -->
 
 <footer id="bottom-bar">
@@ -3834,8 +3840,6 @@
 
 </footer>
 
-
-
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
@@ -3843,8 +3847,6 @@
 // ===== LOGIN STATE =====
 
 let currentUser = null;
-
-
 
 function performLogin() {
 
@@ -3854,8 +3856,6 @@ function performLogin() {
 
     const value = input.value.trim();
 
-
-
     if (!value) {
 
         error.style.display = 'block';
@@ -3864,29 +3864,21 @@ function performLogin() {
 
     }
 
-
-
     currentUser = value.toUpperCase().substring(0, 3);
 
     document.getElementById('user-initials').textContent = currentUser;
 
     document.getElementById('user-name').textContent = currentUser;
 
-
-
     // Hide login overlay
 
     document.getElementById('login-overlay').style.display = 'none';
-
-
 
     // Initialize app
 
     initApp();
 
 }
-
-
 
 // ===== MAP INIT =====
 
@@ -3918,8 +3910,6 @@ let pluiChart;
 
 let allCommuneNames = [];
 
-
-
 function initApp() {
 
     basemapLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -3931,8 +3921,6 @@ function initApp() {
     basemapSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
 
     basemapTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17 });
-
-
 
     map = L.map('map', {
 
@@ -3946,8 +3934,6 @@ function initApp() {
 
     L.control.scale({ position: 'bottomleft', imperial: false }).addTo(map);
 
-
-
     L.control.layers(
 
         { "Plan Clair": basemapLight, "Topographique": basemapTopo, "Satellite": basemapSat },
@@ -3956,11 +3942,7 @@ function initApp() {
 
     ).addTo(map);
 
-
-
     searchCommunesLayer = L.geoJSON();
-
-
 
     // Initialize all layers and setup
 
@@ -3980,15 +3962,11 @@ function initApp() {
 
     loadData();
 
-
-
     // Initial view
 
     switchView('ebf');
 
     initChart();
-
-
 
     // Initialize public mode (hide diagnostic tab and download button)
 
@@ -3999,28 +3977,47 @@ function initApp() {
 }
 
 // ===== COLOR HELPERS =====
+
 function getClassColor(cls) {
+
     return ({ E4: '#de2d26', E3: '#fd8d3c', E2: '#31a354', E1: '#3182bd' })[cls] || '#999';
+
 }
+
 function getUsraStyle(feature) {
+
     const s = parseFloat(feature.properties.Score_100);
+
     if (s < 25) return { color: '#27ae60', weight: 2, fillColor: '#2ecc71', fillOpacity: 0.5 };
+
     if (s <= 45) return { color: '#d35400', weight: 2, fillColor: '#f39c12', fillOpacity: 0.5 };
+
     return { color: '#c0392b', weight: 2, fillColor: '#e74c3c', fillOpacity: 0.5 };
 
 }
 
 function getStyleByAction(feature) {
+
     const action = (feature.properties.Action_SFN || '').trim();
+
     const styles = {
+
         'VAGUE 2 : Préservation - Couvert herbeux':                          { color: '#27ae60', fillColor: '#27ae60', fillOpacity: 0.5 },
+
         'RISQUE FAIBLE : Pas de ruissellement':                               { color: '#bdc3c7', fillColor: '#bdc3c7', fillOpacity: 0.3 },
+
         'SURVEILLANCE : Pratiques agronomiques':                              { color: '#f39c12', fillColor: '#f39c12', fillOpacity: 0.5 },
+
         'VAGUE 1 : URGENCE - Haie / Fascine':                                { color: '#c0392b', fillColor: '#c0392b', fillOpacity: 0.6 },
+
         'VAGUE 2 : Consolidation - MAEC':                                    { color: '#e67e22', fillColor: '#e67e22', fillOpacity: 0.6 },
+
         'EXISTANT : Bande enherbée / tampon':                                 { color: '#9b59b6', fillColor: '#9b59b6', fillOpacity: 0.5 },
+
         'Non impacté par le ruissellement':                                   { color: '#bdc3c7', fillColor: '#bdc3c7', fillOpacity: 0.3 },
+
         'VAGUE 1 : SÉCURITÉ BÂTI - Protection d\'urgence (Noue / Mur)':     { color: '#c0392b', fillColor: '#e74c3c', fillOpacity: 0.8 },
+
         'SURVEILLANCE BÂTI : Veille inondation':                             { color: '#f1c40f', fillColor: '#f1c40f', fillOpacity: 0.8 }
 
     };
@@ -4028,81 +4025,133 @@ function getStyleByAction(feature) {
     return styles[action] || { color: '#7f8c8d', weight: 1, fillColor: '#bdc3c7', fillOpacity: 0.4 };
 
 }
+
 function getPluiColor(typezone) {
+
     const z = (typezone || '').toString().toUpperCase();
+
     if (z.startsWith('A') && !z.startsWith('AU')) return '#a6da59';
+
     if (z.startsWith('1AU') || z.startsWith('2AU') || z.startsWith('AU')) return 'rgb(250,172,76)';
+
     if (z.startsWith('N')) return 'rgb(51,160,44)';
+
     if (z.startsWith('U')) return 'rgb(217,217,217)';
+
     return '#999999';
+
 }
 
 // ===== INFO CONTROL =====
 
 function setupInfoControl() {
+
     info = L.control({ position: 'topright' });
+
     info.onAdd = function() { this._div = L.DomUtil.create('div', 'info'); this.update(); return this._div; };
+
     info.update = function(props) {
+
         if (!props) { this._div.innerHTML = '<h4>Détail Morpho</h4>Survolez la rivière'; return; }
+
         const h = (q) => q === currentActiveQ ? 'val-focus' : '';
+
         const l = props.Largeur_moy || props.largeur_moy || 'N/A';
+
         const v = (val) => val ? parseFloat(val).toFixed(2) : '?';
+
         this._div.innerHTML = `<h4>Secteur : ${props.Typologie || 'N/A'}</h4>
+
             <p style="margin:5px 0 8px;font-size:12px;color:#555;"><b>Largeur :</b> ${l !== 'N/A' ? parseFloat(l).toFixed(2) + ' m' : 'N/A'}</p>
+
             <table class="data-table">
+
                 <tr><th>Crue</th><th>Q (m³/s)</th><th>Ps (W/m²)</th><th>Cl.</th></tr>
+
                 ${['Q2','Q5','Q10','Q20','Q50','Q100'].map(q => `
+
                 <tr class="${h(q)}"><td>${q}</td><td>${v(props['Q_'+q+'_m3s'])}</td><td>${v(props['Ps_'+q])}</td>
+
                 <td><b style="color:${getClassColor(props['Cl_'+q])}">${props['Cl_'+q]||'?'}</b></td></tr>`).join('')}
+
             </table>`;
+
     };
+
 }
 
 // ===== Q LAYERS =====
 
 function setupQLayers() {
+
     function createQLayer(qField) {
+
         return L.geoJSON(null, {
+
             style: (f) => ({ color: getClassColor(f.properties[qField]), weight: 6, opacity: 0.85 }),
+
             onEachFeature: (f, l) => {
+
                 l.on({
+
                     mouseover: (e) => { e.target.setStyle({ weight: 9, color: '#333' }); info.update(f.properties); },
+
                     mouseout: (e) => { e.target.setStyle({ weight: 6, color: getClassColor(f.properties[qField]) }); }
+
                 });
+
             }
+
         });
+
     }
+
     layersQ = {
+
         Q100: createQLayer('Cl_Q100'), Q50: createQLayer('Cl_Q50'), Q20: createQLayer('Cl_Q20'),
+
         Q10: createQLayer('Cl_Q10'), Q5: createQLayer('Cl_Q5'), Q2: createQLayer('Cl_Q2')
+
     };
+
 }
 
 // ===== POINT LAYERS =====
 
 function setupPointLayers() {
+
     layerStation = L.geoJSON(null, {
+
         pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 7, fillColor: '#0078A8', color: '#fff', weight: 2, fillOpacity: 0.9 }),
+
         onEachFeature: (f, l) => l.bindPopup(`<b>Station :</b><br>${f.properties.station || f.properties.nom || 'Station Hem'}`)
 
     });
 
     layerOuvrages = L.geoJSON(null, {
+
         pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 5, fillColor: '#000', color: '#fff', weight: 1, fillOpacity: 0.8 }),
+
         onEachFeature: (f, l) => l.bindPopup(`<b>Ouvrage :</b><br>${f.properties.NomPrincipalObstEcoul || 'Inconnu'}`)
 
     });
 
     layerHydroDiag = L.geoJSON(null, {
+
         style: { color: '#3498db', weight: 2, opacity: 0.8 },
+
         onEachFeature: (f, l) => l.bindPopup(`<b>Cours d'eau :</b><br>${f.properties.NOM_C_EAU || 'Non renseigné'}`)
 
     });
 
     layerPrhymo = L.geoJSON(null, {
+
         style: getUsraStyle,
+
         onEachFeature: (f, l) => {
+
             const s = parseFloat(f.properties.Score_100);
+
             l.bindPopup(`<b>PRHYMO</b><br>Score : ${s.toFixed(1)}%`);
 
         }
@@ -4110,117 +4159,203 @@ function setupPointLayers() {
     });
 
     layerRuissellement = L.geoJSON(null, {
+
         style: { color: '#3498db', weight: 2, dashArray: '3,6', opacity: 0.9 }
 
     });
 
     layerParcellesAgr = L.geoJSON(null, {
+
         style: getStyleByAction,
+
         onEachFeature: (f, l) => l.bindPopup(`<b>Action SFN :</b> ${f.properties.Action_SFN || 'Non définie'}`)
+
     });
+
     layerBatiImpacte = L.geoJSON(null, {
+
         style: getStyleByAction,
+
         onEachFeature: (f, l) => l.bindPopup(`<b>Action :</b> ${f.properties.Action_SFN || 'Non définie'}`)
+
     });
+
 }
 
 // ===== EBF LAYERS =====
 
 function setupEbfLayers() {
+
     const pluiStyle = (f) => ({ fillColor: getPluiColor(f.properties.typezone || f.properties.TYPEZONE), weight: 1, color: '#666', fillOpacity: 0.6 });
+
     const pluiPopup = (f, l) => {
+
         const z = f.properties.typezone || f.properties.TYPEZONE || 'Inconnu';
+
         l.bindPopup(`<b>Zonage PLUi : ${z}</b><br><i>${f.properties.libelong || f.properties.LIBELONG || ''}</i>`);
+
     };
 
     ebfLayers = {
 
         efo: L.geoJSON(null, { style: { color: '#FFAA00', weight: 3, fillOpacity: 0.1 } }),
+
         efn: L.geoJSON(null, { style: { color: '#e67e22', weight: 3, fillOpacity: 0.2, dashArray: '5,10' } }),
+
         bufEroEfo: L.geoJSON(null, { style: { color: '#FFAA00', weight: 2, fillOpacity: 0.1 } }),
+
         bufEroEfn: L.geoJSON(null, { style: { color: '#FFAA00', weight: 2, fillOpacity: 0.1, dashArray: '4,4' } }),
+
         mrvbf: L.geoJSON(null, { style: { color: '#3498db', weight: 0, fillOpacity: 0.3 } }),
+
         aziEfn: L.geoJSON(null, { style: { color: '#3498db', weight: 0, fillOpacity: 0.3 } }),
+
         geol: L.geoJSON(null, { style: { color: '#a6cee3', weight: 0, fillOpacity: 0.4 } }),
+
         geolEfn: L.geoJSON(null, { style: { color: '#a6cee3', weight: 0, fillOpacity: 0.4 } }),
+
         zdh: L.geoJSON(null, { style: { color: '#2ecc71', weight: 0, fillOpacity: 0.4 } }),
+
         geo25: L.geoJSON(null, { style: { color: '#f1c40f', weight: 0, fillOpacity: 0.3 } }),
+
         geo5: L.geoJSON(null, { style: { color: '#f1c40f', weight: 0, fillOpacity: 0.4 } }),
+
         perche: L.geoJSON(null, { style: { color: '#8e44ad', weight: 0, fillOpacity: 0.5 } }),
+
         percheEfn: L.geoJSON(null, { style: { color: '#8e44ad', weight: 0, fillOpacity: 0.5 } }),
+
         zheEfo: L.geoJSON(null, { style: { color: '#27ae60', weight: 0, fillOpacity: 0.5 } }),
+
         zhe: L.geoJSON(null, { style: { color: '#27ae60', weight: 0, fillOpacity: 0.5 } }),
+
         bati: L.geoJSON(null, { style: { color: '#e74c3c', weight: 0, fillOpacity: 0.7 } }),
+
         hydro: L.geoJSON(null, {
+
             style: { color: '#3498db', weight: 2, opacity: 0.8 },
+
             onEachFeature: (f, l) => l.bindPopup(`<b>Cours d'eau :</b><br>${f.properties.NOM_C_EAU || 'Non renseigné'}`)
 
         }),
 
         pluiEfo: L.geoJSON(null, { style: pluiStyle, onEachFeature: pluiPopup }),
+
         pluiEfn: L.geoJSON(null, { style: pluiStyle, onEachFeature: pluiPopup }),
+
         communes: L.geoJSON(null, {
+
             style: { color: '#444', weight: 2, dashArray: '5,5', fillOpacity: 0.05 },
+
             onEachFeature: (f, l) => l.bindPopup(`<b>Commune :</b> ${f.properties.nom || f.properties.NOM || f.properties.NOM_COM || ''}`)
+
         })
+
     };
+
 }
 
 // ===== BIND LAYERS =====
 
 const definitions = {
+
     'check-efo': '<b>EBF Optimal Définitif</b> – Zone de mobilité maximale théorique.',
+
     'check-efn': '<b>EBF Nécessaire Définitif</b> – Périmètre d\'action prioritaire.',
+
     'check-buf-ero-efo': '<b>Espace morphologique (EFO)</b> – Largeur de liberté totale.',
+
     'check-buf-ero-efn': '<b>Espace morphologique (EFN)</b> – Corridor fonctionnel préservé.',
+
     'check-mrvbf': '<b>Enveloppe hydraulique (EFO)</b> – Fond de vallée alluvial.',
+
     'check-azi-efn': '<b>Enveloppe hydraulique (EFN)</b> – Atlas zones inondation (AZI).',
+
     'check-geol': '<b>Enveloppe hydrogéologique (EFO)</b> – Alluvions quaternaires.',
+
     'check-geol-efn': '<b>Enveloppe hydrogéologique (EFN)</b>',
+
     'check-zdh': '<b>Zones à dominantes humides</b>\n\nCette donnée provient de la pédologie caractéristique des zones humides. Elle identifie les secteurs où les conditions pédologiques sont favorables au développement de milieux humides.',
+
     'check-geo25': '<b>Enveloppe biogéochimique (EFO)</b> – Zone tampon 25m.',
+
     'check-perche': '<b>Lits perchés (EFO)</b>',
+
     'check-perche-efn': '<b>Lits perchés (EFN)</b>',
+
     'check-zhe-efo': '<b>Enveloppe biologique (EFO)</b> – Zones humides stratégiques.',
+
     'check-zhe': '<b>Enveloppe biologique (EFN)</b> – Corridor biologique contraint.',
+
     'check-geo5': '<b>Enveloppe biogéochimique (EFN)</b> – Zone tampon 5m.',
+
     'check-bati': '<b>Enjeux Anthropiques</b> – Bâti et infrastructures.',
+
     'check-hydro': '<b>Réseau Hydrographique</b>',
+
     'check-communes': '<b>Limites Communales</b>',
+
     'check-plui-efo': '<b>Zonage PLUi (EFO)</b> – Occupation du sol dans l\'emprise EBF Optimal.',
+
     'check-plui-efn': '<b>Zonage PLUi (EFN)</b> – Occupation du sol dans l\'emprise EBF Nécessaire.',
 
     // Diagnostic layers
+
     'check-prhymo': '<b>Analyse PRHYMO</b>\n\nScore de dégradation physique du cours d\'eau basé sur 9 indicateurs qualitatifs et 2 variables quantitatives.',
+
     'check-ruissellement': '<b>Axes Ruissellement</b>\n\nChemins préférentiels d\'écoulement identifiés par modélisation topographique.',
+
     'check-parcelles-agr': '<b>Parcelles Agricoles Impactées</b>\n\nParcelles prioritaires pour la gestion du ruissellement agricole.',
+
     'check-bati-impacte': '<b>Bâti Impacté</b>\n\nConstructions exposées aux risques de ruissellement.',
+
     'check-station-diag': '<b>Stations Hydrométriques</b>\n\nPoints de mesure des débits et niveaux d\'eau.',
+
     'check-ouvrages-diag': '<b>Ouvrages / Obstacles</b>\n\nÉléments fragmentant le cours d\'eau.',
+
     'check-hydro-diag': '<b>Réseau Hydrographique</b>\n\nTronçons homogènes du bassin de la Hem.',
 
     // Presentation layer definitions
 
     'pres-ppri': '<b>PPRI – Plan de Prévention des Risques d\'Inondation</b>\n\nDocument réglementaire opposable qui délimite les zones exposées au risque d\'inondation. Il impose des règles d\'urbanisme spécifiques pour les constructions.',
+
     'pres-azi': '<b>AZI – Atlas des Zones Inondables</b>\n\nCartographie des secteurs inondables basée sur des études hydrauliques. Outil de connaissance du risque non opposable.',
+
     'pres-reperes-crues': '<b>Repères de crues</b>\n\nPoints de marquage des niveaux atteints par les plus hautes eaux connues. Servent de mémoire des événements passés.',
+
     'pres-bassins': '<b>Bassins versants</b>\n\nEnsemble du territoire drainé par un cours d\'eau. Unité hydrographique de base pour la gestion de l\'eau.',
+
     'pres-axes-ruiss': '<b>Axes de ruissellement</b>\n\nChemins préférentiels d\'écoulement des eaux de surface lors des pluies. Identifiés par modélisation topographique.',
+
     'pres-zh': '<b>Zones humides</b>\n\nMilieux caractérisés par la présence d\'eau proximité de la surface. Rôle majeur dans l\'épuration, le stockage de l\'eau et la biodiversité.',
+
     'pres-natura2000': '<b>Natura 2000 – ZSC</b>\n\nZone Spéciale de Conservation (directive européenne Habitats). Réseau de sites naturels d\'importance européenne.',
+
     'pres-znieff1': '<b>ZNIEFF type 1</b>\n\nZone Naturelle d\'Intérêt Faunistique et Floristique. Périmètre restreint de haute valeur biologique ou écologique.',
+
     'pres-znieff2': '<b>ZNIEFF type 2</b>\n\nZNIEFF de grand ensemble naturel. Unités de paysage cohérentes à valeur fonctionnelle.',
+
     'pres-reservoirs': '<b>Réservoirs de biodiversité</b>\n\nZones identifiées par le SRADDET comme zones sources d\'espèces et milieux naturels remarquables.',
+
     'pres-sites-classes': '<b>Sites classés</b>\n\nSites à protéger en raison de leur caractère artistique, historique, scientifique, légendaire ou pittoresque (loi 1930).',
+
     'pres-reserve-bio': '<b>Réserve de biosphère</b>\n\nDésignation UNESCO reconnaissant un territoire modelé par l\'interaction homme-nature.',
+
     'pres-trame-vert': '<b>Trame verte</b>\n\nRéseau de corridors écologiques terrestres permettant la dispersion des espèces entre réservoirs de biodiversité.',
+
     'pres-trame-bleu': '<b>Trame bleue</b>\n\nRéseau de corridors écologiques aquatiques et humides (cours d\'eau, zones humides, ripisylves).',
+
     'pres-mares': '<b>Mares</b>\n\nPoints d\'eau stagnante de petite taille. Habitats remarquables pour amphibiens, odonates et flore hygrophile.',
+
     'pres-stations-suivi': '<b>Stations de suivi piscicole</b>\n\nPoints de pêche électrique permettant d\'évaluer la population de poissons et l\'indice biotique.',
+
     'pres-peuplements': '<b>Peuplements piscicoles</b>\n\nZones de répartition des communautés de poissons (truite, chabot, vandoise, etc.).',
+
     'pres-obstacles': '<b>Obstacles à l\'écoulement</b>\n\nOuvrages (seuils, barrages, buses) fragmentant le cours d\'eau et le transit sédimentaire.',
+
     'pres-travaux': '<b>Travaux réalisés</b>\n\nLocalisation des opérations de restauration hydromorphologique effectuées.',
+
     'pres-amenagements': '<b>Aménagements anciens</b>\n\nOuvrages hydrauliques historiques (berges artificielles, calibrage).',
+
     'pres-travaux-hydro': '<b>Travaux hydraulique douce</b>\n\nAménagements utilisant le génie végétal pour stabiliser les berges sans durcissement.'
 
 };
@@ -4230,248 +4365,441 @@ function setupBindings() {
     // Build Q buttons in diagnostic panel
 
     const qBtns = document.getElementById('q-buttons');
+
     const qControls = document.getElementById('q-layer-controls');
+
     ['Q2','Q5','Q10','Q20','Q50','Q100'].forEach(q => {
 
         // sidebar buttons
 
         const btn = document.createElement('button');
+
         btn.className = 'chart-btn' + (q === 'Q100' ? ' active' : '');
+
         btn.textContent = q;
+
         btn.style.flex = '0 0 auto';
+
         btn.onclick = () => {
+
             document.querySelectorAll('#q-buttons .chart-btn').forEach(b => b.classList.remove('active'));
+
             btn.classList.add('active');
+
             for (let qq in layersQ) map.removeLayer(layersQ[qq]);
+
             currentActiveQ = q;
+
             layersQ[q].addTo(map);
+
         };
+
         qBtns.appendChild(btn);
 
         // layer checkboxes in sidebar
 
         const item = document.createElement('div');
+
         item.className = 'layer-item';
+
         item.innerHTML = `<div class="layer-swatch" style="background:${getClassColor('E'+q.replace('Q',''))||'#888'};width:10px;height:3px;border-radius:0;margin-top:5px;"></div>
+
             <input type="checkbox" id="check-q-${q}" ${q==='Q100'?'checked':''}>
+
             <label for="check-q-${q}">Crue ${q}</label>`;
+
         item.querySelector('input').addEventListener('change', function() {
+
             if (this.checked) {
+
                 for (let qq in layersQ) map.removeLayer(layersQ[qq]);
+
                 document.querySelectorAll('[id^="check-q-"]').forEach(cb => { if(cb !== this) cb.checked = false; });
+
                 currentActiveQ = q;
+
                 layersQ[q].addTo(map);
+
                 document.querySelectorAll('#q-buttons .chart-btn').forEach(b => b.classList.toggle('active', b.textContent === q));
+
             } else {
+
                 map.removeLayer(layersQ[q]);
+
             }
+
         });
+
         qControls.appendChild(item);
+
     });
 
     // Bind EBF checkboxes
 
     function bindEbf(id, layer, file) {
+
         const el = document.getElementById(id);
+
         if (!el) return;
+
         el.addEventListener('change', function() {
+
             if (this.checked) {
+
                 fetch(file).then(r => r.json()).then(data => {
+
                     layer.addData(data);
+
                     if (!id.startsWith('check-plui') && id !== 'check-communes' && id !== 'check-hydro') {
-                      layer.eachLayer(l => l.bindPopup(definitions[id] || 'Couche modélisée'));
+
+                        layer.eachLayer(l => l.bindPopup(definitions[id] || 'Couche modélisée'));
+
                     }
+
                     layer.addTo(map);
+
                 }).catch(() => console.log('Erreur: ' + file));
+
             } else {
+
                 map.removeLayer(layer);
+
             }
+
         });
+
     }
 
     bindEbf('check-efo', ebfLayers.efo, 'EFO_FINAL_WGS.geojson');
+
     bindEbf('check-efn', ebfLayers.efn, 'EFN_FINAL_WGS.geojson');
+
     bindEbf('check-buf-ero-efo', ebfLayers.bufEroEfo, 'Buffer_Erosion_EFO.geojson');
+
     bindEbf('check-buf-ero-efn', ebfLayers.bufEroEfn, 'Buffer_Erosion_EFN.geojson');
+
     bindEbf('check-mrvbf', ebfLayers.mrvbf, 'MRVBF_LISSER.geojson');
+
     bindEbf('check-azi-efn', ebfLayers.aziEfn, 'Crues_AZI.geojson');
+
     bindEbf('check-geol', ebfLayers.geol, 'Geologie.geojson');
+
     bindEbf('check-geol-efn', ebfLayers.geolEfn, 'Geologie.geojson');
+
     bindEbf('check-zdh', ebfLayers.zdh, 'ZDH_Global.geojson');
+
     bindEbf('check-geo25', ebfLayers.geo25, 'EBF_Geochimique_25m.geojson');
+
     bindEbf('check-perche', ebfLayers.perche, 'LIT_perche_WGS.geojson');
+
     bindEbf('check-perche-efn', ebfLayers.percheEfn, 'LIT_perche_WGS.geojson');
+
     bindEbf('check-zhe-efo', ebfLayers.zheEfo, 'ZH_Enjeux.geojson');
+
     bindEbf('check-zhe', ebfLayers.zhe, 'ZH_Enjeux.geojson');
+
     bindEbf('check-geo5', ebfLayers.geo5, 'EBF_Geochimique_5m.geojson');
+
     bindEbf('check-bati', ebfLayers.bati, 'Bati_route.geojson');
+
     bindEbf('check-hydro', ebfLayers.hydro, 'Hydro_HEM_WGS.geojson');
+
     bindEbf('check-plui-efo', ebfLayers.pluiEfo, 'EFO_PLUI.geojson');
+
     bindEbf('check-plui-efn', ebfLayers.pluiEfn, 'EFN_PLUI.geojson');
+
     bindEbf('check-communes', ebfLayers.communes, 'communes.geojson');
 
     // Diagnostic layer bindings
 
     function bindDiag(id, layer) {
+
         const el = document.getElementById(id);
+
         if (!el) return;
+
         el.addEventListener('change', function() {
+
             if (this.checked) layer.addTo(map);
+
             else map.removeLayer(layer);
+
         });
+
     }
 
     bindDiag('check-prhymo', layerPrhymo);
+
     bindDiag('check-ruissellement', layerRuissellement);
+
     bindDiag('check-parcelles-agr', layerParcellesAgr);
+
     bindDiag('check-bati-impacte', layerBatiImpacte);
+
     bindDiag('check-station-diag', layerStation);
+
     bindDiag('check-ouvrages-diag', layerOuvrages);
+
     bindDiag('check-hydro-diag', layerHydroDiag);
+
 }
 
 // ===== PRESENTATION LAYERS =====
+
 function setupPresentationLayers() {
+
     presLayerDefs = [
 
         // --- Inondation ---
 
         { id: 'pres-ppri',
+
           file: 'PPRI_ancien.geojson',
+
           style: { color: '#3b82f6', weight: 1, fillColor: '#3b82f6', fillOpacity: 0.35 },
+
           popup: f => `<b>PPRI</b>` },
+
         { id: 'pres-azi',
+
           file: 'Crues_AZI.geojson',
+
           style: { color: '#93c5fd', weight: 1, fillColor: '#93c5fd', fillOpacity: 0.35 },
+
           popup: f => `<b>Atlas zones inondables</b><br><b>Année :</b> ${f.properties.ANNEE||'?'}<br><b>Nature :</b> ${f.properties.NATURE||'?'}` },
+
         { id: 'pres-reperes-crues',
+
           file: 'lieux_inondes.geojson',
+
           pointStyle: { radius: 7, fillColor: '#1d4ed8', color: '#fff', weight: 2, fillOpacity: 0.9 },
+
           popup: f => `<b>Lieu inondé</b><br>${Object.entries(f.properties||{}).slice(0,3).map(([k,v])=>`<b>${k}:</b> ${v}`).join('<br>')}` },
+
         { id: 'pres-bassins',
+
           file: 'bassin_hem.geojson',
+
           style: { color: '#3b82f6', weight: 2, fillColor: '#bfdbfe', fillOpacity: 0.15 },
+
           popup: f => `<b>Bassin versant</b>` },
 
         // --- Ruissellement ---
 
         { id: 'pres-axes-ruiss',
+
           file: 'Axe_ruissellement_hors_lit_pente.geojson',
+
           lineStyle: { color: '#06b6d4', weight: 2, opacity: 0.85 },
+
           popup: f => `<b>Axe de ruissellement</b>` },
-        
+
         // --- Biodiversité ---
 
         { id: 'pres-zh',
+
           file: 'ZH_Enjeux.geojson',
+
           style: { color: '#16a34a', weight: 1, fillColor: '#4ade80', fillOpacity: 0.4 },
+
           popup: f => `<b>Zone humide</b>` },
+
         { id: 'pres-natura2000',
+
           file: 'ZCS_HEM.geojson',
+
           style: { color: '#16a34a', weight: 2, fillColor: '#16a34a', fillOpacity: 0.2 },
+
           popup: f => `<b>ZCS – Natura 2000</b><br>${f.properties.sitename||''}` },
+
         { id: 'pres-znieff1',
+
           file: 'ZNIEFF1.geojson',
+
           style: { color: '#65a30d', weight: 1, fillColor: '#a3e635', fillOpacity: 0.3 },
+
           popup: f => `<b>ZNIEFF type 1</b><br>${f.properties.NOM||''}` },
+
         { id: 'pres-znieff2',
+
           file: 'ZNIEFF2.geojson',
+
           style: { color: '#4d7c0f', weight: 1, fillColor: '#86efac', fillOpacity: 0.25 },
+
           popup: f => `<b>ZNIEFF type 2</b><br>${f.properties.NOM||''}` },
+
         { id: 'pres-reservoirs',
+
           file: 'reservoir_biodiversite.geojson',
+
           style: { color: '#f97316', weight: 1, fillColor: '#f97316', fillOpacity: 0.35 },
+
           popup: f => `<b>Réservoir de biodiversité</b><br>${f.properties.MILMAJ_REG||''}` },
+
         { id: 'pres-sites-classes',
+
           file: 'Sites_classe_hem.geojson',
+
           style: { color: '#d97706', weight: 2, fillColor: '#fbbf24', fillOpacity: 0.4 },
+
           popup: f => `<b>Site classé</b><br>${f.properties.ref_site_5||''}` },
+
         { id: 'pres-reserve-bio',
+
           file: 'reserve_biosphere.geojson',
+
           style: { color: '#7c3aed', weight: 2, fillColor: '#a78bfa', fillOpacity: 0.3 },
+
           popup: f => `<b>Réserve de biosphère</b><br>${f.properties.NOM_SITE||''}` },
+
         { id: 'pres-trame-vert',
+
           file: 'trame_vert.geojson',
+
           style: { color: '#65a30d', weight: 1, fillColor: '#84cc16', fillOpacity: 0.35 },
+
           popup: f => `<b>Trame verte</b><br>${f.properties.MILMAJ_REG||''}` },
+
         { id: 'pres-trame-bleu',
+
           file: 'trame_bleu.geojson',
+
           style: { color: '#0284c7', weight: 1, fillColor: '#0ea5e9', fillOpacity: 0.3 },
+
           popup: f => `<b>Trame bleue</b>` },
+
         { id: 'pres-mares',
+
           file: 'mares.geojson',
+
           pointStyle: { radius: 5, fillColor: '#6ee7b7', color: '#059669', weight: 1.5, fillOpacity: 0.9 },
+
           popup: f => `<b>Mare</b><br>${Object.entries(f.properties||{}).slice(0,3).map(([k,v])=>`<b>${k}:</b> ${v}`).join('<br>')}` },
 
         // --- Suivi piscicole ---
 
         { id: 'pres-stations-suivi',
+
           file: 'Station.geojson',
+
           pointStyle: { radius: 7, fillColor: '#0891b2', color: '#fff', weight: 2, fillOpacity: 0.9 },
+
           popup: f => `<b>Station de suivi</b><br>${f.properties.station||f.properties.nom||''}` },
+
         { id: 'pres-peuplements',
+
           file: 'Peuplements_piscicoles.geojson',
+
           style: { color: '#0891b2', weight: 1, fillColor: '#22d3ee', fillOpacity: 0.4 },
+
           popup: f => `<b>Peuplements piscicoles</b>` },
+
         { id: 'pres-obstacles',
+
           file: 'Ouvrage_WGS.geojson',
+
           pointStyle: { radius: 5, fillColor: '#222', color: '#fff', weight: 1, fillOpacity: 0.85 },
+
           popup: f => `<b>Obstacle à l'écoulement</b><br>${f.properties.NomPrincipalObstEcoul||''}` },
 
         // --- Travaux historiques ---
 
         { id: 'pres-travaux',
+
           file: 'Travaux_realises.geojson',
+
           pointStyle: { radius: 6, fillColor: '#f59e0b', color: '#fff', weight: 2, fillOpacity: 0.9 },
+
           popup: f => `<b>Travaux réalisés</b>` },
+
         { id: 'pres-amenagements',
+
           file: 'Amenagements_anciens.geojson',
+
           style: { color: '#d97706', weight: 1, fillColor: '#d97706', fillOpacity: 0.25 },
+
           popup: f => `<b>Aménagement ancien</b>` },
 
         // --- Travaux hydraulique douce (couche unique) ---
 
         { id: 'pres-travaux-hydro',
+
           file: 'Travaux_hydraulique_douce.geojson',
+
           style: { color: '#0284c7', weight: 1.5, fillColor: '#0ea5e9', fillOpacity: 0.35 },
+
           popup: f => `<b>Travaux hydraulique douce</b><br>${Object.entries(f.properties||{}).slice(0,3).map(([k,v])=>`<b>${k}:</b> ${v}`).join('<br>')}` }
 
     ];
+
     presLayerDefs.forEach(def => {
+
         const onEach = (f, l) => {
+
             if (def.popup) l.bindPopup(def.popup(f));
 
         };
+
         if (def.pointStyle) {
+
             presLayers[def.id] = L.geoJSON(null, {
+
                 pointToLayer: (f, latlng) => L.circleMarker(latlng, def.pointStyle),
+
                 onEachFeature: onEach
+
             });
+
         } else if (def.lineStyle) {
+
             presLayers[def.id] = L.geoJSON(null, { style: def.lineStyle, onEachFeature: onEach });
+
         } else {
+
             presLayers[def.id] = L.geoJSON(null, { style: def.style, onEachFeature: onEach });
+
         }
+
         const el = document.getElementById(def.id);
+
         if (!el) return;
+
         el.addEventListener('change', function() {
+
             if (this.checked) {
+
                 if (presLayers[def.id].getLayers().length > 0) {
+
                     presLayers[def.id].addTo(map);
+
                 } else {
+
                     fetch(def.file).then(r => r.json()).then(d => {
+
                         presLayers[def.id].addData(d);
+
                         presLayers[def.id].addTo(map);
+
                     }).catch(() => {
+
                         this.checked = false;
+
                         console.log('Fichier non disponible : ' + def.file);
+
                     });
+
                 }
+
             } else {
+
                 map.removeLayer(presLayers[def.id]);
+
             }
+
         });
+
     });
+
 }
 
 // ===== DATA LOADING =====
@@ -4479,54 +4807,95 @@ function setupPresentationLayers() {
 function loadData() {
 
     fetch('hem_troncons_homogenes_finaux_1.geojson').then(r => r.json()).then(data => {
+
         for (let q in layersQ) layersQ[q].addData(data);
+
         fetch('Station.geojson').then(r=>r.json()).then(d=>layerStation.addData(d)).catch(()=>{});
+
         fetch('Ouvrage_WGS.geojson').then(r=>r.json()).then(d=>layerOuvrages.addData(d)).catch(()=>{});
+
         fetch('Hydro_HEM_WGS.geojson').then(r=>r.json()).then(d=>{
+
             layerHydroDiag.addData(d); ebfLayers.hydro.addData(d);
 
         }).catch(()=>{});
 
         fetch('USRA_HEM.geojson').then(r=>r.json()).then(d=>layerPrhymo.addData(d)).catch(()=>{});
+
         fetch('Axe_ruissellement_hors_lit_pente.geojson').then(r=>r.json()).then(d=>layerRuissellement.addData(d)).catch(()=>{});
+
         fetch('HEM_TON_SOL.geojson').then(r=>r.json()).then(d=>layerParcellesAgr.addData(d)).catch(()=>{});
+
         fetch('Zone_Bati.geojson').then(r=>r.json()).then(d=>layerBatiImpacte.addData(d)).catch(()=>{});
+
         fetch('communes.geojson').then(r=>r.json()).then(data=>{
-            
+
             searchCommunesLayer.addData(data);
+
             ebfLayers.communes.addData(data);
+
             const sel = document.getElementById('commune-selector');
+
             sel.innerHTML = '<option value="">-- Zoomer sur une commune --</option>';
+
             let noms = [];
+
             data.features.forEach(f => {
+
                 const n = f.properties.nom || f.properties.NOM || f.properties.NOM_COM || f.properties.Nom;
+
                 if (n) noms.push(n);
+
             });
+
             allCommuneNames = [...new Set(noms)].sort((a,b)=>a.localeCompare(b,'fr'));
+
             allCommuneNames.forEach(nom => {
+
                 const o = document.createElement('option');
+
                 o.value = nom; o.textContent = nom;
+
                 sel.appendChild(o);
+
             });
+
         }).catch(()=>{ document.getElementById('commune-selector').innerHTML = '<option>Erreur chargement</option>'; });
+
     }).catch(() => {});
+
 }
+
 // ===== ACTIVATE PRES LAYERS =====
 
 function activatePresLayers() {
+
     document.querySelectorAll('#presentation-layers input[type="checkbox"]:checked').forEach(cb => {
+
         const def = presLayerDefs.find(d => d.id === cb.id);
+
         if (!def) return;
+
         if (presLayers[def.id].getLayers().length > 0) {
+
             presLayers[def.id].addTo(map);
+
         } else {
+
             fetch(def.file).then(r => r.json()).then(d => {
+
                 presLayers[def.id].addData(d);
+
                 presLayers[def.id].addTo(map);
+
             }).catch(() => console.log('Fichier non disponible : ' + def.file));
+
         }
+
     });
+
 }
+
 // ===== VIEW SWITCHING =====
 
 function switchView(view) {
@@ -4534,92 +4903,145 @@ function switchView(view) {
     // Block diagnostic view for public mode
 
     if (view === 'diagnostic' && currentMode === 'public') {
+
         alert('Le diagnostic morphologique est réservé aux agents techniques. Veuillez vous identifier avec le code agent.');
+
         return;
+
     }
+
     currentView = view;
 
     // Tab active states
 
     document.getElementById('tab-ebf').classList.toggle('active', view === 'ebf');
+
     document.getElementById('tab-diagnostic').classList.toggle('active', view === 'diagnostic');
+
     document.getElementById('tab-presentation').classList.toggle('active', view === 'presentation');
 
     // Sidebar layer sections
 
     document.getElementById('ebf-layers').style.display = view === 'ebf' ? 'block' : 'none';
+
     document.getElementById('diagnostic-layers').style.display = view === 'diagnostic' ? 'block' : 'none';
+
     document.getElementById('presentation-layers').style.display = view === 'presentation' ? 'block' : 'none';
 
     // Right panel sections
+
     document.getElementById('rp-ebf').style.display = view === 'ebf' ? 'flex' : 'none';
+
     document.getElementById('rp-diag').style.display = view === 'diagnostic' ? 'flex' : 'none';
+
     document.getElementById('rp-presentation').style.display = view === 'presentation' ? 'flex' : 'none';
 
     // Legend panels
 
     const legendEbf  = document.getElementById('legend-ebf');
+
     const legendDiag = document.getElementById('legend-diagnostic');
+
     const legendPres = document.getElementById('legend-presentation');
+
     if (legendEbf)  legendEbf.style.display  = view === 'ebf' ? 'block' : 'none';
+
     if (legendDiag) legendDiag.style.display = view === 'diagnostic' ? 'block' : 'none';
+
     if (legendPres) legendPres.style.display = view === 'presentation' ? 'block' : 'none';
 
     // Info modal sections
 
     document.getElementById('modal-ebf').style.display = view === 'ebf' ? 'block' : 'none';
+
     document.getElementById('modal-diagnostic').style.display = view === 'diagnostic' ? 'block' : 'none';
+
     document.getElementById('modal-presentation').style.display = view === 'presentation' ? 'block' : 'none';
+
     openRightPanel();
+
     // Map layer management
 
     if (view === 'diagnostic') {
+
         info.addTo(map);
+
         layersQ['Q100'].addTo(map); layerStation.addTo(map); layerOuvrages.addTo(map);
+
         for (let l in ebfLayers) map.removeLayer(ebfLayers[l]);
+
         for (let l in presLayers) map.removeLayer(presLayers[l]);
+
         document.getElementById('check-station-diag').checked = true;
+
         document.getElementById('check-ouvrages-diag').checked = true;
+
         document.getElementById('check-hydro-diag').checked = true;
+
         layerHydroDiag.addTo(map);
+
     } else if (view === 'presentation') {
+
         info.remove();
+
         for (let q in layersQ) map.removeLayer(layersQ[q]);
+
         map.removeLayer(layerStation); map.removeLayer(layerOuvrages);
+
         map.removeLayer(layerHydroDiag); map.removeLayer(layerPrhymo);
+
         map.removeLayer(layerRuissellement); map.removeLayer(layerParcellesAgr); map.removeLayer(layerBatiImpacte);
+
         for (let l in ebfLayers) map.removeLayer(ebfLayers[l]);
 
         // Activate pre-checked presentation layers
 
         activatePresLayers();
+
     } else {
 
         // EBF view
+
         info.remove();
+
         for (let q in layersQ) map.removeLayer(layersQ[q]);
+
         map.removeLayer(layerStation); map.removeLayer(layerOuvrages);
+
         map.removeLayer(layerHydroDiag); map.removeLayer(layerPrhymo);
+
         map.removeLayer(layerRuissellement); map.removeLayer(layerParcellesAgr); map.removeLayer(layerBatiImpacte);
+
         for (let l in presLayers) map.removeLayer(presLayers[l]);
+
         if (document.getElementById('check-hydro').checked) ebfLayers.hydro.addTo(map);
+
         if (document.getElementById('check-communes').checked) ebfLayers.communes.addTo(map);
+
     }
+
 }
 
 // ===== RIGHT PANEL =====
 
 function openRightPanel() {
+
     const panel = document.getElementById('right-panel');
+
     panel.classList.add('open');
+
     document.getElementById('map').classList.add('panel-open');
+
     setTimeout(() => map.invalidateSize(), 300);
 
 }
 
 function closeRightPanel() {
+
     document.getElementById('right-panel').classList.remove('open');
+
     document.getElementById('map').classList.remove('panel-open');
+
     setTimeout(() => map.invalidateSize(), 300);
 
 }
@@ -4627,18 +5049,27 @@ function closeRightPanel() {
 function showRpTab(btn, contentId) {
 
     const panel = btn.closest('aside') || btn.closest('#right-panel');
+
     panel.querySelectorAll('.rp-tab').forEach(t => t.classList.remove('active'));
+
     panel.querySelectorAll('.rp-tab-content').forEach(c => c.classList.remove('active'));
+
     btn.classList.add('active');
+
     document.getElementById(contentId).classList.add('active');
 
 }
+
 // ===== LEFT SIDEBAR TABS =====
 
 function showSideTab(tab) {
+
     document.getElementById('sideTab-couches').classList.toggle('active', tab === 'couches');
+
     document.getElementById('sideTab-legende').classList.toggle('active', tab === 'legende');
+
     document.getElementById('sideContent-couches').style.display = tab === 'couches' ? '' : 'none';
+
     document.getElementById('sideContent-legende').style.display = tab === 'legende' ? '' : 'none';
 
 }
@@ -4646,144 +5077,227 @@ function showSideTab(tab) {
 // ===== HEADER SEARCH AUTOCOMPLETE =====
 
 function filterCommuneSearch(val) {
+
     const dropdown = document.getElementById('search-dropdown');
+
     const term = val.trim().toLowerCase();
+
     if (!allCommuneNames.length) { dropdown.classList.remove('open'); return; }
 
     const matches = term
+
         ? allCommuneNames.filter(n => n.toLowerCase().includes(term)).slice(0, 10)
+
         : allCommuneNames.slice(0, 10);
+
     if (!matches.length) {
+
         dropdown.innerHTML = '<li class="sdrop-empty">Aucune commune trouvée</li>';
+
         dropdown.classList.add('open');
+
         return;
+
     }
+
     dropdown.innerHTML = matches.map(n => `
+
         <li onclick="selectCommune('${n.replace(/'/g, "\\'")}')">
+
             <svg class="sdrop-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+
             ${n}
+
         </li>`).join('');
+
     dropdown.classList.add('open');
+
 }
 
 function hideSearchDropdown() {
+
     document.getElementById('search-dropdown').classList.remove('open');
+
 }
 
 function selectCommune(name) {
+
     document.getElementById('header-search-input').value = name;
+
     hideSearchDropdown();
+
     // Sync panel selector
 
     const sel = document.getElementById('commune-selector');
+
     for (let i = 0; i < sel.options.length; i++) {
+
         if (sel.options[i].value === name) { sel.selectedIndex = i; break; }
+
     }
+
     // Open right panel and zoom to commune (stay in current view)
 
     openRightPanel();
+
     if (currentView === 'ebf') {
+
         const communeTab = document.querySelector('#rp-ebf .rp-tab');
+
         if (communeTab) showRpTab(communeTab, 'rpt-commune');
+
     }
+
     zoomToCommune(name);
+
 }
+
 // ===== LAYER GROUPS =====
 
 function toggleGroup(header) {
+
     const group = header.parentElement;
+
     group.classList.toggle('open');
 
 }
 
-
-
 // ===== LAYER INFO =====
 
 function showLayerInfo(id) {
+
     const msg = definitions[id];
+
     if (msg) {
 
         // Create a custom modal for layer info
 
         const existingModal = document.getElementById('layerInfoModal');
+
         if (existingModal) existingModal.remove();
 
         const modal = document.createElement('div');
+
         modal.id = 'layerInfoModal';
+
         modal.className = 'modal';
+
         modal.style.display = 'block';
+
         modal.onclick = function(e) { if(e.target === modal) modal.remove(); };
+
         modal.innerHTML = `
+
             <div class="modal-card" style="max-width:500px;">
+
                 <div class="modal-close" onclick="document.getElementById('layerInfoModal').remove()">&#215;</div>
+
                 <h2 style="font-size:14px;margin-bottom:16px;">Description de la couche</h2>
+
                 <div style="font-size:13px;line-height:1.7;color:#444;">${msg.replace(/\n/g, '<br>').replace(/<b>/g, '<b style="color:var(--color-primary)">')}</div>
+
             </div>
+
         `;
+
         document.body.appendChild(modal);
+
     }
+
 }
 
 // ===== RESET LAYERS =====
 
 function resetAllLayers() {
+
     if (currentView === 'ebf') {
 
         // Reset EBF layers
+
         document.querySelectorAll('#ebf-layers input[type="checkbox"]').forEach(cb => {
+
             if (cb.id === 'check-hydro' || cb.id === 'check-communes') {
+
                 cb.checked = true;
+
             } else {
+
                 cb.checked = false;
+
             }
+
         });
+
         for (let l in ebfLayers) map.removeLayer(ebfLayers[l]);
+
         ebfLayers.hydro.addTo(map);
+
         ebfLayers.communes.addTo(map);
+
     } else if (currentView === 'diagnostic') {
 
         // Reset diagnostic layers
 
         document.querySelectorAll('#diagnostic-layers input[type="checkbox"]').forEach(cb => {
+
             if (cb.id === 'check-station-diag' || cb.id === 'check-ouvrages-diag' || cb.id === 'check-hydro-diag') {
+
                 cb.checked = true;
+
             } else if (cb.id.startsWith('check-q-')) {
+
                 cb.checked = (cb.id === 'check-q-Q100');
+
             } else {
+
                 cb.checked = false;
+
             }
+
         });
+
         // Remove all diagnostic layers
 
         for (let q in layersQ) map.removeLayer(layersQ[q]);
+
         map.removeLayer(layerStation); map.removeLayer(layerOuvrages);
+
         map.removeLayer(layerHydroDiag); map.removeLayer(layerPrhymo);
+
         map.removeLayer(layerRuissellement); map.removeLayer(layerParcellesAgr);
+
         map.removeLayer(layerBatiImpacte);
 
         // Add default layers back
 
         layersQ['Q100'].addTo(map);
+
         layerStation.addTo(map); layerOuvrages.addTo(map); layerHydroDiag.addTo(map);
 
         // Reset Q buttons
 
         document.querySelectorAll('#q-buttons .chart-btn').forEach(b => b.classList.toggle('active', b.textContent === 'Q100'));
+
         currentActiveQ = 'Q100';
+
     } else if (currentView === 'presentation') {
 
         // Reset presentation layers - default checked ones
 
         const defaultChecked = ['pres-ppri', 'pres-reperes-crues', 'pres-axes-ruiss', 'pres-zh', 'pres-natura2000', 'pres-znieff1', 'pres-znieff2', 'pres-reservoirs', 'pres-stations-suivi', 'pres-peuplements'];
+
         document.querySelectorAll('#presentation-layers input[type="checkbox"]').forEach(cb => {
+
             cb.checked = defaultChecked.includes(cb.id);
 
         });
 
         for (let l in presLayers) map.removeLayer(presLayers[l]);
+
         activatePresLayers();
+
     }
+
 }
 
 // ===== MODE TOGGLE =====
@@ -4791,19 +5305,25 @@ function resetAllLayers() {
 function setMode(btn, mode) {
 
     btn.closest('.header-mode-group').querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+
     btn.classList.add('active');
+
     currentMode = mode;
 
-
-
     // Show/hide diagnostic tab based on mode
+
     const diagTab = document.getElementById('tab-diagnostic');
+
     const downloadBtn = document.getElementById('btn-download-data');
+
     const docsTab = document.querySelector('.pres-docs-tab');
 
     if (mode === 'public') {
+
         diagTab.style.display = 'none';
+
         downloadBtn.style.display = 'none';
+
         if (docsTab) docsTab.style.display = 'none';
 
         // If currently on diagnostic view, switch to EBF
@@ -4811,158 +5331,283 @@ function setMode(btn, mode) {
         if (currentView === 'diagnostic') switchView('ebf');
 
     } else {
+
         diagTab.style.display = '';
+
         downloadBtn.style.display = 'flex';
+
         if (docsTab) docsTab.style.display = '';
+
     }
+
 }
+
 function promptAgentMode() {
+
     document.getElementById('authModal').style.display = 'block';
+
     document.getElementById('agent-code-input').value = '';
+
     document.getElementById('agent-code-input').focus();
+
     document.getElementById('auth-error').style.display = 'none';
+
 }
+
 function closeAuthModal() {
+
     document.getElementById('authModal').style.display = 'none';
 
 }
+
 function verifyAgentCode() {
+
     const input = document.getElementById('agent-code-input');
+
     const error = document.getElementById('auth-error');
+
     if (input.value === AGENT_CODE) {
+
         closeAuthModal();
 
         // Activate tech mode
 
         const techBtn = document.querySelector('.mode-btn:not(.active)');
+
         if (techBtn) setMode(techBtn, 'tech');
+
     } else {
+
         error.style.display = 'block';
+
         input.value = '';
+
         input.focus();
+
     }
+
 }
+
 // ===== FULLSCREEN =====
 
 function toggleFullscreen() {
+
     if (!document.fullscreenElement) {
+
         document.documentElement.requestFullscreen().catch(err => {
+
             console.log('Fullscreen error:', err);
+
         });
+
     } else {
+
         document.exitFullscreen();
+
     }
+
 }
 
 // ===== FILTER MODAL =====
 
 function openFilterModal() {
+
     document.getElementById('filterModal').style.display = 'block';
+
     // Populate commune select if not already done
 
     const filterSel = document.getElementById('filter-commune-select');
+
     if (filterSel.options.length <= 1 && allCommuneNames.length > 0) {
+
         filterSel.innerHTML = '<option value="">-- Sélectionner une commune --</option>';
+
         allCommuneNames.forEach(nom => {
+
             const o = document.createElement('option');
+
             o.value = nom; o.textContent = nom;
+
             filterSel.appendChild(o);
+
         });
+
     }
+
 }
 
 function closeFilterModal() {
+
     document.getElementById('filterModal').style.display = 'none';
+
 }
+
 function updateCommuneStats(nomCommune) {
+
     const container = document.getElementById('commune-stats-container');
+
     if (!nomCommune) {
+
         container.style.display = 'none';
+
         return;
+
     }
+
     container.style.display = 'block';
 
     // Generate demo stats (in real app, these would come from analysis)
 
     const baseEfo = Math.round(50 + Math.random() * 200);
+
     const baseEfn = Math.round(baseEfo * 0.7);
+
     const baseZh = Math.round(10 + Math.random() * 50);
+
     const baseBati = Math.round(5 + Math.random() * 30);
+
     document.getElementById('stat-surface-efo').textContent = baseEfo;
+
     document.getElementById('stat-surface-efn').textContent = baseEfn;
+
     document.getElementById('stat-zh').textContent = baseZh;
+
     document.getElementById('stat-bati').textContent = baseBati;
 
     // Update chart
 
     if (!filterPluiChart) {
+
         const ctx = document.getElementById('filterPluiChart').getContext('2d');
+
         filterPluiChart = new Chart(ctx, {
+
             type: 'doughnut',
+
             data: {
+
                 labels: ['Agricole', 'Naturel', 'Urbain', 'A urbaniser'],
+
                 datasets: [{
+
                     data: [62, 28, 9, 1],
+
                     backgroundColor: ['#a6da59', 'rgb(51,160,44)', 'rgb(217,217,217)', 'rgb(250,172,76)'],
+
                     borderWidth: 1
+
                 }]
+
             },
+
             options: {
+
                 responsive: true,
+
                 maintainAspectRatio: false,
+
                 plugins: {
-                  legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } }
+
+                    legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10 } } }
+
                 }
+
             }
+
         });
+
     } else {
 
         // Vary data slightly for demo
+
         const a = Math.round(55 + Math.random() * 15);
+
         const n = Math.round(25 + Math.random() * 10);
+
         const u = Math.round(5 + Math.random() * 10);
+
         const au = Math.max(0, 100 - a - n - u);
+
         filterPluiChart.data.datasets[0].data = [a, n, u, au];
+
         filterPluiChart.update();
+
     }
+
 }
+
 // ===== DOWNLOAD MODAL =====
 
 function openDownloadModal() {
+
     if (currentMode !== 'tech') {
+
         alert('Accès réservé aux agents techniques.');
+
         return;
+
     }
+
     document.getElementById('downloadModal').style.display = 'block';
+
 }
+
 function closeDownloadModal() {
+
     document.getElementById('downloadModal').style.display = 'none';
 
 }
+
 function selectAllDownloadLayers() {
+
     const checkboxes = document.querySelectorAll('#downloadModal input[type="checkbox"]');
+
     const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
     checkboxes.forEach(cb => cb.checked = !allChecked);
+
 }
+
 function executeDownload() {
+
     const selected = [];
+
     if (document.getElementById('dl-efo').checked) selected.push('EFO_FINAL_WGS.geojson');
+
     if (document.getElementById('dl-efn').checked) selected.push('EFN_FINAL_WGS.geojson');
+
     if (document.getElementById('dl-hydro').checked) selected.push('Hydro_HEM_WGS.geojson');
+
     if (document.getElementById('dl-communes').checked) selected.push('communes.geojson');
+
     if (document.getElementById('dl-plui').checked) { selected.push('EFO_PLUI.geojson'); selected.push('EFN_PLUI.geojson'); }
+
     if (document.getElementById('dl-zh').checked) selected.push('ZH_Enjeux.geojson');
+
     if (document.getElementById('dl-zdh').checked) selected.push('ZDH_Global.geojson');
+
     if (document.getElementById('dl-geol').checked) selected.push('Geologie.geojson');
+
     if (document.getElementById('dl-buf').checked) { selected.push('Buffer_Erosion_EFO.geojson'); selected.push('Buffer_Erosion_EFN.geojson'); }
+
     if (document.getElementById('dl-geo').checked) { selected.push('EBF_Geochimique_25m.geojson'); selected.push('EBF_Geochimique_5m.geojson'); }
+
     if (selected.length === 0) {
+
         alert('Veuillez sélectionner au moins une couche à télécharger.');
+
         return;
+
     }
+
     alert('Téléchargement de ' + selected.length + ' fichier(s) : ' + selected.join(', '));
+
     closeDownloadModal();
+
+    // In a real implementation, this would trigger actual downloads
+
 }
+
 // ===== USER MODAL =====
 
 function openUserModal() {
@@ -4970,94 +5615,171 @@ function openUserModal() {
     // Allow user to change initials
 
     const newInitials = prompt('Entrez vos initiales :', currentUser || '');
+
     if (newInitials && newInitials.trim()) {
+
         currentUser = newInitials.trim().toUpperCase().substring(0, 3);
+
         document.getElementById('user-initials').textContent = currentUser;
+
         document.getElementById('user-name').textContent = currentUser;
+
     }
+
 }
 
 // ===== COMMUNE ZOOM =====
 
 function zoomToCommune(nomCommune) {
+
     const pdfDiv = document.getElementById('pdf-downloads');
+
     const pdfTitle = document.getElementById('pdf-title');
+
     if (!nomCommune) { pdfDiv.style.display = 'none'; map.setView([50.78, 2.05], 11); return; }
+
     searchCommunesLayer.eachLayer(l => {
+
         const props = l.feature.properties;
+
         const n = props.nom || props.NOM || props.NOM_COM || props.Nom || '';
+
         if (n.toLowerCase() === nomCommune.toLowerCase()) {
+
             map.flyToBounds(l.getBounds(), { padding: [20,20], duration: 1.5, maxZoom: 15 });
+
         }
+
     });
+
     pdfTitle.innerHTML = `Cartes réglementaires : <b>${nomCommune}</b>`;
+
     pdfDiv.style.display = 'block';
 
     [
+
         { id:'link-efo',   url:`EFO/${nomCommune}_EFO.png`,        fn:`${nomCommune}_EFO.png` },
+
         { id:'link-efn',   url:`EFN/${nomCommune}_EFN.png`,        fn:`${nomCommune}_EFN.png` },
+
         { id:'link-synth', url:`Complet/${nomCommune}_EBF_Global.png`, fn:`${nomCommune}_EBF_Global.png` }
+
     ].forEach(async doc => {
+
         const btn = document.getElementById(doc.id);
-      btn.style.opacity = '0.5';
+
+        btn.style.opacity = '0.5';
+
         btn.onclick = e => e.preventDefault();
+
         try {
+
             const r = await fetch(doc.url, { method: 'HEAD' });
+
             if (r.ok) { btn.href = doc.url; btn.download = doc.fn; btn.style.opacity = '1'; btn.onclick = null; }
+
             else throw new Error();
+
         } catch {
+
             btn.removeAttribute('href'); btn.removeAttribute('download'); btn.style.opacity = '0.6';
+
             btn.onclick = e => { e.preventDefault(); alert(`Carte non disponible pour ${nomCommune}.`); };
+
         }
+
     });
+
 }
 
 // ===== INFO MODAL =====
+
 function openInfoModal() { document.getElementById('infoModal').style.display = 'block'; }
+
 function closeInfoModal() { document.getElementById('infoModal').style.display = 'none'; }
 
 // ===== CHART =====
+
 const chartData = {
+
     EFO: { labels: ['Agricole (A)', 'Naturel (N)', 'Urbain (U)', 'A urbaniser (AU)'], data: [60.6, 33.3, 6.0, 0.1] },
+
     EFN: { labels: ['Agricole (A)', 'Naturel (N)', 'Urbain (U)', 'A urbaniser (AU)'], data: [64.0, 32.0, 4.1, 0.0] }
+
 };
+
 const chartColors = ['#a6da59','rgb(51,160,44)','rgb(217,217,217)','rgb(250,172,76)'];
+
 function initChart() {
+
     const ctx = document.getElementById('pluiChart').getContext('2d');
+
     pluiChart = new Chart(ctx, {
+
         type: 'doughnut',
+
         data: { labels: chartData.EFO.labels, datasets: [{ data: chartData.EFO.data, backgroundColor: chartColors, borderWidth: 1 }] },
+
         options: {
+
             responsive: true, maintainAspectRatio: false,
+
             plugins: {
+
                 legend: { position: 'right', labels: { boxWidth: 10, font: { size: 10, family: 'Inter' } } },
+
                 tooltip: { callbacks: { label: ctx => ' ' + ctx.label + ': ' + ctx.raw + '%' } }
+
             }
+
         }
+
     });
+
 }
 
 function updateChart(type, btnEl) {
+
     document.querySelectorAll('.chart-btn').forEach(b => b.classList.remove('active'));
+
     btnEl.classList.add('active');
+
     pluiChart.data.datasets[0].data = chartData[type].data;
+
     pluiChart.update();
+
 }
+
 // Bind onclick to all layer info buttons after DOM ready
+
 document.addEventListener('DOMContentLoaded', function() {
+
     document.querySelectorAll('.layer-info-btn').forEach(btn => {
+
         const layerItem = btn.closest('.layer-item');
+
         if (layerItem) {
+
             const checkbox = layerItem.querySelector('input[type="checkbox"]');
+
             if (checkbox && checkbox.id) {
+
                 btn.onclick = () => showLayerInfo(checkbox.id);
+
                 btn.style.cursor = 'pointer';
+
             }
+
         }
+
     });
+
 });
 
 map && map.on('overlayadd', (e) => { for(let q in layersQ){ if(layersQ[q]===e.layer) currentActiveQ=q; } });
+
 </script>
+
 </body>
+
 </html>
