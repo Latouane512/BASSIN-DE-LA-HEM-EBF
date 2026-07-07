@@ -4167,7 +4167,8 @@ function initApp() {
         attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
     });
     basemapSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
-    basemapTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17 });Platform
+    // CORRECTION 1 : suppression du mot "Platform" à la fin de cette ligne
+    basemapTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17 });
 
     map = L.map('map', {
         center: [50.78, 2.05], zoom: 11, layers: [basemapLight],
@@ -4184,7 +4185,7 @@ function initApp() {
     searchCommunesLayer = L.geoJSON();
 
     // Initialize all layers and setup
-    setupLayers();
+    
     setupInfoControl();
     setupQLayers();
     setupPointLayers();
@@ -4192,9 +4193,8 @@ function initApp() {
     setupPresentationLayers();
     setupBindings();
 
-    // MODIFICATION ICI : On attend que les données soient chargées avant d'allumer la vue
+    // MODIFICATION DE SYNCHRONISATION
     loadData().then(() => {
-        // Vue initiale — s'exécute maintenant APPRÈS le chargement du GeoJSON
         switchView('ebf');
         initChart();
     });
@@ -4203,10 +4203,6 @@ function initApp() {
     document.getElementById('tab-diagnostic').style.display = 'none';
     document.getElementById('btn-download-data').style.display = 'none';
 }
-
-
-
-
 
 // ===== COLOR HELPERS =====
 
