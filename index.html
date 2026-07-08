@@ -2150,6 +2150,10 @@ function initApp() {
     loadData().then(() => {
         switchView('ebf');
         initChart();
+    }).catch(err => {
+        console.error('loadData failed:', err);
+        switchView('ebf');
+        initChart();
     });
 
     document.getElementById('tab-diagnostic').style.display = 'none';
@@ -2661,7 +2665,10 @@ function loadData() {
         ];
 
         return Promise.all(promises);
-    }).catch(() => {});
+    }).catch(err => {
+        console.error('Erreur chargement tronçons:', err);
+        return Promise.resolve();
+    });
 }
 
 // ===== ACTIVATE PRES LAYERS =====
@@ -2714,36 +2721,39 @@ function switchView(view) {
 
     openRightPanel();
 
+    function safeRemove(layer) { if (layer && map.hasLayer(layer)) map.removeLayer(layer); }
+    function safeRemoveControl(ctrl) { try { ctrl.remove(); } catch(e){} }
+
     if (view === 'diagnostic') {
         info.addTo(map);
         layersQ['Q100'].addTo(map); layerStation.addTo(map); layerOuvrages.addTo(map);
-        for (let l in ebfLayers) map.removeLayer(ebfLayers[l]);
-        for (let l in presLayers) map.removeLayer(presLayers[l]);
+        for (let l in ebfLayers) safeRemove(ebfLayers[l]);
+        for (let l in presLayers) safeRemove(presLayers[l]);
         document.getElementById('check-station-diag').checked = true;
         document.getElementById('check-ouvrages-diag').checked = true;
         document.getElementById('check-hydro-diag').checked = true;
         layerHydroDiag.addTo(map);
     } else if (view === 'presentation') {
-        info.remove();
-        for (let q in layersQ) map.removeLayer(layersQ[q]);
-        map.removeLayer(layerStation); map.removeLayer(layerOuvrages);
-        map.removeLayer(layerHydroDiag); map.removeLayer(layerPrhymo);
-        map.removeLayer(layerRuissellement); map.removeLayer(layerParcellesAgr); map.removeLayer(layerBatiImpacte);
-        for (let l in ebfLayers) map.removeLayer(ebfLayers[l]);
-        map.removeLayer(layerRsaAnguille); map.removeLayer(layerSatSaumon);
-        map.removeLayer(layerFrayeresTrf); map.removeLayer(layerFrayeresLpf);
-        map.removeLayer(layerPeGlobal);
+        safeRemoveControl(info);
+        for (let q in layersQ) safeRemove(layersQ[q]);
+        safeRemove(layerStation); safeRemove(layerOuvrages);
+        safeRemove(layerHydroDiag); safeRemove(layerPrhymo);
+        safeRemove(layerRuissellement); safeRemove(layerParcellesAgr); safeRemove(layerBatiImpacte);
+        for (let l in ebfLayers) safeRemove(ebfLayers[l]);
+        safeRemove(layerRsaAnguille); safeRemove(layerSatSaumon);
+        safeRemove(layerFrayeresTrf); safeRemove(layerFrayeresLpf);
+        safeRemove(layerPeGlobal);
         activatePresLayers();
     } else {
-        info.remove();
-        for (let q in layersQ) map.removeLayer(layersQ[q]);
-        map.removeLayer(layerStation); map.removeLayer(layerOuvrages);
-        map.removeLayer(layerHydroDiag); map.removeLayer(layerPrhymo);
-        map.removeLayer(layerRuissellement); map.removeLayer(layerParcellesAgr); map.removeLayer(layerBatiImpacte);
-        for (let l in presLayers) map.removeLayer(presLayers[l]);
-        map.removeLayer(layerRsaAnguille); map.removeLayer(layerSatSaumon);
-        map.removeLayer(layerFrayeresTrf); map.removeLayer(layerFrayeresLpf);
-        map.removeLayer(layerPeGlobal);
+        safeRemoveControl(info);
+        for (let q in layersQ) safeRemove(layersQ[q]);
+        safeRemove(layerStation); safeRemove(layerOuvrages);
+        safeRemove(layerHydroDiag); safeRemove(layerPrhymo);
+        safeRemove(layerRuissellement); safeRemove(layerParcellesAgr); safeRemove(layerBatiImpacte);
+        for (let l in presLayers) safeRemove(presLayers[l]);
+        safeRemove(layerRsaAnguille); safeRemove(layerSatSaumon);
+        safeRemove(layerFrayeresTrf); safeRemove(layerFrayeresLpf);
+        safeRemove(layerPeGlobal);
         if (document.getElementById('check-hydro').checked) ebfLayers.hydro.addTo(map);
         if (document.getElementById('check-communes').checked) ebfLayers.communes.addTo(map);
     }
@@ -2853,6 +2863,7 @@ function showLayerInfo(id) {
 
 // ===== RESET LAYERS =====
 function resetAllLayers() {
+    function safeRemove(layer) { if (layer && map.hasLayer(layer)) map.removeLayer(layer); }
     if (currentView === 'ebf') {
         document.querySelectorAll('#ebf-layers input[type="checkbox"]').forEach(cb => {
             if (cb.id === 'check-hydro' || cb.id === 'check-communes') {
@@ -2861,7 +2872,7 @@ function resetAllLayers() {
                 cb.checked = false;
             }
         });
-        for (let l in ebfLayers) map.removeLayer(ebfLayers[l]);
+        for (let l in ebfLayers) safeRemove(ebfLayers[l]);
         ebfLayers.hydro.addTo(map);
         ebfLayers.communes.addTo(map);
     } else if (currentView === 'diagnostic') {
@@ -2874,11 +2885,11 @@ function resetAllLayers() {
                 cb.checked = false;
             }
         });
-        for (let q in layersQ) map.removeLayer(layersQ[q]);
-        map.removeLayer(layerStation); map.removeLayer(layerOuvrages);
-        map.removeLayer(layerHydroDiag); map.removeLayer(layerPrhymo);
-        map.removeLayer(layerRuissellement); map.removeLayer(layerParcellesAgr);
-        map.removeLayer(layerBatiImpacte);
+        for (let q in layersQ) safeRemove(layersQ[q]);
+        safeRemove(layerStation); safeRemove(layerOuvrages);
+        safeRemove(layerHydroDiag); safeRemove(layerPrhymo);
+        safeRemove(layerRuissellement); safeRemove(layerParcellesAgr);
+        safeRemove(layerBatiImpacte);
         layersQ['Q100'].addTo(map);
         layerStation.addTo(map); layerOuvrages.addTo(map); layerHydroDiag.addTo(map);
         document.querySelectorAll('#q-buttons .chart-btn').forEach(b => b.classList.toggle('active', b.textContent === 'Q100'));
@@ -2888,7 +2899,7 @@ function resetAllLayers() {
         document.querySelectorAll('#presentation-layers input[type="checkbox"]').forEach(cb => {
             cb.checked = defaultChecked.includes(cb.id);
         });
-        for (let l in presLayers) map.removeLayer(presLayers[l]);
+        for (let l in presLayers) safeRemove(presLayers[l]);
         activatePresLayers();
     }
 }
