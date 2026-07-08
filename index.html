@@ -1947,214 +1947,160 @@
 
 
         <!-- DIAGNOSTIC LAYERS (shown in diagnostic view) -->
-
-        <div id="diagnostic-layers" style="display:none;">
-
-            <!-- Hydrologie -->
+<div id="diagnostic-layers" style="display:none;">
 
             <div class="layer-group open">
-
                 <div class="layer-group-header" onclick="toggleGroup(this)">
-
-    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#3182bd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-
-        <path d="M2 6c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1"/>
-
-        <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1"/>
-
-        <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1"/>
-
-    </svg>
-
-    <span class="group-title">Hydrologie (Ps)</span>
-
-    <span class="group-count">6</span>
-
-    <span class="group-chevron">&#9654;</span>
-
-</div>
-
+                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#3182bd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 6c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1"/>
+                        <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1"/>
+                        <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1"/>
+                    </svg>
+                    <span class="group-title">Hydrologie (Ps)</span>
+                    <span class="group-count">6</span>
+                    <span class="group-chevron">&#9654;</span>
+                </div>
                 <div class="layer-group-body" id="q-layer-controls">
-
-                    <!-- filled by JS -->
-
-                </div>
-
+                    </div>
             </div>
 
-
-
-           <!-- Altération du réseau -->
-
-            <div class="layer-group open">
-
+           <div class="layer-group open">
                 <div class="layer-group-header" onclick="toggleGroup(this)">
-
-                    <!-- Icône d'électrocardiogramme / altération -->
-
                     <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-
                         <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-
                     </svg>
-
                     <span class="group-title">Diagnostic altération du réseau</span>
-
                     <span class="group-count">1</span>
-
                     <span class="group-chevron">&#9654;</span>
-
                 </div>
-
                 <div class="layer-group-body">
-
                     <div class="layer-item">
-
                         <div class="layer-swatch" style="background:#2ecc71;"></div>
-
                         <input type="checkbox" id="check-prhymo">
-
                         <label for="check-prhymo">Analyse PRHYMO (USRA_HEM)</label>
-
                         <div class="layer-info-btn" onclick="showLayerInfo('check-prhymo')">i</div>
-
                     </div>
-
                 </div>
-
             </div>
 
-
-
-            <!-- Ruissellement -->
-
             <div class="layer-group open">
-
                <div class="layer-group-header" onclick="toggleGroup(this)">
-
-                    <!-- Symbole Pente et flèche d'écoulement -->
-
                     <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#e67e22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-
                         <path d="M3 6v14h16Z"/>
-
                         <line x1="8" y1="5" x2="17" y2="13"/>
-
                         <polyline points="12 13 17 13 17 8"/>
-
                     </svg>
-
                     <span class="group-title">Diagnostic Ruissellement</span>
-
                     <span class="group-count">3</span>
-
                     <span class="group-chevron">&#9654;</span>
-
                 </div>
-
                 <div class="layer-group-body">
-
                     <div class="layer-item">
-
                         <div class="layer-swatch" style="background:#3498db;border-radius:0;height:3px;margin-top:4px;"></div>
-
                         <input type="checkbox" id="check-ruissellement">
-
                         <label for="check-ruissellement">Axes Ruissellement (Pente)</label>
-
                         <div class="layer-info-btn" onclick="showLayerInfo('check-ruissellement')">i</div>
-
                     </div>
-
                     <div class="layer-item">
-
                         <div class="layer-swatch" style="background:#f39c12;"></div>
-
                         <input type="checkbox" id="check-parcelles-agr">
-
                         <label for="check-parcelles-agr">Parcelles Agricoles Impactées</label>
-
                         <div class="layer-info-btn" onclick="showLayerInfo('check-parcelles-agr')">i</div>
-
                     </div>
-
                     <div class="layer-item">
-
                         <div class="layer-swatch" style="background:#e74c3c;"></div>
-
                         <input type="checkbox" id="check-bati-impacte">
-
                         <label for="check-bati-impacte">Bâti Impacté (Ruissellement)</label>
-
                         <div class="layer-info-btn" onclick="showLayerInfo('check-bati-impacte')">i</div>
-
                     </div>
-
                 </div>
-
             </div>
-
-
-
-            <!-- Infrastructure -->
 
             <div class="layer-group open">
-
                 <div class="layer-group-header" onclick="toggleGroup(this)">
-
                     <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
-
                     <span class="group-title">Infrastructure & Stations</span>
-
                     <span class="group-count">3</span>
-
                     <span class="group-chevron">&#9654;</span>
+                </div>
+                <div class="layer-group-body">
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="background:#3498db;border-radius:50%;"></div>
+                        <input type="checkbox" id="check-station-diag" checked>
+                        <label for="check-station-diag">Stations Hydrométriques</label>
+                        <div class="layer-info-btn" onclick="showLayerInfo('check-station-diag')">i</div>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="background:#222;border-radius:50%;"></div>
+                        <input type="checkbox" id="check-ouvrages-diag" checked>
+                        <label for="check-ouvrages-diag">Ouvrages / Obstacles</label>
+                        <div class="layer-info-btn" onclick="showLayerInfo('check-ouvrages-diag')">i</div>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="background:#3498db;"></div>
+                        <input type="checkbox" id="check-hydro-diag" checked>
+                        <label for="check-hydro-diag">Réseau Hydrographique</label>
+                        <div class="layer-info-btn" onclick="showLayerInfo('check-hydro-diag')">i</div>
+                    </div>
+                </div>
+            </div>
 
+            <div id="private-biological-layers" style="margin-top: 10px;">
+                
+                <div class="layer-group open" style="margin-bottom: 10px;">
+                    <div class="layer-group-header" onclick="toggleGroup(this)">
+                        <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <span class="group-title">Grands Migrateurs (RSA / SAT)</span>
+                        <span class="group-count">2</span>
+                        <span class="group-chevron">&#9654;</span>
+                    </div>
+                    <div class="layer-group-body">
+                        <div class="layer-item">
+                            <div class="layer-swatch" style="background:#9b59b6; border-radius:50%;"></div>
+                            <input type="checkbox" id="check-rsa-anguille">
+                            <label for="check-rsa-anguille">Réseau Spécifique Anguille (RSA 2011-2023)</label>
+                            <div class="layer-info-btn">i</div>
+                        </div>
+                        <div class="layer-item">
+                            <div class="layer-swatch" style="background:#1abc9c; border-radius:50%;"></div>
+                            <input type="checkbox" id="check-sat-saumon">
+                            <label for="check-sat-saumon">Indices Abondance Saumon (SAT62)</label>
+                            <div class="layer-info-btn">i</div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="layer-group-body">
-
-                    <div class="layer-item">
-
-                        <div class="layer-swatch" style="background:#3498db;border-radius:50%;"></div>
-
-                        <input type="checkbox" id="check-station-diag" checked>
-
-                        <label for="check-station-diag">Stations Hydrométriques</label>
-
-                        <div class="layer-info-btn" onclick="showLayerInfo('check-station-diag')">i</div>
-
+                <div class="layer-group open" style="margin-bottom: 10px;">
+                    <div class="layer-group-header" onclick="toggleGroup(this)">
+                        <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2"><path d="M6.5 12c.94-3.46 4.94-6 10.5-6-3 3-4 6-4 6s1 3 4 6c-5.56 0-9.56-2.54-10.5-6z"/><circle cx="17" cy="10" r="1" fill="#e74c3c"/></svg>
+                        <span class="group-title">Inventaires & Frayères (SNDP / PE)</span>
+                        <span class="group-count">3</span>
+                        <span class="group-chevron">&#9654;</span>
                     </div>
-
-                    <div class="layer-item">
-
-                        <div class="layer-swatch" style="background:#222;border-radius:50%;"></div>
-
-                        <input type="checkbox" id="check-ouvrages-diag" checked>
-
-                        <label for="check-ouvrages-diag">Ouvrages / Obstacles</label>
-
-                        <div class="layer-info-btn" onclick="showLayerInfo('check-ouvrages-diag')">i</div>
-
+                    <div class="layer-group-body">
+                        <div class="layer-item">
+                            <div class="layer-swatch" style="background:#e74c3c; border-radius:50%;"></div>
+                            <input type="checkbox" id="check-frayeres-trf">
+                            <label for="check-frayeres-trf">Frayères Truites de mer & Salmonidés</label>
+                            <div class="layer-info-btn">i</div>
+                        </div>
+                        <div class="layer-item">
+                            <div class="layer-swatch" style="background:#e67e22; border-radius:50%;"></div>
+                            <input type="checkbox" id="check-frayeres-lpf">
+                            <label for="check-frayeres-lpf">Frayères Lamproies (Agnathes)</label>
+                            <div class="layer-info-btn">i</div>
+                        </div>
+                        <div class="layer-item">
+                            <div class="layer-swatch" style="background:#3498db; border-radius:50%;"></div>
+                            <input type="checkbox" id="check-pe-global">
+                            <label for="check-pe-global">Stations Pêches Électriques (PE_FD62)</label>
+                            <div class="layer-info-btn">i</div>
+                        </div>
                     </div>
-
-                    <div class="layer-item">
-
-                        <div class="layer-swatch" style="background:#3498db;"></div>
-
-                        <input type="checkbox" id="check-hydro-diag" checked>
-
-                        <label for="check-hydro-diag">Réseau Hydrographique</label>
-
-                        <div class="layer-info-btn" onclick="showLayerInfo('check-hydro-diag')">i</div>
-
-                    </div>
-
                 </div>
 
             </div>
-
-        </div>
+            </div>
 
 
 
@@ -4384,6 +4330,45 @@ function setupPointLayers() {
 
     });
 
+    layerRsaAnguille = L.geoJSON(null, {
+        pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, fillColor: '#9b59b6', color: '#fff', weight: 1.5, fillOpacity: 0.9 }),
+        onEachFeature: (f, l) => {
+            const annee = f.properties.annee || f.properties.ANNEE || "Chronique";
+            l.bindPopup(`<b>Réseau Spécifique Anguille (RSA)</b><br><br><b>Espèce cible :</b> Anguille européenne<br><b>Campagne :</b> ${annee}`);
+        }
+    });
+
+    layerSatSaumon = L.geoJSON(null, {
+        pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, fillColor: '#1abc9c', color: '#fff', weight: 1.5, fillOpacity: 0.9 }),
+        onEachFeature: (f, l) => {
+            l.bindPopup(`<b>Suivi Aquatique Territorial (SAT62)</b><br><br><b>Indice d'Abondance Saumon</b><br><b>Objectif :</b> Suivi de l'effort de reproduction via l'échantillonnage de tacons.<br><b>Note Hem :</b> 1 seul tacon échantillonné sur la commune de Recques-sur-Hem (2022).`);
+        }
+    });
+
+    layerFrayeresTrf = L.geoJSON(null, {
+        pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, fillColor: '#e74c3c', color: '#fff', weight: 1.5, fillOpacity: 0.9 }),
+        onEachFeature: (f, l) => {
+            const source = f.properties.layer || "SNDP_TRF";
+            l.bindPopup(`<b>Suivi des Frayères (SNDP)</b><br><br><b>Espèce cible :</b> Truite de mer / Grands Salmonidés<br><b>Source :</b> ${source.replace(/_/g, ' ')}`);
+        }
+    });
+
+    layerFrayeresLpf = L.geoJSON(null, {
+        pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, fillColor: '#e67e22', color: '#fff', weight: 1.5, fillOpacity: 0.9 }),
+        onEachFeature: (f, l) => {
+            const source = f.properties.layer || "SNDP_LPF";
+            l.bindPopup(`<b>Suivi des Frayères (SNDP)</b><br><br><b>Espèce cible :</b> Lamproie fluviatile & de Planer<br><b>Source :</b> ${source.replace(/_/g, ' ')}`);
+        }
+    });
+
+    layerPeGlobal = L.geoJSON(null, {
+        pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 5, fillColor: '#3498db', color: '#fff', weight: 1, fillOpacity: 0.8 }),
+        onEachFeature: (f, l) => {
+            const station = f.properties.nom_stat || f.properties.nom || "Station FD62";
+            l.bindPopup(`<b>Inventaire Pêche Électrique (PE_FD62)</b><br><br><b>Station :</b> ${station}`);
+        }
+    });
+    
     layerPrhymo = L.geoJSON(null, {
 
         style: getUsraStyle,
@@ -4603,7 +4588,16 @@ const definitions = {
     'pres-amenagements': '<b>Aménagements anciens</b>\n\nOuvrages hydrauliques historiques (berges artificielles, calibrage).',
 
     'pres-travaux-hydro': '<b>Travaux hydraulique douce</b>\n\nAménagements utilisant le génie végétal pour stabiliser les berges sans durcissement.'
-
+    
+    'check-rsa-anguille': '<b>Réseau Spécifique Anguille (RSA62)</b><br><br>Centralise les suivis d\'Abondance piscicole de l\'Anguille européenne à l\'échelle de la Hem. Chroniques couvrant les campagnes 2011, 2014, 2017, 2020 et 2023.',
+    
+    'check-sat-saumon': '<b>Suivi Aquatique Territorial Saumon (SAT62)</b><br><br>Suivi de l\'effort de reproduction du Saumon Atlantique via l\'échantillonnage de tacons (juvéniles). Sur la Hem, seul 1 tacon a été recensé (en 2022 à Recques-sur-Hem) depuis le lancement du protocole en 2017.',
+    
+    'check-frayeres-trf': '<b>Suivi des Frayères de Grands Salmonidés (SNDP)</b><br><br>Données issues du Système National des Données sur les Pêches. Répertorie le suivi et l\'emplacement des zones de ponte de la Truite de mer sur le bassin versant.',
+    
+    'check-frayeres-lpf': '<b>Suivi des Frayères d\'Agnathes (SNDP)</b><br><br>Inventaires ciblés sur les zones de ponte des Lamproies (notamment la Lamproie fluviatile et de Planer) sur le réseau hydrographique.',
+    
+    'check-pe-global': '<b>Stations de Pêches Électriques (PE_FD62)</b><br><br>Données géoréférencées de l\'ensemble des inventaires piscicoles et suivis de peuplements menés par la Fédération Départementale de Pêche 62.',
 };
 
 
@@ -4785,19 +4779,17 @@ function setupBindings() {
     }
 
     bindDiag('check-prhymo', layerPrhymo);
-
     bindDiag('check-ruissellement', layerRuissellement);
-
     bindDiag('check-parcelles-agr', layerParcellesAgr);
-
     bindDiag('check-bati-impacte', layerBatiImpacte);
-
     bindDiag('check-station-diag', layerStation);
-
     bindDiag('check-ouvrages-diag', layerOuvrages);
-
     bindDiag('check-hydro-diag', layerHydroDiag);
-
+    bindDiag('check-rsa-anguille', layerRsaAnguille);
+    bindDiag('check-sat-saumon', layerSatSaumon);
+    bindDiag('check-frayeres-trf', layerFrayeresTrf);
+    bindDiag('check-frayeres-lpf', layerFrayeresLpf);
+    bindDiag('check-pe-global', layerPeGlobal);
 }
 
 
@@ -5101,6 +5093,13 @@ function loadData() {
             fetch('Axe_ruissellement_hors_lit_pente.geojson').then(r=>r.json()).then(d=>layerRuissellement.addData(d)).catch(()=>{}),
             fetch('HEM_TON_SOL.geojson').then(r=>r.json()).then(d=>layerParcellesAgr.addData(d)).catch(()=>{}),
             fetch('Zone_Bati.geojson').then(r=>r.json()).then(d=>layerBatiImpacte.addData(d)).catch(()=>{}),
+
+            fetch('SIG_RSA62.geojson').then(r=>r.json()).then(d=>layerRsaAnguille.addData(d)).catch(()=>{}),
+            fetch('SIG_SAT62.geojson').then(r=>r.json()).then(d=>layerSatSaumon.addData(d)).catch(()=>{}),
+            fetch('SNDP_TRF_FD62.geojson').then(r=>r.json()).then(d=>layerFrayeresTrf.addData(d)).catch(()=>{}),
+            fetch('SNDP_LPF_FD62.geojson').then(r=>r.json()).then(d=>layerFrayeresLpf.addData(d)).catch(()=>{}),
+            fetch('SIG_PE_FD62.geojson').then(r=>r.json()).then(d=>layerPeGlobal.addData(d)).catch(()=>{}),
+            
             
             // Le fetch des communes est indispensable pour l'affichage initial, on l'inclut
             fetch('communes.geojson').then(r=>r.json()).then(data=>{
@@ -5162,145 +5161,88 @@ function activatePresLayers() {
 
 
 // ===== VIEW SWITCHING =====
-
 function switchView(view) {
 
     // Block diagnostic view for public mode
-
     if (view === 'diagnostic' && currentMode === 'public') {
-
         alert('Le diagnostic morphologique est réservé aux agents techniques. Veuillez vous identifier avec le code agent.');
-
         return;
-
     }
-
-
 
     currentView = view;
 
-
-
     // Tab active states
-
     document.getElementById('tab-ebf').classList.toggle('active', view === 'ebf');
-
     document.getElementById('tab-diagnostic').classList.toggle('active', view === 'diagnostic');
-
     document.getElementById('tab-presentation').classList.toggle('active', view === 'presentation');
 
-
-
     // Sidebar layer sections
-
     document.getElementById('ebf-layers').style.display = view === 'ebf' ? 'block' : 'none';
-
     document.getElementById('diagnostic-layers').style.display = view === 'diagnostic' ? 'block' : 'none';
-
     document.getElementById('presentation-layers').style.display = view === 'presentation' ? 'block' : 'none';
 
-
-
     // Right panel sections
-
     document.getElementById('rp-ebf').style.display = view === 'ebf' ? 'flex' : 'none';
-
     document.getElementById('rp-diag').style.display = view === 'diagnostic' ? 'flex' : 'none';
-
     document.getElementById('rp-presentation').style.display = view === 'presentation' ? 'flex' : 'none';
 
-
-
     // Legend panels
-
     const legendEbf  = document.getElementById('legend-ebf');
-
     const legendDiag = document.getElementById('legend-diagnostic');
-
     const legendPres = document.getElementById('legend-presentation');
-
     if (legendEbf)  legendEbf.style.display  = view === 'ebf' ? 'block' : 'none';
-
     if (legendDiag) legendDiag.style.display = view === 'diagnostic' ? 'block' : 'none';
-
     if (legendPres) legendPres.style.display = view === 'presentation' ? 'block' : 'none';
 
-
-
     // Info modal sections
-
     document.getElementById('modal-ebf').style.display = view === 'ebf' ? 'block' : 'none';
-
     document.getElementById('modal-diagnostic').style.display = view === 'diagnostic' ? 'block' : 'none';
-
     document.getElementById('modal-presentation').style.display = view === 'presentation' ? 'block' : 'none';
-
-
 
     openRightPanel();
 
-
-
     // Map layer management
-
     if (view === 'diagnostic') {
-
         info.addTo(map);
-
         layersQ['Q100'].addTo(map); layerStation.addTo(map); layerOuvrages.addTo(map);
-
         for (let l in ebfLayers) map.removeLayer(ebfLayers[l]);
-
         for (let l in presLayers) map.removeLayer(presLayers[l]);
-
         document.getElementById('check-station-diag').checked = true;
-
         document.getElementById('check-ouvrages-diag').checked = true;
-
         document.getElementById('check-hydro-diag').checked = true;
-
         layerHydroDiag.addTo(map);
-
     } else if (view === 'presentation') {
-
         info.remove();
-
         for (let q in layersQ) map.removeLayer(layersQ[q]);
-
         map.removeLayer(layerStation); map.removeLayer(layerOuvrages);
-
         map.removeLayer(layerHydroDiag); map.removeLayer(layerPrhymo);
-
         map.removeLayer(layerRuissellement); map.removeLayer(layerParcellesAgr); map.removeLayer(layerBatiImpacte);
-
         for (let l in ebfLayers) map.removeLayer(ebfLayers[l]);
+        
+        map.removeLayer(layerRsaAnguille); map.removeLayer(layerSatSaumon);
+        map.removeLayer(layerFrayeresTrf); map.removeLayer(layerFrayeresLpf);
+        map.removeLayer(layerPeGlobal);
+        // =======================================================================
 
         // Activate pre-checked presentation layers
-
         activatePresLayers();
-
     } else {
-
         // EBF view
-
         info.remove();
-
         for (let q in layersQ) map.removeLayer(layersQ[q]);
-
         map.removeLayer(layerStation); map.removeLayer(layerOuvrages);
-
         map.removeLayer(layerHydroDiag); map.removeLayer(layerPrhymo);
-
         map.removeLayer(layerRuissellement); map.removeLayer(layerParcellesAgr); map.removeLayer(layerBatiImpacte);
-
         for (let l in presLayers) map.removeLayer(presLayers[l]);
+        
+        map.removeLayer(layerRsaAnguille); map.removeLayer(layerSatSaumon);
+        map.removeLayer(layerFrayeresTrf); map.removeLayer(layerFrayeresLpf);
+        map.removeLayer(layerPeGlobal);
+        // =======================================================================
 
         if (document.getElementById('check-hydro').checked) ebfLayers.hydro.addTo(map);
-
         if (document.getElementById('check-communes').checked) ebfLayers.communes.addTo(map);
-
     }
-
 }
 
 
