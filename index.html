@@ -612,6 +612,25 @@
         }
         .login-btn:hover { background: #156038; }
         .login-error { color: #dc2626; font-size: 12px; margin-top: 12px; display: none; }
+
+        /* Year filter box */
+        .year-filter-box {
+            padding: 10px 14px; margin: 8px 14px;
+            background: var(--color-bg); border-radius: 8px;
+        }
+        .year-filter-box label {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 12px; cursor: pointer; margin-bottom: 6px;
+        }
+        .year-filter-box input[type="checkbox"] {
+            width: 15px; height: 15px; cursor: pointer;
+            accent-color: var(--color-primary);
+        }
+        .year-filter-box select {
+            width: 100%; padding: 6px 8px;
+            border: 1px solid var(--color-border); border-radius: 6px;
+            font-size: 12px; font-family: inherit;
+        }
     </style>
 </head>
 <body>
@@ -1071,6 +1090,17 @@
             </div>
 
             <div id="private-biological-layers" style="margin-top: 10px;">
+                <!-- Year filter for piscicultural layers -->
+                <div class="year-filter-box">
+                    <label>
+                        <input type="checkbox" id="pisco-year-filter-toggle" onchange="togglePiscoYearFilter()">
+                        Filtrer par année
+                    </label>
+                    <select id="pisco-year-select" onchange="applyPiscoYearFilter()" disabled style="display:none;">
+                        <option value="">-- Toutes les années --</option>
+                    </select>
+                </div>
+
                 <div class="layer-group open" style="margin-bottom: 10px;">
                     <div class="layer-group-header" onclick="toggleGroup(this)">
                         <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -1320,6 +1350,16 @@
                         <input type="checkbox" id="pres-travaux-hydro">
                         <label for="pres-travaux-hydro">Travaux hydrauliques doux</label>
                         <div class="layer-info-btn" onclick="showLayerInfo('pres-travaux-hydro')">i</div>
+                    </div>
+                    <!-- Year filter for Plantations_hydraulique_douce -->
+                    <div class="year-filter-box" style="margin:6px 14px 6px 36px;">
+                        <label>
+                            <input type="checkbox" id="hydro-year-filter-toggle" onchange="toggleHydroYearFilter()">
+                            Filtrer par année
+                        </label>
+                        <select id="hydro-year-select" onchange="applyHydroYearFilter()" disabled style="display:none;">
+                            <option value="">-- Toutes les années --</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -2041,7 +2081,7 @@
                 <ul>
                     <li><strong>Travaux réalisés</strong> – Localisation des opérations de restauration hydromorphologique effectuées par le SYMVAHEM.</li>
                     <li><strong>Aménagements anciens</strong> – Ouvrages hydrauliques historiques (berges artificielles, calibrage).</li>
-                    <li><strong>Travaux hydrauliques doux</strong> – Aménagements utilisant le génie végétal pour stabiliser les berges.</li>
+                    <li><strong>Travaux hydrauliques doux</strong> – Plantations réalisées pour pallier au ruissellement. Aménagements utilisant le génie végétal pour stabiliser les berges sans durcissement.</li>
                 </ul>
 
                 <h3>Sources des données</h3>
@@ -2113,6 +2153,26 @@ let presLayers = {};
 let presLayerDefs = [];
 let pluiChart;
 let allCommuneNames = [];
+
+// Year filter state for piscicultural layers
+let piscoYearFilterEnabled = false;
+let piscoYearDataLoaded = false;
+let piscoRawData = {};
+let piscoAvailableYears = [];
+
+// Year filter state for Plantations_hydraulique_douce
+let hydroYearFilterEnabled = false;
+let hydroYearDataLoaded = false;
+let hydroRawData = null;
+let hydroAvailableYears = [];
+
+// Piscicultural layer year field mapping
+const piscoLayerYearFields = {
+    'rsa-anguille': 'ANNEE',
+    'frayeres-trf': 'date_suivi',
+    'frayeres-lpf': 'date_suivi',
+    'pe-global': 'Annee'
+};
 
 function initApp() {
     basemapLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -2389,7 +2449,7 @@ const definitions = {
     'pres-obstacles': '<b>Obstacles à l\'écoulement</b>\n\nOuvrages (seuils, barrages, buses) fragmentant le cours d\'eau et le transit sédimentaire.',
     'pres-travaux': '<b>Travaux réalisés</b>\n\nLocalisation des opérations de restauration hydromorphologique effectuées.',
     'pres-amenagements': '<b>Aménagements anciens</b>\n\nOuvrages hydrauliques historiques (berges artificielles, calibrage).',
-    'pres-travaux-hydro': '<b>Travaux hydrauliques doux</b>\n\nAménagements utilisant le génie végétal pour stabiliser les berges sans durcissement.',
+    'pres-travaux-hydro': '<b>Travaux hydrauliques doux</b>\n\nPlantations réalisées pour pallier au ruissellement. Aménagements utilisant le génie végétal pour stabiliser les berges sans durcissement.',
     'check-rsa-anguille': '<b>Réseau Spécifique Anguille (RSA62)</b><br><br>Centralise les suivis d\'Abondance piscicole de l\'Anguille européenne à l\'échelle de la Hem. Chroniques couvrant les campagnes 2011, 2014, 2017, 2020 et 2023.',
     'check-sat-saumon': '<b>Suivi Aquatique Territorial Saumon (SAT62)</b><br><br>Suivi de l\'effort de reproduction du Saumon Atlantique via l\'échantillonnage de tacons (juvéniles).',
     'check-frayeres-trf': '<b>Suivi des Frayères de Grands Salmonidés (SNDP)</b><br><br> Répertorie le suivi et l\'emplacement des zones de ponte de la Truite de mer sur le bassin versant.',
@@ -2578,9 +2638,10 @@ function setupPresentationLayers() {
           style: { color: '#d97706', weight: 1, fillColor: '#d97706', fillOpacity: 0.25 },
           popup: f => `<b>Aménagement ancien</b>` },
         { id: 'pres-travaux-hydro',
-          file: 'Travaux_hydraulique_douce.geojson',
+          file: 'Plantations_hydraulique_douce.geojson',
           style: { color: '#0284c7', weight: 1.5, fillColor: '#0ea5e9', fillOpacity: 0.35 },
-          popup: f => `<b>Travaux hydrauliques doux</b><br>${Object.entries(f.properties||{}).slice(0,3).map(([k,v])=>`<b>${k}:</b> ${v}`).join('<br>')}` }
+          popup: f => `<b>Travaux hydrauliques doux</b><br><b>Date de réalisation :</b> ${f.properties.DATEREALIS||'?'}`,
+          yearField: 'DATEREALIS' }
     ];
 
     presLayerDefs.forEach(def => {
@@ -2608,6 +2669,7 @@ function setupPresentationLayers() {
                     fetch(def.file).then(r => r.json()).then(d => {
                         presLayers[def.id].addData(d);
                         presLayers[def.id].addTo(map);
+                        if (def.yearField) loadHydroYearData(d);
                     }).catch(() => {
                         this.checked = false;
                         console.log('Fichier non disponible : ' + def.file);
@@ -2635,11 +2697,11 @@ function loadData() {
             fetch('Axe_ruissellement_hors_lit_pente.geojson').then(r=>r.json()).then(d=>layerRuissellement.addData(d)).catch(()=>{}),
             fetch('HEM_TON_SOL.geojson').then(r=>r.json()).then(d=>layerParcellesAgr.addData(d)).catch(()=>{}),
             fetch('Zone_Bati.geojson').then(r=>r.json()).then(d=>layerBatiImpacte.addData(d)).catch(()=>{}),
-            fetch('RSA_62.geojson').then(r=>r.json()).then(d=>layerRsaAnguille.addData(d)).catch(()=>{}),
+            fetch('RSA_62.geojson').then(r=>r.json()).then(d=>{ layerRsaAnguille.addData(d); piscoRawData['rsa-anguille'] = d; }).catch(()=>{}),
             fetch('SIG_SAT62.geojson').then(r=>r.json()).then(d=>layerSatSaumon.addData(d)).catch(()=>{}),
-            fetch('SNDP_TRF_FD62.geojson').then(r=>r.json()).then(d=>layerFrayeresTrf.addData(d)).catch(()=>{}),
-            fetch('SNDP_LPF_FD62.geojson').then(r=>r.json()).then(d=>layerFrayeresLpf.addData(d)).catch(()=>{}),
-            fetch('SIG_PE_FD62.geojson').then(r=>r.json()).then(d=>layerPeGlobal.addData(d)).catch(()=>{}),
+            fetch('SNDP_TFR_FD62.geojson').then(r=>r.json()).then(d=>{ layerFrayeresTrf.addData(d); piscoRawData['frayeres-trf'] = d; }).catch(()=>{}),
+            fetch('SNDP_LPF_FD62.geojson').then(r=>r.json()).then(d=>{ layerFrayeresLpf.addData(d); piscoRawData['frayeres-lpf'] = d; }).catch(()=>{}),
+            fetch('SIG_PE_FD62.geojson').then(r=>r.json()).then(d=>{ layerPeGlobal.addData(d); piscoRawData['pe-global'] = d; }).catch(()=>{}),
             fetch('communes.geojson').then(r=>r.json()).then(data=>{
                 searchCommunesLayer.addData(data);
                 ebfLayers.communes.addData(data);
@@ -2659,11 +2721,162 @@ function loadData() {
             }).catch(()=>{ document.getElementById('commune-selector').innerHTML = '<option>Erreur chargement</option>'; })
         ];
 
-        return Promise.all(promises);
+        return Promise.all(promises).then(() => {
+            populatePiscoYearSelect();
+        });
     }).catch(err => {
         console.error('Erreur chargement tronçons:', err);
         return Promise.resolve();
     });
+}
+
+// ===== PISCICULTURAL YEAR FILTER =====
+function extractYear(value) {
+    if (!value) return null;
+    const s = String(value);
+    const m = s.match(/(\d{4})/);
+    return m ? parseInt(m[1]) : null;
+}
+
+function populatePiscoYearSelect() {
+    const years = new Set();
+    for (const layerKey in piscoLayerYearFields) {
+        const field = piscoLayerYearFields[layerKey];
+        const data = piscoRawData[layerKey];
+        if (!data || !data.features) continue;
+        data.features.forEach(f => {
+            const y = extractYear(f.properties[field]);
+            if (y) years.add(y);
+        });
+    }
+    piscoAvailableYears = [...years].sort((a,b) => b - a);
+    piscoYearDataLoaded = true;
+
+    const sel = document.getElementById('pisco-year-select');
+    if (sel) {
+        sel.innerHTML = '<option value="">-- Toutes les années --</option>';
+        piscoAvailableYears.forEach(y => {
+            const o = document.createElement('option');
+            o.value = y; o.textContent = y;
+            sel.appendChild(o);
+        });
+    }
+}
+
+function togglePiscoYearFilter() {
+    const toggle = document.getElementById('pisco-year-filter-toggle');
+    const sel = document.getElementById('pisco-year-select');
+    piscoYearFilterEnabled = toggle.checked;
+    if (piscoYearFilterEnabled) {
+        sel.disabled = false;
+        sel.style.display = 'block';
+    } else {
+        sel.disabled = true;
+        sel.style.display = 'none';
+        sel.value = '';
+        rebuildPiscoLayers(null);
+    }
+}
+
+function applyPiscoYearFilter() {
+    const sel = document.getElementById('pisco-year-select');
+    const year = sel.value ? parseInt(sel.value) : null;
+    rebuildPiscoLayers(year);
+}
+
+function rebuildPiscoLayers(filterYear) {
+    const layerMap = {
+        'rsa-anguille': layerRsaAnguille,
+        'frayeres-trf': layerFrayeresTrf,
+        'frayeres-lpf': layerFrayeresLpf,
+        'pe-global': layerPeGlobal
+    };
+
+    for (const layerKey in layerMap) {
+        const layer = layerMap[layerKey];
+        const wasOnMap = map.hasLayer(layer);
+        if (wasOnMap) map.removeLayer(layer);
+
+        const field = piscoLayerYearFields[layerKey];
+        const raw = piscoRawData[layerKey];
+        if (!raw) continue;
+
+        const filtered = {
+            type: 'FeatureCollection',
+            features: filterYear
+                ? raw.features.filter(f => extractYear(f.properties[field]) === filterYear)
+                : raw.features
+        };
+
+        layer.clearLayers();
+        layer.addData(filtered);
+
+        if (wasOnMap) layer.addTo(map);
+    }
+}
+
+// ===== HYDRO YEAR FILTER (Plantations_hydraulique_douce) =====
+function loadHydroYearData(data) {
+    if (!data || !data.features) return;
+    hydroRawData = data;
+    const years = new Set();
+    data.features.forEach(f => {
+        const y = extractYear(f.properties.DATEREALIS);
+        if (y) years.add(y);
+    });
+    hydroAvailableYears = [...years].sort((a,b) => b - a);
+    hydroYearDataLoaded = true;
+
+    const sel = document.getElementById('hydro-year-select');
+    if (sel) {
+        sel.innerHTML = '<option value="">-- Toutes les années --</option>';
+        hydroAvailableYears.forEach(y => {
+            const o = document.createElement('option');
+            o.value = y; o.textContent = y;
+            sel.appendChild(o);
+        });
+    }
+}
+
+function toggleHydroYearFilter() {
+    const toggle = document.getElementById('hydro-year-filter-toggle');
+    const sel = document.getElementById('hydro-year-select');
+    hydroYearFilterEnabled = toggle.checked;
+    if (hydroYearFilterEnabled) {
+        sel.disabled = false;
+        sel.style.display = 'block';
+    } else {
+        sel.disabled = true;
+        sel.style.display = 'none';
+        sel.value = '';
+        rebuildHydroLayer(null);
+    }
+}
+
+function applyHydroYearFilter() {
+    const sel = document.getElementById('hydro-year-select');
+    const year = sel.value ? parseInt(sel.value) : null;
+    rebuildHydroLayer(year);
+}
+
+function rebuildHydroLayer(filterYear) {
+    const layer = presLayers['pres-travaux-hydro'];
+    if (!layer || !hydroRawData) return;
+
+    const wasOnMap = map.hasLayer(layer);
+    if (wasOnMap) map.removeLayer(layer);
+
+    const filtered = {
+        type: 'FeatureCollection',
+        features: filterYear
+            ? hydroRawData.features.filter(f => extractYear(f.properties.DATEREALIS) === filterYear)
+            : hydroRawData.features
+    };
+
+    layer.clearLayers();
+    layer.addData(filtered);
+
+    if (wasOnMap) layer.addTo(map);
 }
 
 // ===== ACTIVATE PRES LAYERS =====
@@ -2677,6 +2890,7 @@ function activatePresLayers() {
             fetch(def.file).then(r => r.json()).then(d => {
                 presLayers[def.id].addData(d);
                 presLayers[def.id].addTo(map);
+                if (def.yearField) loadHydroYearData(d);
             }).catch(() => console.log('Fichier non disponible : ' + def.file));
         }
     });
