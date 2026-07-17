@@ -2808,7 +2808,7 @@ function loadData() {
             fetch('Zone_Bati.geojson').then(r=>r.json()).then(d=>layerBatiImpacte.addData(d)).catch(()=>{}),
             fetch('RSA_62.geojson').then(r=>r.json()).then(d=>{ layerRsaAnguille.addData(d); piscoRawData['rsa-anguille'] = d; }).catch(()=>{}),
             fetch('SIG_SAT62.geojson').then(r=>r.json()).then(d=>layerSatSaumon.addData(d)).catch(()=>{}),
-            fetch('SNDP_TFR_FD62.geojson').then(r=>r.json()).then(d=>{ layerFrayeresTrf.addData(d); piscoRawData['frayeres-trf'] = d; }).catch(()=>{}),
+            fetch('SNDP_TRF_FD62.geojson').then(r=>r.json()).then(d=>{ layerFrayeresTrf.addData(d); piscoRawData['frayeres-trf'] = d; }).catch(()=>{}),
             fetch('SNDP_LPF_FD62.geojson').then(r=>r.json()).then(d=>{ layerFrayeresLpf.addData(d); piscoRawData['frayeres-lpf'] = d; }).catch(()=>{}),
             fetch('SIG_PE_FD62.geojson').then(r=>r.json()).then(d=>{ layerPeGlobal.addData(d); piscoRawData['pe-global'] = d; }).catch(()=>{}),
             fetch('communes.geojson').then(r=>r.json()).then(data=>{
