@@ -615,8 +615,22 @@
 
         /* Year filter box */
         .year-filter-box {
-            padding: 10px 14px; margin: 8px 14px;
-            background: var(--color-bg); border-radius: 8px;
+            padding: 12px 14px; margin: 8px 14px;
+            background: linear-gradient(135deg, #eef6ff 0%, #e8f5ee 100%);
+            border: 1px solid #b8d8e8;
+            border-left: 4px solid var(--color-primary);
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+        .year-filter-box .yfb-title {
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.5px; color: var(--color-primary);
+            margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+        }
+        .year-filter-box .yfb-title svg { width: 12px; height: 12px; }
+        .year-filter-box .yfb-subtitle {
+            font-size: 10.5px; color: var(--color-text-muted);
+            margin-bottom: 8px; font-style: italic;
         }
         .year-filter-box label {
             display: flex; align-items: center; gap: 8px;
@@ -630,6 +644,22 @@
             width: 100%; padding: 6px 8px;
             border: 1px solid var(--color-border); border-radius: 6px;
             font-size: 12px; font-family: inherit;
+        }
+        .year-filter-box .yfb-type-row {
+            display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+        }
+        .year-filter-box .yfb-type-chip {
+            font-size: 10.5px; padding: 3px 9px; border-radius: 12px;
+            background: #fff; border: 1px solid var(--color-border);
+            cursor: pointer; color: var(--color-text-muted);
+            transition: all 0.15s; user-select: none;
+        }
+        .year-filter-box .yfb-type-chip.active {
+            background: var(--color-primary); color: #fff;
+            border-color: var(--color-primary);
+        }
+        .year-filter-box .yfb-type-chip:hover:not(.active) {
+            background: var(--color-primary-light); color: var(--color-primary);
         }
     </style>
 </head>
@@ -1092,6 +1122,11 @@
             <div id="private-biological-layers" style="margin-top: 10px;">
                 <!-- Year filter for piscicultural layers -->
                 <div class="year-filter-box">
+                    <div class="yfb-title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 12c.94-3.46 4.94-6 10.5-6-3 3-4 6-4 6s1 3 4 6c-5.56 0-9.56-2.54-10.5-6z"/><circle cx="17" cy="10" r="1" fill="currentColor"/></svg>
+                        Filtre – Données Piscicoles
+                    </div>
+                    <div class="yfb-subtitle">RSA, Frayères, Pêches électriques</div>
                     <label>
                         <input type="checkbox" id="pisco-year-filter-toggle" onchange="togglePiscoYearFilter()">
                         Filtrer par année
@@ -1312,7 +1347,6 @@
                         <label for="pres-stations-suivi">Stations de suivi</label>
                         <div class="layer-info-btn" onclick="showLayerInfo('pres-stations-suivi')">i</div>
                     </div>
-                   
                     <div class="layer-item">
                         <div class="layer-swatch" style="background:#222;border-radius:50%;border:1px solid #888;"></div>
                         <input type="checkbox" id="pres-obstacles">
@@ -1351,8 +1385,13 @@
                         <label for="pres-travaux-hydro">Travaux hydrauliques doux</label>
                         <div class="layer-info-btn" onclick="showLayerInfo('pres-travaux-hydro')">i</div>
                     </div>
-                    <!-- Year filter for Plantations_hydraulique_douce -->
+                    <!-- Year + TYPEOUVRAG filter for Plantations_hydraulique_douce -->
                     <div class="year-filter-box" style="margin:6px 14px 6px 36px;">
+                        <div class="yfb-title">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6m0 0l3-3m-3 3L9 5m-7 7h6m0 0l-3 3m3-3l-3-3m13 3h-6m6 0l-3 3m3-3l-3-3"/></svg>
+                            Filtre – Plantations Hydrauliques Douces
+                        </div>
+                        <div class="yfb-subtitle">Année + Type d'ouvrage</div>
                         <label>
                             <input type="checkbox" id="hydro-year-filter-toggle" onchange="toggleHydroYearFilter()">
                             Filtrer par année
@@ -1360,6 +1399,11 @@
                         <select id="hydro-year-select" onchange="applyHydroYearFilter()" disabled style="display:none;">
                             <option value="">-- Toutes les années --</option>
                         </select>
+                        <label style="margin-top:8px;">
+                            <input type="checkbox" id="hydro-type-filter-toggle" onchange="toggleHydroTypeFilter()">
+                            Filtrer par type d'ouvrage
+                        </label>
+                        <div id="hydro-type-chips" class="yfb-type-row" style="display:none;"></div>
                     </div>
                 </div>
             </div>
@@ -2142,7 +2186,7 @@ let map, basemapLight, basemapSat, basemapTopo;
 let currentActiveQ = 'Q100';
 let currentView = 'ebf';
 let currentMode = 'public';
-let searchCommunesLayer, info;
+let searchCommunesLayer, info, prhymoInfo;
 const AGENT_CODE = 'HEM2026&*';
 let filterPluiChart = null;
 let layersQ = {};
@@ -2160,11 +2204,16 @@ let piscoYearDataLoaded = false;
 let piscoRawData = {};
 let piscoAvailableYears = [];
 
-// Year filter state for Plantations_hydraulique_douce
+// Year + type filter state for Plantations_hydraulique_douce
 let hydroYearFilterEnabled = false;
+let hydroTypeFilterEnabled = false;
 let hydroYearDataLoaded = false;
 let hydroRawData = null;
 let hydroAvailableYears = [];
+let hydroAvailableTypes = [];
+let hydroSelectedTypes = new Set();
+const HYDRO_TYPE_FIELD = 'TYPEOUVRAG';
+const HYDRO_YEAR_FIELD = 'DATEREALIS';
 
 // Piscicultural layer year field mapping
 const piscoLayerYearFields = {
@@ -2196,6 +2245,7 @@ function initApp() {
     searchCommunesLayer = L.geoJSON();
 
     setupInfoControl();
+    setupPrhymoInfoControl();
     setupQLayers();
     setupPointLayers();
     setupEbfLayers();
@@ -2252,7 +2302,7 @@ function getPluiColor(typezone) {
     return '#999999';
 }
 
-// ===== INFO CONTROL =====
+// ===== INFO CONTROL (Q layers) =====
 function setupInfoControl() {
     info = L.control({ position: 'topright' });
     info.onAdd = function() { this._div = L.DomUtil.create('div', 'info'); this.update(); return this._div; };
@@ -2269,6 +2319,78 @@ function setupInfoControl() {
                 <tr class="${h(q)}"><td>${q}</td><td>${v(props['Q_'+q+'_m3s'])}</td><td>${v(props['Ps_'+q])}</td>
                 <td><b style="color:${getClassColor(props['Cl_'+q])}">${props['Cl_'+q]||'?'}</b></td></tr>`).join('')}
             </table>`;
+    };
+}
+
+// ===== PRHYMO INFO CONTROL (hover panel) =====
+function prhymoLevelColor(v) {
+    if (v == null || isNaN(v)) return '#888';
+    const n = parseFloat(v);
+    if (n >= 4.5) return '#c0392b';
+    if (n >= 3.5) return '#e67e22';
+    if (n >= 2.5) return '#f39c12';
+    if (n >= 1.5) return '#27ae60';
+    return '#2ecc71';
+}
+
+function prhymoLevelLabel(v) {
+    if (v == null || isNaN(v)) return 'N/A';
+    const n = parseFloat(v);
+    if (n >= 4.5) return 'Critique';
+    if (n >= 3.5) return 'Fort';
+    if (n >= 2.5) return 'Modéré';
+    if (n >= 1.5) return 'Faible';
+    return 'Très bon';
+}
+
+function setupPrhymoInfoControl() {
+    prhymoInfo = L.control({ position: 'topright' });
+    prhymoInfo.onAdd = function() { this._div = L.DomUtil.create('div', 'info'); this.update(); return this._div; };
+    prhymoInfo.update = function(props) {
+        if (!props) {
+            this._div.innerHTML = '<h4>Diagnostic PRHYMO</h4>Survolez un tronçon';
+            return;
+        }
+        const score = props.Score_100 != null ? parseFloat(props.Score_100).toFixed(1) + '%' : 'N/A';
+        const indicators = [
+            { k: 'mor_pll', l: 'Altération morphologie du profil en long (seuils, rupture de pente)' },
+            { k: 'mor_ssl', l: 'Altération de la section du lit et du profil en travers (calibrage, encaissement)' },
+            { k: 'mor_riv', l: 'Dégradation de la morphologie des rives, des berges et de la ripisylve' },
+            { k: 'mor_rip', l: 'État de la couverture arborée de la ripisylve (boisement de berges)' },
+            { k: 'con_pro', l: 'Rupture de la continuité biologique induite par les obstacles en long' },
+            { k: 'con_sed', l: 'Blocage de la continuité sédimentaire et du transit de la charge de fond (sables, graviers)' },
+            { k: 'con_amp', l: 'Perte de connectivité avec les annexes et réduction de l’amplitude du lit majeur' },
+            { k: 'hyd_dyn', l: 'Perturbation de la dynamique hydrologique et de la typologie des écoulements' },
+            { k: 'hyd_qte', l: 'Altération quantitative du régime hydrologique et des volumes d’eau circulants' }
+        ];
+        const malusAgri = props.malus_agri != null ? parseFloat(props.malus_agri).toFixed(1) + '%' : 'N/A';
+        const malusAmenag = props.malus_amenag != null ? parseFloat(props.malus_amenag).toFixed(1) + '%' : 'N/A';
+
+        let rows = indicators.map(ind => {
+            const v = props[ind.k];
+            const val = (v != null && !isNaN(parseFloat(v))) ? parseFloat(v).toFixed(1) : '–';
+            const color = prhymoLevelColor(v);
+            const lbl = prhymoLevelLabel(v);
+            return `<tr><td title="${ind.l}" style="text-align:left;font-size:10px;padding-right:6px;cursor:help;">${ind.k}</td>
+                <td><b style="color:${color};font-size:12px;">${val}</b></td>
+                <td style="font-size:9px;color:${color};">${lbl}</td></tr>`;
+        }).join('');
+
+        this._div.innerHTML = `<h4>Diagnostic PRHYMO</h4>
+            <p style="margin:4px 0 6px;font-size:12px;color:#555;"><b>Score global :</b> 
+                <span style="font-weight:700;color:${parseFloat(props.Score_100)>=45?'#c0392b':(parseFloat(props.Score_100)>=25?'#e67e22':'#27ae60')};">${score}</span>
+            </p>
+            <p style="font-size:10px;color:#999;margin-bottom:6px;">Valeurs 1 (bon) → 5 (critique). Survolez un code pour son libellé.</p>
+            <table class="data-table">
+                <tr><th style="text-align:left;">Indicateur</th><th>Val.</th><th>Niveau</th></tr>
+                ${rows}
+            </table>
+            <div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--color-border);font-size:11px;color:#555;">
+                <div style="margin-bottom:3px;"><b>Malus Agricole :</b> 
+                    <span style="font-weight:700;color:#c2410c;">${malusAgri}</span></div>
+                <div><b>Malus d’Aménagement :</b> 
+                    <span style="font-weight:700;color:#c2410c;">${malusAmenag}</span></div>
+            </div>`;
     };
 }
 
@@ -2343,6 +2465,15 @@ function setupPointLayers() {
     layerPrhymo = L.geoJSON(null, {
         style: getUsraStyle,
         onEachFeature: (f, l) => {
+            l.on({
+                mouseover: (e) => {
+                    e.target.setStyle({ weight: 4, color: '#333' });
+                    prhymoInfo.update(f.properties);
+                },
+                mouseout: (e) => {
+                    e.target.setStyle(getUsraStyle(f));
+                }
+            });
             const s = parseFloat(f.properties.Score_100);
             l.bindPopup(`<b>PRHYMO</b><br>Score : ${s.toFixed(1)}%`);
         }
@@ -2420,7 +2551,6 @@ const definitions = {
     'check-communes': '<b>Limites Communales</b>',
     'check-plui-efo': '<b>Zonage PLUi (EFO)</b> – Occupation du sol dans l\'emprise EBF Optimal.',
     'check-plui-efn': '<b>Zonage PLUi (EFN)</b> – Occupation du sol dans l\'emprise EBF Nécessaire.',
-    // Diagnostic layers
     'check-prhymo': '<b>Analyse PRHYMO</b>\n\nScore de dégradation physique du cours d\'eau basé sur 9 indicateurs qualitatifs et 2 variables quantitatives.',
     'check-ruissellement': '<b>Axes Ruissellement</b>\n\nChemins préférentiels d\'écoulement identifiés par modélisation topographique.',
     'check-parcelles-agr': '<b>Parcelles Agricoles Impactées</b>\n\nParcelles prioritaires pour la gestion du ruissellement agricole.',
@@ -2428,7 +2558,6 @@ const definitions = {
     'check-station-diag': '<b>Stations Hydrométriques</b>\n\nPoints de mesure des débits et niveaux d\'eau.',
     'check-ouvrages-diag': '<b>Ouvrages / Obstacles</b>\n\nÉléments fragmentant le cours d\'eau.',
     'check-hydro-diag': '<b>Réseau Hydrographique</b>\n\nTronçons homogènes du bassin de la Hem.',
-    // Presentation layer definitions
     'pres-ppri': '<b>PPRI – Plan de Prévention des Risques d\'Inondation</b>\n\nDocument réglementaire opposable qui délimite les zones exposées au risque d\'inondation. Il impose des règles d\'urbanisme spécifiques pour les constructions.',
     'pres-azi': '<b>AZI – Atlas des Zones Inondables</b>\n\nCartographie des secteurs inondables basée sur des études hydrauliques. Outil de connaissance du risque non opposable.',
     'pres-reperes-crues': '<b>Repères de crues</b>\n\nPoints de marquage des niveaux atteints par les plus hautes eaux connues. Servent de mémoire des événements passés.',
@@ -2445,7 +2574,6 @@ const definitions = {
     'pres-trame-bleu': '<b>Trame bleue</b>\n\nRéseau de corridors écologiques aquatiques et humides (cours d\'eau, zones humides, ripisylves).',
     'pres-mares': '<b>Mares</b>\n\nPoints d\'eau stagnante de petite taille. Habitats remarquables pour amphibiens, odonates et flore hygrophile.',
     'pres-stations-suivi': '<b>Stations de suivi piscicole</b>\n\nPoints de pêche électrique permettant d\'évaluer la population de poissons et l\'indice biotique.',
-    'pres-peuplements': '<b>Peuplements piscicoles</b>\n\nZones de répartition des communautés de poissons (truite, chabot, vandoise, etc.).',
     'pres-obstacles': '<b>Obstacles à l\'écoulement</b>\n\nOuvrages (seuils, barrages, buses) fragmentant le cours d\'eau et le transit sédimentaire.',
     'pres-travaux': '<b>Travaux réalisés</b>\n\nLocalisation des opérations de restauration hydromorphologique effectuées.',
     'pres-amenagements': '<b>Aménagements anciens</b>\n\nOuvrages hydrauliques historiques (berges artificielles, calibrage).',
@@ -2557,91 +2685,67 @@ function setupBindings() {
 // ===== PRESENTATION LAYERS =====
 function setupPresentationLayers() {
     presLayerDefs = [
-        { id: 'pres-ppri',
-          file: 'PPRI_ancien.geojson',
+        { id: 'pres-ppri', file: 'PPRI_ancien.geojson',
           style: { color: '#3b82f6', weight: 1, fillColor: '#3b82f6', fillOpacity: 0.35 },
           popup: f => `<b>PPRI</b>` },
-        { id: 'pres-azi',
-          file: 'Crues_AZI.geojson',
+        { id: 'pres-azi', file: 'Crues_AZI.geojson',
           style: { color: '#93c5fd', weight: 1, fillColor: '#93c5fd', fillOpacity: 0.35 },
           popup: f => `<b>Atlas zones inondables</b><br><b>Année :</b> ${f.properties.ANNEE||'?'}<br><b>Nature :</b> ${f.properties.NATURE||'?'}` },
-        { id: 'pres-reperes-crues',
-          file: 'lieux_inondes.geojson',
+        { id: 'pres-reperes-crues', file: 'lieux_inondes.geojson',
           pointStyle: { radius: 7, fillColor: '#1d4ed8', color: '#fff', weight: 2, fillOpacity: 0.9 },
           popup: f => `<b>Lieu inondé</b><br>${Object.entries(f.properties||{}).slice(0,3).map(([k,v])=>`<b>${k}:</b> ${v}`).join('<br>')}` },
-        { id: 'pres-bassins',
-          file: 'bassin_hem.geojson',
+        { id: 'pres-bassins', file: 'bassin_hem.geojson',
           style: { color: '#3b82f6', weight: 2, fillColor: '#bfdbfe', fillOpacity: 0.15 },
           popup: f => `<b>Bassin versant</b>` },
-        { id: 'pres-axes-ruiss',
-          file: 'Axe_ruissellement_hors_lit_pente.geojson',
+        { id: 'pres-axes-ruiss', file: 'Axe_ruissellement_hors_lit_pente.geojson',
           lineStyle: { color: '#06b6d4', weight: 2, opacity: 0.85 },
           popup: f => `<b>Axe de ruissellement</b>` },
-        { id: 'pres-zh',
-          file: 'ZH_Enjeux.geojson',
+        { id: 'pres-zh', file: 'ZH_Enjeux.geojson',
           style: { color: '#16a34a', weight: 1, fillColor: '#4ade80', fillOpacity: 0.4 },
           popup: f => `<b>Zone humide</b>` },
-        { id: 'pres-natura2000',
-          file: 'ZCS_HEM.geojson',
+        { id: 'pres-natura2000', file: 'ZCS_HEM.geojson',
           style: { color: '#16a34a', weight: 2, fillColor: '#16a34a', fillOpacity: 0.2 },
           popup: f => `<b>ZCS – Natura 2000</b><br>${f.properties.sitename||''}` },
-        { id: 'pres-znieff1',
-          file: 'ZNIEFF1.geojson',
+        { id: 'pres-znieff1', file: 'ZNIEFF1.geojson',
           style: { color: '#65a30d', weight: 1, fillColor: '#a3e635', fillOpacity: 0.3 },
           popup: f => `<b>ZNIEFF type 1</b><br>${f.properties.NOM||''}` },
-        { id: 'pres-znieff2',
-          file: 'ZNIEFF2.geojson',
+        { id: 'pres-znieff2', file: 'ZNIEFF2.geojson',
           style: { color: '#4d7c0f', weight: 1, fillColor: '#86efac', fillOpacity: 0.25 },
           popup: f => `<b>ZNIEFF type 2</b><br>${f.properties.NOM||''}` },
-        { id: 'pres-reservoirs',
-          file: 'reservoir_biodiversite.geojson',
+        { id: 'pres-reservoirs', file: 'reservoir_biodiversite.geojson',
           style: { color: '#f97316', weight: 1, fillColor: '#f97316', fillOpacity: 0.35 },
           popup: f => `<b>Réservoir de biodiversité</b><br>${f.properties.MILMAJ_REG||''}` },
-        { id: 'pres-sites-classes',
-          file: 'Sites_classe_hem.geojson',
+        { id: 'pres-sites-classes', file: 'Sites_classe_hem.geojson',
           style: { color: '#d97706', weight: 2, fillColor: '#fbbf24', fillOpacity: 0.4 },
           popup: f => `<b>Site classé</b><br>${f.properties.ref_site_5||''}` },
-        { id: 'pres-reserve-bio',
-          file: 'reserve_biosphere.geojson',
+        { id: 'pres-reserve-bio', file: 'reserve_biosphere.geojson',
           style: { color: '#7c3aed', weight: 2, fillColor: '#a78bfa', fillOpacity: 0.3 },
           popup: f => `<b>Réserve de biosphère</b><br>${f.properties.NOM_SITE||''}` },
-        { id: 'pres-trame-vert',
-          file: 'trame_vert.geojson',
+        { id: 'pres-trame-vert', file: 'trame_vert.geojson',
           style: { color: '#65a30d', weight: 1, fillColor: '#84cc16', fillOpacity: 0.35 },
           popup: f => `<b>Trame verte</b><br>${f.properties.MILMAJ_REG||''}` },
-        { id: 'pres-trame-bleu',
-          file: 'trame_bleu.geojson',
+        { id: 'pres-trame-bleu', file: 'trame_bleu.geojson',
           style: { color: '#0284c7', weight: 1, fillColor: '#0ea5e9', fillOpacity: 0.3 },
           popup: f => `<b>Trame bleue</b>` },
-        { id: 'pres-mares',
-          file: 'mares.geojson',
+        { id: 'pres-mares', file: 'mares.geojson',
           pointStyle: { radius: 5, fillColor: '#6ee7b7', color: '#059669', weight: 1.5, fillOpacity: 0.9 },
           popup: f => `<b>Mare</b><br>${Object.entries(f.properties||{}).slice(0,3).map(([k,v])=>`<b>${k}:</b> ${v}`).join('<br>')}` },
-        { id: 'pres-stations-suivi',
-          file: 'Station.geojson',
+        { id: 'pres-stations-suivi', file: 'Station.geojson',
           pointStyle: { radius: 7, fillColor: '#0891b2', color: '#fff', weight: 2, fillOpacity: 0.9 },
           popup: f => `<b>Station de suivi</b><br>${f.properties.station||f.properties.nom||''}` },
-        { id: 'pres-peuplements',
-          file: 'Peuplements_piscicoles.geojson',
-          style: { color: '#0891b2', weight: 1, fillColor: '#22d3ee', fillOpacity: 0.4 },
-          popup: f => `<b>Peuplements piscicoles</b>` },
-        { id: 'pres-obstacles',
-          file: 'Ouvrage_WGS.geojson',
+        { id: 'pres-obstacles', file: 'Ouvrage_WGS.geojson',
           pointStyle: { radius: 5, fillColor: '#222', color: '#fff', weight: 1, fillOpacity: 0.85 },
           popup: f => `<b>Obstacle à l'écoulement</b><br>${f.properties.NomPrincipalObstEcoul||''}` },
-        { id: 'pres-travaux',
-          file: 'Travaux_realises.geojson',
+        { id: 'pres-travaux', file: 'Travaux_realises.geojson',
           pointStyle: { radius: 6, fillColor: '#f59e0b', color: '#fff', weight: 2, fillOpacity: 0.9 },
           popup: f => `<b>Travaux réalisés</b>` },
-        { id: 'pres-amenagements',
-          file: 'Amenagements_anciens.geojson',
+        { id: 'pres-amenagements', file: 'Amenagements_anciens.geojson',
           style: { color: '#d97706', weight: 1, fillColor: '#d97706', fillOpacity: 0.25 },
           popup: f => `<b>Aménagement ancien</b>` },
-        { id: 'pres-travaux-hydro',
-          file: 'Plantations_hydraulique_douce.geojson',
+        { id: 'pres-travaux-hydro', file: 'Plantations_hydraulique_douce.geojson',
           style: { color: '#0284c7', weight: 1.5, fillColor: '#0ea5e9', fillOpacity: 0.35 },
-          popup: f => `<b>Travaux hydrauliques doux</b><br><b>Date de réalisation :</b> ${f.properties.DATEREALIS||'?'}`,
-          yearField: 'DATEREALIS' }
+          popup: f => `<b>Travaux hydrauliques doux</b><br><b>Date de réalisation :</b> ${f.properties.DATEREALIS||'?'}<br><b>Type d'ouvrage :</b> ${f.properties.TYPEOUVRAG||'?'}`,
+          yearField: HYDRO_YEAR_FIELD, typeField: HYDRO_TYPE_FIELD }
     ];
 
     presLayerDefs.forEach(def => {
@@ -2815,16 +2919,20 @@ function rebuildPiscoLayers(filterYear) {
     }
 }
 
-// ===== HYDRO YEAR FILTER (Plantations_hydraulique_douce) =====
+// ===== HYDRO YEAR + TYPE FILTER (Plantations_hydraulique_douce) =====
 function loadHydroYearData(data) {
     if (!data || !data.features) return;
     hydroRawData = data;
     const years = new Set();
+    const types = new Set();
     data.features.forEach(f => {
-        const y = extractYear(f.properties.DATEREALIS);
+        const y = extractYear(f.properties[HYDRO_YEAR_FIELD]);
         if (y) years.add(y);
+        const t = f.properties[HYDRO_TYPE_FIELD];
+        if (t && String(t).trim()) types.add(String(t).trim());
     });
     hydroAvailableYears = [...years].sort((a,b) => b - a);
+    hydroAvailableTypes = [...types].sort((a,b) => a.localeCompare(b,'fr'));
     hydroYearDataLoaded = true;
 
     const sel = document.getElementById('hydro-year-select');
@@ -2834,6 +2942,29 @@ function loadHydroYearData(data) {
             const o = document.createElement('option');
             o.value = y; o.textContent = y;
             sel.appendChild(o);
+        });
+    }
+
+    const chips = document.getElementById('hydro-type-chips');
+    if (chips) {
+        chips.innerHTML = '';
+        hydroAvailableTypes.forEach(t => {
+            const chip = document.createElement('span');
+            chip.className = 'yfb-type-chip active';
+            chip.textContent = t;
+            chip.dataset.type = t;
+            chip.onclick = () => {
+                if (hydroSelectedTypes.has(t)) {
+                    hydroSelectedTypes.delete(t);
+                    chip.classList.remove('active');
+                } else {
+                    hydroSelectedTypes.add(t);
+                    chip.classList.add('active');
+                }
+                rebuildHydroLayer();
+            };
+            chips.appendChild(chip);
+            hydroSelectedTypes.add(t);
         });
     }
 }
@@ -2849,14 +2980,26 @@ function toggleHydroYearFilter() {
         sel.disabled = true;
         sel.style.display = 'none';
         sel.value = '';
-        rebuildHydroLayer(null);
+        rebuildHydroLayer();
     }
 }
 
 function applyHydroYearFilter() {
-    const sel = document.getElementById('hydro-year-select');
-    const year = sel.value ? parseInt(sel.value) : null;
-    rebuildHydroLayer(year);
+    rebuildHydroLayer();
+}
+
+function toggleHydroTypeFilter() {
+    const toggle = document.getElementById('hydro-type-filter-toggle');
+    const chips = document.getElementById('hydro-type-chips');
+    hydroTypeFilterEnabled = toggle.checked;
+    if (hydroTypeFilterEnabled) {
+        chips.style.display = 'flex';
+    } else {
+        chips.style.display = 'none';
+        hydroSelectedTypes = new Set(hydroAvailableTypes);
+        chips.querySelectorAll('.yfb-type-chip').forEach(c => c.classList.add('active'));
+        rebuildHydroLayer();
+    }
 }
 
 function rebuildHydroLayer(filterYear) {
@@ -2866,11 +3009,21 @@ function rebuildHydroLayer(filterYear) {
     const wasOnMap = map.hasLayer(layer);
     if (wasOnMap) map.removeLayer(layer);
 
+    let year = null;
+    if (hydroYearFilterEnabled) {
+        const sel = document.getElementById('hydro-year-select');
+        year = sel && sel.value ? parseInt(sel.value) : null;
+    }
+
+    const useTypeFilter = hydroTypeFilterEnabled && hydroSelectedTypes.size < hydroAvailableTypes.length;
+
     const filtered = {
         type: 'FeatureCollection',
-        features: filterYear
-            ? hydroRawData.features.filter(f => extractYear(f.properties.DATEREALIS) === filterYear)
-            : hydroRawData.features
+        features: hydroRawData.features.filter(f => {
+            const yOk = !year || extractYear(f.properties[HYDRO_YEAR_FIELD]) === year;
+            const tOk = !useTypeFilter || hydroSelectedTypes.has(String(f.properties[HYDRO_TYPE_FIELD] || '').trim());
+            return yOk && tOk;
+        })
     };
 
     layer.clearLayers();
@@ -2935,6 +3088,7 @@ function switchView(view) {
 
     if (view === 'diagnostic') {
         info.addTo(map);
+        prhymoInfo.addTo(map);
         layersQ['Q100'].addTo(map); layerStation.addTo(map); layerOuvrages.addTo(map);
         for (let l in ebfLayers) safeRemove(ebfLayers[l]);
         for (let l in presLayers) safeRemove(presLayers[l]);
@@ -2944,6 +3098,7 @@ function switchView(view) {
         layerHydroDiag.addTo(map);
     } else if (view === 'presentation') {
         safeRemoveControl(info);
+        safeRemoveControl(prhymoInfo);
         for (let q in layersQ) safeRemove(layersQ[q]);
         safeRemove(layerStation); safeRemove(layerOuvrages);
         safeRemove(layerHydroDiag); safeRemove(layerPrhymo);
@@ -2955,6 +3110,7 @@ function switchView(view) {
         activatePresLayers();
     } else {
         safeRemoveControl(info);
+        safeRemoveControl(prhymoInfo);
         for (let q in layersQ) safeRemove(layersQ[q]);
         safeRemove(layerStation); safeRemove(layerOuvrages);
         safeRemove(layerHydroDiag); safeRemove(layerPrhymo);
@@ -3104,7 +3260,7 @@ function resetAllLayers() {
         document.querySelectorAll('#q-buttons .chart-btn').forEach(b => b.classList.toggle('active', b.textContent === 'Q100'));
         currentActiveQ = 'Q100';
     } else if (currentView === 'presentation') {
-        const defaultChecked = ['pres-ppri', 'pres-reperes-crues', 'pres-axes-ruiss', 'pres-zh', 'pres-natura2000', 'pres-znieff1', 'pres-znieff2', 'pres-reservoirs', 'pres-stations-suivi', 'pres-peuplements'];
+        const defaultChecked = ['pres-ppri', 'pres-reperes-crues', 'pres-axes-ruiss', 'pres-zh', 'pres-natura2000', 'pres-znieff1', 'pres-znieff2', 'pres-reservoirs', 'pres-stations-suivi'];
         document.querySelectorAll('#presentation-layers input[type="checkbox"]').forEach(cb => {
             cb.checked = defaultChecked.includes(cb.id);
         });
