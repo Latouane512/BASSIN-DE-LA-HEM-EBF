@@ -2363,8 +2363,13 @@ function setupPrhymoInfoControl() {
             { k: 'hyd_dyn', l: 'Perturbation de la dynamique hydrologique et de la typologie des écoulements' },
             { k: 'hyd_qte', l: 'Altération quantitative du régime hydrologique et des volumes d’eau circulants' }
         ];
-        const malusAgri = props.malus_agri != null ? parseFloat(props.malus_agri).toFixed(1) + '%' : 'N/A';
-        const malusAmenag = props.malus_amenag != null ? parseFloat(props.malus_amenag).toFixed(1) + '%' : 'N/A';
+        const calcMalus = (field) => {
+            const v = props[field];
+            if (v == null || isNaN(parseFloat(v))) return 'N/A';
+            return (parseFloat(v) * 0.2).toFixed(1) + '%';
+        };
+        const malusAgri = calcMalus('agri3w_v');
+        const malusAmenag = calcMalus('txamg_v');
 
         let rows = indicators.map(ind => {
             const v = props[ind.k];
@@ -3002,7 +3007,7 @@ function toggleHydroTypeFilter() {
     }
 }
 
-function rebuildHydroLayer(filterYear) {
+function rebuildHydroLayer() {
     const layer = presLayers['pres-travaux-hydro'];
     if (!layer || !hydroRawData) return;
 
