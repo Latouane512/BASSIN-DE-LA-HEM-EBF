@@ -2366,7 +2366,7 @@ function setupPrhymoInfoControl() {
         const calcMalus = (field) => {
             const v = props[field];
             if (v == null || isNaN(parseFloat(v))) return 'N/A';
-            return (parseFloat(v) * 0.2).toFixed(1) + '%';
+            return parseFloat(v).toFixed(1) + '%';
         };
         const malusAgri = calcMalus('agri3w_v');
         const malusAmenag = calcMalus('txamg_v');
