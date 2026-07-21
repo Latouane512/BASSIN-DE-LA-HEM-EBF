@@ -271,18 +271,6 @@
 </head>
 <body>
 
-<!-- ========== LOGIN OVERLAY ========== -->
-<div id="login-overlay">
-    <div class="login-card">
-        <svg width="48" height="48" viewBox="0 0 36 36" fill="none" style="margin-bottom:16px;">
-            <path d="M4 22 Q9 14 18 18 Q27 22 32 14" stroke="#1a7a4a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-            <path d="M4 27 Q9 19 18 23 Q27 27 32 19" stroke="#2d9e63" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-            <path d="M4 17 Q9 9 18 13 Q27 17 32 9" stroke="#68c197" stroke-width="2" stroke-linecap="round" fill="none"/>
-        </svg>
-        <h1>Vallée de la Hem</h1>
-        <p>Outil de gestion intégrée du bassin versant</p>
-    </div>
-</div>
 
 <!-- ========== HEADER ========== -->
 <header id="app-header">
@@ -1857,26 +1845,7 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// ===== LOGIN STATE =====
-let currentUser = null;
 
-function performLogin() {
-    const input = document.getElementById('login-username');
-    const error = document.getElementById('login-error');
-    const value = input.value.trim();
-
-    if (!value) {
-        error.style.display = 'block';
-        return;
-    }
-
-    currentUser = value.toUpperCase().substring(0, 3);
-    document.getElementById('user-initials').textContent = currentUser;
-    document.getElementById('user-name').textContent = currentUser;
-
-    document.getElementById('login-overlay').style.display = 'none';
-    initApp();
-}
 
 // ===== MAP INIT =====
 let map, basemapLight, basemapSat, basemapTopo;
