@@ -3586,56 +3586,76 @@ document.addEventListener('DOMContentLoaded', function() {
 
 map && map.on('overlayadd', (e) => { for(let q in layersQ){ if(layersQ[q]===e.layer) currentActiveQ=q; } });
 
+// ===== LOGIQUE TRAVAUX GLOBAL (LINEAIRE + PONCTUEL) =====
 const TRAVAUX_DICT = {
-    'PRA1': { label: 'Clôtures', color: '#8b5cf6' },
-    'RBT':  { label: 'Reboisement / Ripisylve', color: '#10b981' },
-    'PRA2': { label: 'Abreuvoir', color: '#3b82f6' },
-    'PAG':  { label: 'Passage à gué', color: '#f59e0b' },
+    'pra1': { label: 'Clôtures', color: '#8b5cf6' },
+    'clôture': { label: 'Clôtures', color: '#8b5cf6' },
+    'clôtures': { label: 'Clôtures', color: '#8b5cf6' },
+    
+    'rbt':  { label: 'Reboisement / Ripisylve', color: '#10b981' },
+    'reboisement': { label: 'Reboisement / Ripisylve', color: '#10b981' },
+    
+    'pra2': { label: 'Abreuvoir', color: '#3b82f6' },
+    'abreuvoir': { label: 'Abreuvoir', color: '#3b82f6' },
+    
+    'pag':  { label: 'Passage à gué', color: '#f59e0b' },
+    'passage à gué': { label: 'Passage à gué', color: '#f59e0b' },
+    
     'abattage préventif': { label: 'Abattage préventif', color: '#eab308' },
     'passerelle': { label: 'Passerelle', color: '#64748b' },
     'pont': { label: 'Pont', color: '#475569' },
-    'RBT2': { label: 'Abattage d\'essences inadaptées', color: '#ef4444' },
-    'RLC2': { label: 'Effacement', color: '#6366f1' },
-    'RLC3': { label: 'Aménagement seuil résiduel', color: '#f97316' },
+    
+    'rbt2': { label: 'Abattage d\'essences inadaptées', color: '#ef4444' },
+    
+    'rcl2': { label: 'Effacement', color: '#6366f1' },
+    'rlc2': { label: 'Effacement', color: '#6366f1' },
+    'effacement': { label: 'Effacement', color: '#6366f1' },
+    
+    'rlc3': { label: 'Aménagement seuil résiduel', color: '#f97316' },
+    'aménagement seuil': { label: 'Aménagement seuil résiduel', color: '#f97316' },
+    
     'retrait embacle': { label: 'Retrait embâcle', color: '#a8a29e' },
     'retrait embâcle': { label: 'Retrait embâcle', color: '#a8a29e' }
 };
 
-function getTravauxColor(type) { 
-    const t = type ? String(type).trim().toLowerCase() : '';
-    for(let key in TRAVAUX_DICT) {
-        if(key.toLowerCase() === t) return TRAVAUX_DICT[key].color;
-    }
-    return '#555'; 
+// Récupérer le libellé "propre" (ex: PRA2 -> Abreuvoir)
+function getTravauxLabel(type) { 
+    const tLow = type ? String(type).trim().toLowerCase() : '';
+    if (TRAVAUX_DICT[tLow]) return TRAVAUX_DICT[tLow].label;
+    return type ? String(type).trim().charAt(0).toUpperCase() + String(type).trim().slice(1) : 'Inconnu'; 
 }
 
-function getTravauxLabel(type) { 
-    const t = type ? String(type).trim() : '';
-    const tLow = t.toLowerCase();
+// Récupérer la couleur via le libellé propre
+function getTravauxColorByLabel(label) {
     for(let key in TRAVAUX_DICT) {
-        if(key.toLowerCase() === tLow) {
-            return key === key.toUpperCase() ? `${TRAVAUX_DICT[key].label} (${t})` : TRAVAUX_DICT[key].label;
-        }
+        if(TRAVAUX_DICT[key].label === label) return TRAVAUX_DICT[key].color;
     }
-    return t || 'Inconnu'; 
+    return '#555';
+}
+
+// Récupérer la couleur via la donnée brute du GeoJSON
+function getTravauxColorByRaw(type) {
+    const tLow = type ? String(type).trim().toLowerCase() : '';
+    if (TRAVAUX_DICT[tLow]) return TRAVAUX_DICT[tLow].color;
+    return '#555';
 }
 
 // Définition manuelle des deux couches Leaflet
 let layerTravauxLin = L.geoJSON(null, {
-    style: f => ({ color: getTravauxColor(f.properties.TYPE), weight: 3, opacity: 0.9 }),
+    style: f => ({ color: getTravauxColorByRaw(f.properties.TYPE), weight: 3, opacity: 0.9 }),
     onEachFeature: (f, l) => l.bindPopup(`<b>Travaux Linéaires</b><br><b>Année :</b> ${f.properties.ANNEE||'?'}<br><b>Type :</b> ${getTravauxLabel(f.properties.TYPE)}`)
 });
 
 let layerTravauxPt = L.geoJSON(null, {
     pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, weight: 2, fillOpacity: 0.9, color: '#fff' }),
     onEachFeature: (f, l) => {
-        l.setStyle({ fillColor: getTravauxColor(f.properties.TYPE) });
+        l.setStyle({ fillColor: getTravauxColorByRaw(f.properties.TYPE) });
         l.bindPopup(`<b>Travaux Ponctuels</b><br><b>Année :</b> ${f.properties.ANNEE||'?'}<br><b>Type :</b> ${getTravauxLabel(f.properties.TYPE)}`);
     }
 });
 
 let travauxRawData = { lineaire: null, ponctuel: null };
-let travauxAvailableTypes = new Set();
+let travauxAvailableTypes = new Set(); // Stockera uniquement les labels propres ("Abreuvoir", "Effacement"...)
 let travauxAvailableYears = new Set();
 let travauxSelectedTypes = new Set();
 
@@ -3679,10 +3699,13 @@ function processTravauxData(data, typeKey) {
     data.features.forEach(f => {
         const y = extractYear(f.properties['ANNEE']);
         if (y) travauxAvailableYears.add(y);
+        
         const t = f.properties['TYPE'];
         if (t && String(t).trim()) {
-            travauxAvailableTypes.add(String(t).trim());
-            travauxSelectedTypes.add(String(t).trim());
+            // On standardise tout de suite la donnée
+            const canonicalLabel = getTravauxLabel(t);
+            travauxAvailableTypes.add(canonicalLabel);
+            travauxSelectedTypes.add(canonicalLabel);
         }
     });
     updateTravauxFilterUI();
@@ -3702,27 +3725,29 @@ function updateTravauxFilterUI() {
     });
     sel.value = currentYear;
 
-    const types = [...travauxAvailableTypes].sort((a,b) => getTravauxLabel(a).localeCompare(getTravauxLabel(b)));
+    const types = [...travauxAvailableTypes].sort();
     chips.innerHTML = '';
-    types.forEach(t => {
+    types.forEach(tLabel => {
         const chip = document.createElement('span');
-        chip.className = travauxSelectedTypes.has(t) ? 'yfb-type-chip active' : 'yfb-type-chip';
-        chip.textContent = getTravauxLabel(t).replace(/\s*\([^)]*\)/, '');
-        chip.style.borderColor = getTravauxColor(t);
-        if(travauxSelectedTypes.has(t)) { 
-            chip.style.backgroundColor = getTravauxColor(t); 
+        chip.className = travauxSelectedTypes.has(tLabel) ? 'yfb-type-chip active' : 'yfb-type-chip';
+        chip.textContent = tLabel;
+        
+        const color = getTravauxColorByLabel(tLabel);
+        chip.style.borderColor = color;
+        if(travauxSelectedTypes.has(tLabel)) { 
+            chip.style.backgroundColor = color; 
             chip.style.color = '#fff'; 
         }
         
         chip.onclick = () => {
-            if (travauxSelectedTypes.has(t)) {
-                travauxSelectedTypes.delete(t);
+            if (travauxSelectedTypes.has(tLabel)) {
+                travauxSelectedTypes.delete(tLabel);
                 chip.classList.remove('active');
                 chip.style.backgroundColor = '#fff'; chip.style.color = 'var(--color-text-muted)';
             } else {
-                travauxSelectedTypes.add(t);
+                travauxSelectedTypes.add(tLabel);
                 chip.classList.add('active');
-                chip.style.backgroundColor = getTravauxColor(t); chip.style.color = '#fff';
+                chip.style.backgroundColor = color; chip.style.color = '#fff';
             }
             applyTravauxFilter();
         };
@@ -3754,17 +3779,23 @@ function applyTravauxFilter() {
     const selYear = document.getElementById('travaux-year-select').value;
     const filterYear = (yearToggle && selYear) ? parseInt(selYear) : null;
 
+    // Fonction de filtre qui vérifie le label canonical
+    const filterFeatures = (features) => {
+        return features.filter(f => {
+            const yOk = !filterYear || extractYear(f.properties['ANNEE']) === filterYear;
+            const canonicalLabel = getTravauxLabel(f.properties['TYPE']);
+            const tOk = !typeToggle || travauxSelectedTypes.has(canonicalLabel);
+            return yOk && tOk;
+        });
+    };
+
     if (travauxRawData.lineaire) {
         const wasOnMapLin = map.hasLayer(layerTravauxLin);
         if (wasOnMapLin) map.removeLayer(layerTravauxLin);
         layerTravauxLin.clearLayers();
         layerTravauxLin.addData({
             type: 'FeatureCollection',
-            features: travauxRawData.lineaire.features.filter(f => {
-                const yOk = !filterYear || extractYear(f.properties['ANNEE']) === filterYear;
-                const tOk = !typeToggle || travauxSelectedTypes.has(String(f.properties['TYPE'] || '').trim());
-                return yOk && tOk;
-            })
+            features: filterFeatures(travauxRawData.lineaire.features)
         });
         layerTravauxLin.addTo(map);
     }
@@ -3775,11 +3806,7 @@ function applyTravauxFilter() {
         layerTravauxPt.clearLayers();
         layerTravauxPt.addData({
             type: 'FeatureCollection',
-            features: travauxRawData.ponctuel.features.filter(f => {
-                const yOk = !filterYear || extractYear(f.properties['ANNEE']) === filterYear;
-                const tOk = !typeToggle || travauxSelectedTypes.has(String(f.properties['TYPE'] || '').trim());
-                return yOk && tOk;
-            })
+            features: filterFeatures(travauxRawData.ponctuel.features)
         });
         layerTravauxPt.addTo(map);
     }
