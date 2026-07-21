@@ -46,6 +46,7 @@
             font-size: 13px;
         }
 
+        /* =========== HEADER =========== */
         #app-header {
             position: fixed; top: 0; left: 0; right: 0;
             height: var(--header-h);
@@ -57,150 +58,449 @@
             box-shadow: var(--shadow-sm);
         }
 
-        .header-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; }
-        .logo-icon { width: 36px; height: 36px; }
+        .header-logo {
+            display: flex; align-items: center; gap: 10px;
+            flex-shrink: 0;
+            text-decoration: none;
+        }
+        .logo-icon {
+            width: 36px; height: 36px;
+        }
         .logo-text h1 { font-size: 15px; font-weight: 700; color: var(--color-primary); line-height: 1.2; }
         .logo-text p  { font-size: 10px; color: var(--color-text-muted); font-weight: 400; }
+
         .header-divider { width: 1px; height: 30px; background: var(--color-border); flex-shrink: 0; }
-        .header-search { flex: 1; max-width: 420px; display: flex; align-items: center; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 8px; padding: 0 12px; gap: 8px; transition: border-color 0.2s; }
+
+        .header-search {
+            flex: 1; max-width: 420px;
+            display: flex; align-items: center;
+            background: var(--color-bg); border: 1px solid var(--color-border);
+            border-radius: 8px; padding: 0 12px; gap: 8px;
+            transition: border-color 0.2s;
+        }
         .header-search:focus-within { border-color: var(--color-primary); }
-        .header-search input { border: none; background: transparent; outline: none; font-size: 13px; color: var(--color-text); width: 100%; padding: 8px 0; font-family: inherit; }
+        .header-search input {
+            border: none; background: transparent; outline: none;
+            font-size: 13px; color: var(--color-text); width: 100%; padding: 8px 0;
+            font-family: inherit;
+        }
         .header-search input::placeholder { color: var(--color-text-light); }
         .search-icon { color: var(--color-text-muted); flex-shrink: 0; }
 
-        #search-dropdown { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: #fff; border: 1px solid var(--color-border); border-radius: 8px; box-shadow: var(--shadow-md); list-style: none; max-height: 220px; overflow-y: auto; z-index: 4000; display: none; }
+        #search-dropdown {
+            position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+            background: #fff; border: 1px solid var(--color-border);
+            border-radius: 8px; box-shadow: var(--shadow-md);
+            list-style: none; max-height: 220px; overflow-y: auto;
+            z-index: 4000; display: none;
+        }
         #search-dropdown.open { display: block; }
-        #search-dropdown li { padding: 8px 14px; cursor: pointer; font-size: 13px; color: var(--color-text); transition: background 0.1s; display: flex; align-items: center; gap: 8px; }
+        #search-dropdown li {
+            padding: 8px 14px; cursor: pointer; font-size: 13px;
+            color: var(--color-text); transition: background 0.1s;
+            display: flex; align-items: center; gap: 8px;
+        }
         #search-dropdown li:hover { background: var(--color-primary-light); color: var(--color-primary); }
         #search-dropdown li .sdrop-icon { color: var(--color-text-muted); flex-shrink: 0; }
         #search-dropdown .sdrop-empty { color: var(--color-text-muted); font-style: italic; cursor: default; }
         #search-dropdown .sdrop-empty:hover { background: none; color: var(--color-text-muted); }
 
+        /* Legend tab */
         .legend-section { padding: 14px 14px 6px; }
-        .legend-section-title { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--color-text-muted); margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--color-border); }
-        .legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 12px; color: var(--color-text); }
-        .legend-swatch { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
-        .legend-line { width: 22px; height: 4px; border-radius: 2px; flex-shrink: 0; }
-        .legend-line-dashed { width: 22px; height: 0; border-top: 3px dashed; flex-shrink: 0; }
-        .legend-circle { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+        .legend-section-title {
+            font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.6px; color: var(--color-text-muted);
+            margin-bottom: 8px; padding-bottom: 4px;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .legend-item {
+            display: flex; align-items: center; gap: 8px;
+            padding: 4px 0; font-size: 12px; color: var(--color-text);
+        }
+        .legend-swatch {
+            width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0;
+        }
+        .legend-line {
+            width: 22px; height: 4px; border-radius: 2px; flex-shrink: 0;
+        }
+        .legend-line-dashed {
+            width: 22px; height: 0; border-top: 3px dashed; flex-shrink: 0;
+        }
+        .legend-circle {
+            width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;
+        }
 
-        .header-btn { display: flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 7px; cursor: pointer; border: 1px solid var(--color-border); background: #fff; font-size: 12px; font-weight: 500; color: var(--color-text); transition: all 0.15s; white-space: nowrap; font-family: inherit; }
+        .header-btn {
+            display: flex; align-items: center; gap: 6px;
+            padding: 7px 12px; border-radius: 7px; cursor: pointer;
+            border: 1px solid var(--color-border); background: #fff;
+            font-size: 12px; font-weight: 500; color: var(--color-text);
+            transition: all 0.15s; white-space: nowrap; font-family: inherit;
+        }
         .header-btn:hover { background: var(--color-bg); border-color: #c4c9d4; }
-        .header-mode-group { display: flex; align-items: center; gap: 0; border: 1px solid var(--color-border); border-radius: 7px; overflow: hidden; flex-shrink: 0; }
+
+        .header-mode-group {
+            display: flex; align-items: center; gap: 0;
+            border: 1px solid var(--color-border); border-radius: 7px; overflow: hidden;
+            flex-shrink: 0;
+        }
         .header-mode-label { font-size: 11px; color: var(--color-text-muted); padding: 0 10px; white-space: nowrap; }
-        .mode-btn { padding: 7px 14px; font-size: 12px; font-weight: 500; cursor: pointer; border: none; background: #fff; color: var(--color-text-muted); transition: all 0.15s; font-family: inherit; border-left: 1px solid var(--color-border); }
+        .mode-btn {
+            padding: 7px 14px; font-size: 12px; font-weight: 500;
+            cursor: pointer; border: none; background: #fff;
+            color: var(--color-text-muted); transition: all 0.15s;
+            font-family: inherit; border-left: 1px solid var(--color-border);
+        }
         .mode-btn.active { background: var(--color-bg); color: var(--color-text); font-weight: 600; }
         .mode-btn:hover:not(.active) { background: #fafafa; }
-        .header-btn-primary { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 7px; cursor: pointer; border: none; background: var(--color-primary); font-size: 12px; font-weight: 600; color: #fff; transition: background 0.15s; white-space: nowrap; font-family: inherit; }
+
+        .header-btn-primary {
+            display: flex; align-items: center; gap: 6px;
+            padding: 8px 16px; border-radius: 7px; cursor: pointer;
+            border: none; background: var(--color-primary);
+            font-size: 12px; font-weight: 600; color: #fff;
+            transition: background 0.15s; white-space: nowrap; font-family: inherit;
+        }
         .header-btn-primary:hover { background: #156038; }
-        .header-icon-btn { width: 34px; height: 34px; border-radius: 7px; cursor: pointer; border: 1px solid var(--color-border); background: #fff; display: flex; align-items: center; justify-content: center; color: var(--color-text-muted); transition: all 0.15s; flex-shrink: 0; }
+
+        .header-icon-btn {
+            width: 34px; height: 34px; border-radius: 7px; cursor: pointer;
+            border: 1px solid var(--color-border); background: #fff;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--color-text-muted); transition: all 0.15s; flex-shrink: 0;
+        }
         .header-icon-btn:hover { background: var(--color-bg); color: var(--color-text); }
-        .header-view-select { display: flex; align-items: center; gap: 0; border: 1px solid var(--color-border); border-radius: 7px; overflow: hidden; flex-shrink: 0; margin-left: auto; }
-        .view-tab { padding: 7px 13px; font-size: 11px; font-weight: 500; cursor: pointer; border: none; background: #fff; color: var(--color-text-muted); transition: all 0.15s; font-family: inherit; white-space: nowrap; }
+        
+        .hydro-label {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    color: #0284c7;
+    font-weight: 700;
+    font-size: 11px;
+    text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
+}
+        .header-view-select {
+            display: flex; align-items: center; gap: 0;
+            border: 1px solid var(--color-border); border-radius: 7px; overflow: hidden;
+            flex-shrink: 0; margin-left: auto;
+        }
+        .view-tab {
+            padding: 7px 13px; font-size: 11px; font-weight: 500;
+            cursor: pointer; border: none; background: #fff;
+            color: var(--color-text-muted); transition: all 0.15s;
+            font-family: inherit; white-space: nowrap;
+        }
         .view-tab + .view-tab { border-left: 1px solid var(--color-border); }
         .view-tab.active { background: var(--color-primary-light); color: var(--color-primary); font-weight: 600; }
         .view-tab:hover:not(.active) { background: var(--color-bg); }
 
-        #map { position: fixed; top: var(--header-h); left: var(--left-w); right: 0; bottom: var(--bottom-h); z-index: 1; }
+        /* =========== MAP =========== */
+        #map {
+            position: fixed;
+            top: var(--header-h);
+            left: var(--left-w);
+            right: 0;
+            bottom: var(--bottom-h);
+            z-index: 1;
+        }
         #map.panel-open { right: var(--right-w); }
 
-        #left-sidebar { position: fixed; top: var(--header-h); left: 0; bottom: var(--bottom-h); width: var(--left-w); background: var(--color-sidebar); border-right: 1px solid var(--color-border); display: flex; flex-direction: column; z-index: 2000; overflow: hidden; }
-        .sidebar-tabs { display: flex; border-bottom: 1px solid var(--color-border); flex-shrink: 0; }
-        .sidebar-tab { flex: 1; padding: 12px 0; text-align: center; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--color-text-muted); border-bottom: 2px solid transparent; transition: all 0.15s; background: none; border: none; font-family: inherit; }
+        /* =========== LEFT SIDEBAR =========== */
+        #left-sidebar {
+            position: fixed;
+            top: var(--header-h); left: 0; bottom: var(--bottom-h);
+            width: var(--left-w);
+            background: var(--color-sidebar);
+            border-right: 1px solid var(--color-border);
+            display: flex; flex-direction: column;
+            z-index: 2000;
+            overflow: hidden;
+        }
+
+        .sidebar-tabs {
+            display: flex; border-bottom: 1px solid var(--color-border);
+            flex-shrink: 0;
+        }
+        .sidebar-tab {
+            flex: 1; padding: 12px 0; text-align: center;
+            font-size: 13px; font-weight: 500; cursor: pointer;
+            color: var(--color-text-muted); border-bottom: 2px solid transparent;
+            transition: all 0.15s; background: none; border: none;
+            border-bottom: 2px solid transparent; font-family: inherit;
+        }
         .sidebar-tab.active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
         .sidebar-tab:hover:not(.active) { color: var(--color-text); }
-        .sidebar-body { flex: 1; overflow-y: auto; padding: 8px 0; }
+
+        .sidebar-body {
+            flex: 1; overflow-y: auto; padding: 8px 0;
+        }
         .sidebar-body::-webkit-scrollbar { width: 4px; }
         .sidebar-body::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+
         .layer-group { margin-bottom: 2px; }
-        .layer-group-header { display: flex; align-items: center; gap: 8px; padding: 9px 14px; cursor: pointer; transition: background 0.1s; user-select: none; }
+        .layer-group-header {
+            display: flex; align-items: center; gap: 8px;
+            padding: 9px 14px; cursor: pointer;
+            transition: background 0.1s; user-select: none;
+        }
         .layer-group-header:hover { background: var(--color-bg); }
         .group-icon { width: 20px; height: 20px; flex-shrink: 0; }
         .group-title { font-weight: 600; font-size: 12.5px; color: var(--color-text); flex: 1; }
-        .group-count { background: var(--color-primary-light); color: var(--color-primary); font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 10px; flex-shrink: 0; }
-        .group-chevron { color: var(--color-text-light); transition: transform 0.2s; flex-shrink: 0; font-size: 10px; }
+        .group-count {
+            background: var(--color-primary-light); color: var(--color-primary);
+            font-size: 10px; font-weight: 700; padding: 2px 6px;
+            border-radius: 10px; flex-shrink: 0;
+        }
+        .group-chevron {
+            color: var(--color-text-light); transition: transform 0.2s; flex-shrink: 0;
+            font-size: 10px;
+        }
         .layer-group.open .group-chevron { transform: rotate(90deg); }
+
         .layer-group-body { display: none; padding: 2px 0 6px 0; }
         .layer-group.open .layer-group-body { display: block; }
-        .layer-item { display: flex; align-items: center; gap: 8px; padding: 6px 14px 6px 36px; cursor: pointer; transition: background 0.1s; }
+
+        .layer-item {
+            display: flex; align-items: center; gap: 8px;
+            padding: 6px 14px 6px 36px;
+            cursor: pointer; transition: background 0.1s;
+        }
         .layer-item:hover { background: var(--color-bg); }
         .layer-item label { flex: 1; font-size: 12px; color: var(--color-text); cursor: pointer; line-height: 1.3; }
-        .layer-item input[type="checkbox"] { width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; accent-color: var(--color-primary); }
-        .layer-info-btn { width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--color-border); background: #fff; display: flex; align-items: center; justify-content: center; color: var(--color-text-muted); font-size: 9px; font-weight: 700; cursor: pointer; flex-shrink: 0; transition: all 0.15s; }
+        .layer-item input[type="checkbox"] {
+            width: 15px; height: 15px; flex-shrink: 0; cursor: pointer;
+            accent-color: var(--color-primary);
+        }
+        .layer-info-btn {
+            width: 16px; height: 16px; border-radius: 50%;
+            border: 1px solid var(--color-border); background: #fff;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--color-text-muted); font-size: 9px; font-weight: 700;
+            cursor: pointer; flex-shrink: 0; transition: all 0.15s;
+        }
         .layer-info-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
-        .layer-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-        .sidebar-footer { flex-shrink: 0; border-top: 1px solid var(--color-border); padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
-        .footer-action-btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; border-radius: 7px; cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.15s; font-family: inherit; width: 100%; }
-        .btn-reset { border: 1px solid var(--color-border); background: #fff; color: var(--color-text-muted); }
+
+        .layer-swatch {
+            width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0;
+        }
+
+        .sidebar-footer {
+            flex-shrink: 0; border-top: 1px solid var(--color-border); padding: 10px 12px;
+            display: flex; flex-direction: column; gap: 6px;
+        }
+
+        .footer-action-btn {
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 8px 12px; border-radius: 7px; cursor: pointer;
+            font-size: 12px; font-weight: 500; transition: all 0.15s; font-family: inherit;
+            width: 100%;
+        }
+        .btn-reset {
+            border: 1px solid var(--color-border); background: #fff; color: var(--color-text-muted);
+        }
         .btn-reset:hover { border-color: #c4c9d4; color: var(--color-text); }
-        .btn-download { border: 1px solid var(--color-primary); background: var(--color-primary-light); color: var(--color-primary); }
+        .btn-download {
+            border: 1px solid var(--color-primary); background: var(--color-primary-light);
+            color: var(--color-primary);
+        }
         .btn-download:hover { background: #d4eddf; }
 
+        /* =========== MAP CONTROLS (override leaflet) =========== */
         .leaflet-top.leaflet-left { top: 12px; left: 12px; }
         .leaflet-bottom.leaflet-right { bottom: 16px; right: 12px; }
         .leaflet-bottom.leaflet-left { bottom: 16px; left: 12px; }
+
         .leaflet-control-zoom { border: none !important; box-shadow: var(--shadow-md) !important; }
-        .leaflet-control-zoom a { border-radius: 7px !important; width: 32px !important; height: 32px !important; line-height: 32px !important; background: #fff !important; border: 1px solid var(--color-border) !important; color: var(--color-text) !important; font-size: 16px !important; }
+        .leaflet-control-zoom a {
+            border-radius: 7px !important; width: 32px !important; height: 32px !important;
+            line-height: 32px !important; background: #fff !important;
+            border: 1px solid var(--color-border) !important;
+            color: var(--color-text) !important; font-size: 16px !important;
+        }
         .leaflet-control-zoom a:hover { background: var(--color-bg) !important; }
         .leaflet-control-zoom-in { margin-bottom: 4px !important; border-radius: 7px !important; }
         .leaflet-control-zoom-out { border-radius: 7px !important; }
+
         .leaflet-control-scale { margin-bottom: 8px !important; }
         .leaflet-control-scale-line { border-color: #999 !important; border-radius: 0 0 3px 3px !important; background: rgba(255,255,255,0.85) !important; }
-        .map-control-group { display: flex; flex-direction: column; gap: 4px; position: absolute; top: 12px; left: 12px; z-index: 800; }
-        .map-ctrl-btn { width: 32px; height: 32px; border-radius: 7px; background: #fff; border: 1px solid var(--color-border); box-shadow: var(--shadow-sm); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--color-text-muted); transition: all 0.15s; }
+
+        /* =========== MAP CONTROLS CUSTOM =========== */
+        .map-control-group {
+            display: flex; flex-direction: column; gap: 4px;
+            position: absolute; top: 12px; left: 12px; z-index: 800;
+        }
+        .map-ctrl-btn {
+            width: 32px; height: 32px; border-radius: 7px;
+            background: #fff; border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-sm); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--color-text-muted); transition: all 0.15s;
+        }
         .map-ctrl-btn:hover { background: var(--color-bg); color: var(--color-text); }
 
-        .info { padding: 14px 16px; background: rgba(255,255,255,0.98); border-radius: 10px; box-shadow: var(--shadow-md) !important; border: 1px solid var(--color-border) !important; min-width: 300px; font-family: 'Inter', Arial, sans-serif; }
-        .info h4 { margin: 0 0 10px; font-size: 13px; font-weight: 600; color: var(--color-text); border-bottom: 2px solid var(--color-primary); padding-bottom: 6px; text-transform: uppercase; letter-spacing: 0.3px; }
+        /* =========== INFO HOVER PANEL =========== */
+        .info {
+            padding: 14px 16px;
+            background: rgba(255,255,255,0.98);
+            border-radius: 10px;
+            box-shadow: var(--shadow-md) !important;
+            border: 1px solid var(--color-border) !important;
+            min-width: 300px;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        .info h4 {
+            margin: 0 0 10px; font-size: 13px; font-weight: 600;
+            color: var(--color-text);
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: 6px; text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
         .data-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
-        .data-table th { text-align: center; color: var(--color-text-muted); font-size: 11px; border-bottom: 1px solid var(--color-border); padding-bottom: 4px; font-weight: 500; }
-        .data-table td { padding: 4px 0; border-bottom: 1px solid #f0f0f0; font-size: 12px; text-align: center; }
+        .data-table th {
+            text-align: center; color: var(--color-text-muted); font-size: 11px;
+            border-bottom: 1px solid var(--color-border); padding-bottom: 4px; font-weight: 500;
+        }
+        .data-table td {
+            padding: 4px 0; border-bottom: 1px solid #f0f0f0;
+            font-size: 12px; text-align: center;
+        }
         .val-focus { font-weight: 700; background: var(--color-primary-light); }
 
-        .legend { background: rgba(255,255,255,0.97); border-radius: 10px; padding: 12px 14px; box-shadow: var(--shadow-md) !important; border: 1px solid var(--color-border) !important; font-size: 12px; color: #555; min-width: 180px; font-family: 'Inter', Arial, sans-serif; }
-        .legend h4 { font-size: 11px; font-weight: 700; color: var(--color-text); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; border-bottom: 1px solid var(--color-border); padding-bottom: 5px; }
-        .legend i { width: 14px; height: 14px; float: left; margin-right: 7px; border-radius: 3px; margin-top: 1px; }
+        /* =========== LEGEND =========== */
+        .legend {
+            background: rgba(255,255,255,0.97);
+            border-radius: 10px; padding: 12px 14px;
+            box-shadow: var(--shadow-md) !important;
+            border: 1px solid var(--color-border) !important;
+            font-size: 12px; color: #555; min-width: 180px;
+            font-family: 'Inter', Arial, sans-serif;
+        }
+        .legend h4 {
+            font-size: 11px; font-weight: 700; color: var(--color-text);
+            text-transform: uppercase; letter-spacing: 0.5px;
+            margin-bottom: 8px; border-bottom: 1px solid var(--color-border);
+            padding-bottom: 5px;
+        }
+        .legend i {
+            width: 14px; height: 14px; float: left; margin-right: 7px;
+            border-radius: 3px; margin-top: 1px;
+        }
         .legend br { clear: left; }
 
-        #right-panel { position: fixed; top: var(--header-h); right: 0; bottom: var(--bottom-h); width: var(--right-w); background: #fff; border-left: 1px solid var(--color-border); box-shadow: -4px 0 16px rgba(0,0,0,0.07); z-index: 2000; display: none; flex-direction: column; overflow: hidden; }
+        /* =========== RIGHT DETAIL PANEL =========== */
+        #right-panel {
+            position: fixed;
+            top: var(--header-h); right: 0; bottom: var(--bottom-h);
+            width: var(--right-w);
+            background: #fff;
+            border-left: 1px solid var(--color-border);
+            box-shadow: -4px 0 16px rgba(0,0,0,0.07);
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
         #right-panel.open { display: flex; }
-        .rp-header { flex-shrink: 0; padding: 18px 18px 14px; border-bottom: 1px solid var(--color-border); }
-        .rp-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+
+        .rp-header {
+            flex-shrink: 0; padding: 18px 18px 14px;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .rp-title-row {
+            display: flex; align-items: flex-start; justify-content: space-between; gap: 10px;
+            margin-bottom: 10px;
+        }
         .rp-title { font-size: 15px; font-weight: 700; color: var(--color-text); line-height: 1.4; flex: 1; }
-        .rp-close { width: 28px; height: 28px; border-radius: 6px; cursor: pointer; border: 1px solid var(--color-border); background: #fff; display: flex; align-items: center; justify-content: center; color: var(--color-text-muted); font-size: 16px; flex-shrink: 0; transition: all 0.15s; }
+        .rp-close {
+            width: 28px; height: 28px; border-radius: 6px; cursor: pointer;
+            border: 1px solid var(--color-border); background: #fff;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--color-text-muted); font-size: 16px; flex-shrink: 0;
+            transition: all 0.15s;
+        }
         .rp-close:hover { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
+
         .rp-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-        .rp-tag { padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+        .rp-tag {
+            padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 500;
+        }
         .tag-green { background: var(--color-primary-light); color: var(--color-primary); }
         .tag-blue  { background: #e0f2fe; color: #0369a1; }
         .tag-orange{ background: #fff7ed; color: #c2410c; }
+
         .rp-meta { margin-top: 10px; font-size: 12px; color: var(--color-text-muted); display: flex; gap: 16px; }
         .rp-meta span b { color: var(--color-text); }
-        .rp-tabs { display: flex; border-bottom: 1px solid var(--color-border); flex-shrink: 0; padding: 0 18px; }
-        .rp-tab { padding: 10px 0; margin-right: 20px; font-size: 12px; font-weight: 500; cursor: pointer; color: var(--color-text-muted); border-bottom: 2px solid transparent; transition: all 0.15s; background: none; border-top: none; border-left: none; border-right: none; font-family: inherit; white-space: nowrap; }
+
+        .rp-tabs {
+            display: flex; border-bottom: 1px solid var(--color-border);
+            flex-shrink: 0; padding: 0 18px;
+        }
+        .rp-tab {
+            padding: 10px 0; margin-right: 20px; font-size: 12px; font-weight: 500;
+            cursor: pointer; color: var(--color-text-muted);
+            border-bottom: 2px solid transparent; transition: all 0.15s;
+            background: none; border-top: none; border-left: none; border-right: none;
+            font-family: inherit; white-space: nowrap;
+        }
         .rp-tab.active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
         .rp-tab:hover:not(.active) { color: var(--color-text); }
-        .rp-body { flex: 1; overflow-y: auto; padding: 16px 18px; }
+
+        .rp-body {
+            flex: 1; overflow-y: auto; padding: 16px 18px;
+        }
         .rp-body::-webkit-scrollbar { width: 4px; }
         .rp-body::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
         .rp-tab-content { display: none; }
         .rp-tab-content.active { display: block; }
-        .rp-section-title { font-size: 12.5px; font-weight: 700; color: var(--color-text); margin: 18px 0 10px; }
+
+        .rp-section-title {
+            font-size: 12.5px; font-weight: 700; color: var(--color-text);
+            margin: 18px 0 10px;
+        }
         .rp-section-title:first-child { margin-top: 0; }
+
         .rp-description { font-size: 12px; color: var(--color-text-muted); line-height: 1.6; }
         .rp-description b { color: var(--color-text); }
-        .commune-search-box { border: 1px solid var(--color-border); border-radius: 8px; padding: 8px 10px; font-size: 12px; font-family: inherit; width: 100%; outline: none; transition: border-color 0.2s; }
+
+        /* EBF commune search */
+        .commune-search-box {
+            border: 1px solid var(--color-border); border-radius: 8px;
+            padding: 8px 10px; font-size: 12px; font-family: inherit;
+            width: 100%; outline: none; transition: border-color 0.2s;
+        }
         .commune-search-box:focus { border-color: var(--color-primary); }
-        .dl-link { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 7px; margin-bottom: 6px; text-decoration: none; color: var(--color-text); font-size: 12px; transition: all 0.15s; cursor: pointer; }
+
+        .dl-link {
+            display: flex; align-items: center; gap: 8px;
+            padding: 8px 12px; background: var(--color-bg);
+            border: 1px solid var(--color-border); border-radius: 7px;
+            margin-bottom: 6px; text-decoration: none; color: var(--color-text);
+            font-size: 12px; transition: all 0.15s; cursor: pointer;
+        }
         .dl-link:hover { background: #eff6ff; border-color: #93c5fd; }
+
+        /* Charts */
         .chart-container { position: relative; height: 190px; width: 100%; margin-top: 10px; }
         .chart-toggles { display: flex; gap: 6px; margin-top: 12px; margin-bottom: 8px; }
-        .chart-btn { flex: 1; padding: 6px; border: 1px solid var(--color-border); background: #fff; cursor: pointer; border-radius: 6px; font-size: 12px; font-weight: 500; transition: all 0.15s; font-family: inherit; color: var(--color-text-muted); }
+        .chart-btn {
+            flex: 1; padding: 6px; border: 1px solid var(--color-border);
+            background: #fff; cursor: pointer; border-radius: 6px;
+            font-size: 12px; font-weight: 500; transition: all 0.15s;
+            font-family: inherit; color: var(--color-text-muted);
+        }
         .chart-btn:hover { background: var(--color-bg); }
         .chart-btn.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
-        .plui-legend { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; font-size: 11px; }
+
+        /* Zonage legend inline */
+        .plui-legend {
+            display: flex; gap: 8px; flex-wrap: wrap;
+            margin-top: 8px; font-size: 11px;
+        }
         .plui-legend-item { display: flex; align-items: center; gap: 4px; }
         .plui-swatch { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+
+        /* RMC table */
         .rmc-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; line-height: 1.4; }
         .rmc-table th { background: #2c3e50; color: #fff; padding: 8px; font-weight: 600; text-align: left; border: 1px solid #34495e; text-transform: uppercase; font-size: 10px; }
         .rmc-table td { padding: 8px; border: 1px solid var(--color-border); vertical-align: top; }
@@ -213,64 +513,182 @@
         .badge-efo { background: #fff3cd; color: #d35400; border: 1px solid #ffeeba; }
         .badge-efn { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
 
-        .modal, #infoModal, #authModal { display: none; position: fixed; z-index: 4000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.45); backdrop-filter: blur(4px); }
-        .modal-card { background: #fff; margin: 3% auto; padding: 32px; border-radius: 14px; width: 94%; max-width: 960px; position: relative; box-shadow: var(--shadow-lg); max-height: 90vh; display: flex; flex-direction: column; }
+        /* Panel info modal (methodology) */
+        .modal, #infoModal, #authModal {
+            display: none; position: fixed; z-index: 4000;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.45); backdrop-filter: blur(4px);
+        }
+        .modal-card {
+            background: #fff; margin: 3% auto;
+            padding: 32px; border-radius: 14px;
+            width: 94%; max-width: 960px;
+            position: relative; box-shadow: var(--shadow-lg);
+            max-height: 90vh; display: flex; flex-direction: column;
+        }
         .modal-card h2 { font-size: 18px; color: var(--color-text); margin-bottom: 20px; }
-        .modal-body-scroll { overflow-y: auto; padding-right: 12px; font-size: 13px; line-height: 1.6; color: #444; flex: 1; max-height: 70vh; }
+        .modal-body-scroll {
+            overflow-y: auto; padding-right: 12px; font-size: 13px;
+            line-height: 1.6; color: #444; flex: 1;
+            max-height: 70vh;
+        }
         .modal-body-scroll::-webkit-scrollbar { width: 5px; }
         .modal-body-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
         .modal-body-scroll h3 { color: var(--color-primary); font-size: 14px; margin: 20px 0 8px; }
         .modal-body-scroll ul { margin: 6px 0; padding-left: 20px; }
         .modal-body-scroll li { margin-bottom: 6px; }
-        .modal-close { position: absolute; right: 20px; top: 18px; cursor: pointer; font-size: 24px; color: var(--color-text-muted); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; transition: all 0.15s; }
+        .modal-close {
+            position: absolute; right: 20px; top: 18px;
+            cursor: pointer; font-size: 24px; color: var(--color-text-muted);
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            border-radius: 6px; transition: all 0.15s;
+        }
         .modal-close:hover { background: #fee2e2; color: #dc2626; }
 
-        #bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; height: var(--bottom-h); background: #fff; border-top: 1px solid var(--color-border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 2500; font-size: 11px; color: var(--color-text-muted); }
+        /* =========== BOTTOM BAR =========== */
+        #bottom-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            height: var(--bottom-h);
+            background: #fff; border-top: 1px solid var(--color-border);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; z-index: 2500;
+            font-size: 11px; color: var(--color-text-muted);
+        }
         .bottom-attribution { text-align: center; flex: 1; }
-        .bottom-user { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-        .user-avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--color-primary-light); border: 1px solid var(--color-primary); display: flex; align-items: center; justify-content: center; color: var(--color-primary); font-weight: 700; font-size: 11px; }
+        .bottom-user {
+            display: flex; align-items: center; gap: 8px; cursor: pointer;
+        }
+        .user-avatar {
+            width: 26px; height: 26px; border-radius: 50%;
+            background: var(--color-primary-light); border: 1px solid var(--color-primary);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--color-primary); font-weight: 700; font-size: 11px;
+        }
         .user-info { line-height: 1.3; }
         .user-info b { display: block; font-size: 12px; color: var(--color-text); }
         .bottom-version { font-size: 10px; color: var(--color-text-light); }
 
+        /* =========== SCROLLBARS =========== */
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
 
-        .leaflet-control-layers { border-radius: 10px !important; box-shadow: var(--shadow-md) !important; border: 1px solid var(--color-border) !important; font-family: 'Inter', Arial, sans-serif !important; }
+        /* =========== LEAFLET LAYER CONTROL =========== */
+        .leaflet-control-layers {
+            border-radius: 10px !important;
+            box-shadow: var(--shadow-md) !important;
+            border: 1px solid var(--color-border) !important;
+            font-family: 'Inter', Arial, sans-serif !important;
+        }
         .leaflet-control-layers-expanded { padding: 10px 14px !important; font-size: 12px !important; }
-        .leaflet-control-layers-base label, .leaflet-control-layers-overlays label { margin: 4px 0 !important; }
+        .leaflet-control-layers-base label,
+        .leaflet-control-layers-overlays label { margin: 4px 0 !important; }
 
-        #map-title { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 800; background: rgba(255,255,255,0.96); padding: 8px 22px; border-radius: 30px; box-shadow: var(--shadow-md); border: 1px solid var(--color-border); text-align: center; pointer-events: none; }
+        /* Map title pill */
+        #map-title {
+            position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+            z-index: 800; background: rgba(255,255,255,0.96);
+            padding: 8px 22px; border-radius: 30px;
+            box-shadow: var(--shadow-md); border: 1px solid var(--color-border);
+            text-align: center; pointer-events: none;
+        }
         #map-title h1 { font-size: 13px; color: var(--color-text); letter-spacing: 0.5px; font-weight: 600; margin: 0; }
         #map-title p  { font-size: 10px; color: var(--color-text-muted); margin: 2px 0 0; }
 
-        #login-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--color-primary-light); display: flex; align-items: center; justify-content: center; z-index: 5000; }
-        .login-card { background: #fff; border-radius: 16px; padding: 40px; box-shadow: var(--shadow-lg); max-width: 420px; width: 90%; text-align: center; }
+        /* Login modal overlay */
+        #login-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--color-primary-light);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 5000;
+        }
+        .login-card {
+            background: #fff; border-radius: 16px; padding: 40px;
+            box-shadow: var(--shadow-lg); max-width: 420px; width: 90%;
+            text-align: center;
+        }
         .login-card h1 { color: var(--color-primary); font-size: 22px; margin-bottom: 8px; }
         .login-card p { color: var(--color-text-muted); font-size: 13px; margin-bottom: 24px; }
-        .login-input { width: 100%; padding: 12px 16px; border: 1px solid var(--color-border); border-radius: 8px; font-size: 14px; margin-bottom: 16px; font-family: inherit; }
+        .login-input {
+            width: 100%; padding: 12px 16px; border: 1px solid var(--color-border);
+            border-radius: 8px; font-size: 14px; margin-bottom: 16px;
+            font-family: inherit;
+        }
         .login-input:focus { outline: none; border-color: var(--color-primary); }
-        .login-btn { width: 100%; padding: 12px; background: var(--color-primary); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+        .login-btn {
+            width: 100%; padding: 12px; background: var(--color-primary);
+            color: #fff; border: none; border-radius: 8px; font-size: 14px;
+            font-weight: 600; cursor: pointer; transition: background 0.15s;
+        }
         .login-btn:hover { background: #156038; }
         .login-error { color: #dc2626; font-size: 12px; margin-top: 12px; display: none; }
 
-        .year-filter-box { padding: 12px 14px; margin: 8px 14px; background: linear-gradient(135deg, #eef6ff 0%, #e8f5ee 100%); border: 1px solid #b8d8e8; border-left: 4px solid var(--color-primary); border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
-        .year-filter-box .yfb-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--color-primary); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        /* Year filter box */
+        .year-filter-box {
+            padding: 12px 14px; margin: 8px 14px;
+            background: linear-gradient(135deg, #eef6ff 0%, #e8f5ee 100%);
+            border: 1px solid #b8d8e8;
+            border-left: 4px solid var(--color-primary);
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+        .year-filter-box .yfb-title {
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.5px; color: var(--color-primary);
+            margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+        }
         .year-filter-box .yfb-title svg { width: 12px; height: 12px; }
-        .year-filter-box .yfb-subtitle { font-size: 10.5px; color: var(--color-text-muted); margin-bottom: 8px; font-style: italic; }
-        .year-filter-box label { display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer; margin-bottom: 6px; }
-        .year-filter-box input[type="checkbox"] { width: 15px; height: 15px; cursor: pointer; accent-color: var(--color-primary); }
-        .year-filter-box select { width: 100%; padding: 6px 8px; border: 1px solid var(--color-border); border-radius: 6px; font-size: 12px; font-family: inherit; }
-        .year-filter-box .yfb-type-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-        .year-filter-box .yfb-type-chip { font-size: 10.5px; padding: 3px 9px; border-radius: 12px; background: #fff; border: 1px solid var(--color-border); cursor: pointer; color: var(--color-text-muted); transition: all 0.15s; user-select: none; }
-        .year-filter-box .yfb-type-chip.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
-        .year-filter-box .yfb-type-chip:hover:not(.active) { background: var(--color-primary-light); color: var(--color-primary); }
-
-        .leaflet-label { background: rgba(255,255,255,0.9); border: 1px solid var(--color-border); border-radius: 4px; padding: 1px 5px; font-size: 10px; font-weight: 600; color: var(--color-text); box-shadow: 0 1px 3px rgba(0,0,0,0.1); white-space: nowrap; }
+        .year-filter-box .yfb-subtitle {
+            font-size: 10.5px; color: var(--color-text-muted);
+            margin-bottom: 8px; font-style: italic;
+        }
+        .year-filter-box label {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 12px; cursor: pointer; margin-bottom: 6px;
+        }
+        .year-filter-box input[type="checkbox"] {
+            width: 15px; height: 15px; cursor: pointer;
+            accent-color: var(--color-primary);
+        }
+        .year-filter-box select {
+            width: 100%; padding: 6px 8px;
+            border: 1px solid var(--color-border); border-radius: 6px;
+            font-size: 12px; font-family: inherit;
+        }
+        .year-filter-box .yfb-type-row {
+            display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+        }
+        .year-filter-box .yfb-type-chip {
+            font-size: 10.5px; padding: 3px 9px; border-radius: 12px;
+            background: #fff; border: 1px solid var(--color-border);
+            cursor: pointer; color: var(--color-text-muted);
+            transition: all 0.15s; user-select: none;
+        }
+        .year-filter-box .yfb-type-chip.active {
+            background: var(--color-primary); color: #fff;
+            border-color: var(--color-primary);
+        }
+        .year-filter-box .yfb-type-chip:hover:not(.active) {
+            background: var(--color-primary-light); color: var(--color-primary);
+        }
     </style>
 </head>
 <body>
 
+<!-- ========== LOGIN OVERLAY ========== -->
+<div id="login-overlay">
+    <div class="login-card">
+        <svg width="48" height="48" viewBox="0 0 36 36" fill="none" style="margin-bottom:16px;">
+            <path d="M4 22 Q9 14 18 18 Q27 22 32 14" stroke="#1a7a4a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <path d="M4 27 Q9 19 18 23 Q27 27 32 19" stroke="#2d9e63" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <path d="M4 17 Q9 9 18 13 Q27 17 32 9" stroke="#68c197" stroke-width="2" stroke-linecap="round" fill="none"/>
+        </svg>
+        <h1>Vallée de la Hem</h1>
+        <p>Outil de gestion intégrée du bassin versant</p>
+        <input type="text" id="login-username" class="login-input" placeholder="Entrez vos initiales (ex: CM)">
+        <button class="login-btn" onclick="performLogin()">Accéder à l'application</button>
+        <p id="login-error" class="login-error">Veuillez entrer vos initiales.</p>
+    </div>
+</div>
 
 <!-- ========== HEADER ========== -->
 <header id="app-header">
@@ -711,6 +1129,7 @@
             </div>
 
             <div id="private-biological-layers" style="margin-top: 10px;">
+                <!-- Year filter for piscicultural layers -->
                 <div class="year-filter-box">
                     <div class="yfb-title">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 12c.94-3.46 4.94-6 10.5-6-3 3-4 6-4 6s1 3 4 6c-5.56 0-9.56-2.54-10.5-6z"/><circle cx="17" cy="10" r="1" fill="currentColor"/></svg>
@@ -782,6 +1201,22 @@
 
         <!-- PRESENTATION LAYERS (shown in presentation view) -->
         <div id="presentation-layers" style="display:none;">
+
+            <div class="layer-group open">
+        <div class="layer-group-header" onclick="toggleGroup(this)">
+            <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+            <span class="group-title">Réseau Hydrographique</span>
+            <span class="group-count">1</span>
+            <span class="group-chevron">&#9654;</span>
+        </div>
+        <div class="layer-group-body">
+            <div class="layer-item">
+                <div class="layer-swatch" style="background:#3498db;height:3px;border-radius:0;margin-top:5px;"></div>
+                <input type="checkbox" id="pres-hydro-noms" checked>
+                <label for="pres-hydro-noms">Cours d'eau principaux</label>
+            </div>
+        </div>
+    </div>
             <!-- Inondation -->
             <div class="layer-group open">
                 <div class="layer-group-header" onclick="toggleGroup(this)">
@@ -816,28 +1251,6 @@
                         <input type="checkbox" id="pres-bassins">
                         <label for="pres-bassins">Bassins versants</label>
                         <div class="layer-info-btn" onclick="showLayerInfo('pres-bassins')">i</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Réseau hydrographique (avec noms d'affluents) -->
-            <div class="layer-group open">
-                <div class="layer-group-header" onclick="toggleGroup(this)">
-                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2">
-                        <path d="M2 6c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1"/>
-                        <path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1"/>
-                        <path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1"/>
-                    </svg>
-                    <span class="group-title">Réseau Hydrographique</span>
-                    <span class="group-count">1</span>
-                    <span class="group-chevron">&#9654;</span>
-                </div>
-                <div class="layer-group-body">
-                    <div class="layer-item">
-                        <div class="layer-swatch" style="background:#0ea5e9;height:3px;border-radius:0;margin-top:5px;"></div>
-                        <input type="checkbox" id="pres-hydro-noms" checked>
-                        <label for="pres-hydro-noms"><b>Cours d'eau (Hem, Locquin, Acquine)</b></label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-hydro-noms')">i</div>
                     </div>
                 </div>
             </div>
@@ -974,87 +1387,65 @@
                     <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2">
                         <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
                     </svg>
-                    <span class="group-title">Travaux historiques</span>
-                    <span class="group-count">4</span>
+                    <span class="group-title">Travaux et Aménagements</span>
+                    <span class="group-count">3</span>
                     <span class="group-chevron">&#9654;</span>
                 </div>
                 <div class="layer-group-body">
                     <div class="layer-item">
-                        <div class="layer-swatch" style="background:#f59e0b;opacity:0.7;border-radius:50%;"></div>
-                        <input type="checkbox" id="pres-travaux">
-                        <label for="pres-travaux">Travaux réalisés</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-travaux')">i</div>
-                    </div>
-                    <div class="layer-item">
-                        <div class="layer-swatch" style="background:#d97706;opacity:0.5;"></div>
-                        <input type="checkbox" id="pres-amenagements">
-                        <label for="pres-amenagements">Aménagements anciens</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-amenagements')">i</div>
-                    </div>
-                    <div class="layer-item">
-                        <div class="layer-swatch" style="background:#0ea5e9;opacity:0.6;border:1px solid #0284c7;"></div>
-                        <input type="checkbox" id="pres-travaux-hydro">
-                        <label for="pres-travaux-hydro">Travaux hydrauliques doux</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-travaux-hydro')">i</div>
-                    </div>
-                    <!-- Year + TYPEOUVRAG filter for Plantations_hydraulique_douce -->
-                    <div class="year-filter-box" style="margin:6px 14px 6px 36px;">
-                        <div class="yfb-title">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6m0 0l3-3m-3 3L9 5m-7 7h6m0 0l-3 3m3-3l-3-3m13 3h-6m6 0l-3 3m3-3l-3-3"/></svg>
-                            Filtre – Plantations Hydrauliques Douces
-                        </div>
-                        <div class="yfb-subtitle">Année + Type d'ouvrage (couleurs par type)</div>
-                        <label>
-                            <input type="checkbox" id="hydro-year-filter-toggle" onchange="toggleHydroYearFilter()">
-                            Filtrer par année
-                        </label>
-                        <select id="hydro-year-select" onchange="applyHydroYearFilter()" disabled style="display:none;">
-                            <option value="">-- Toutes les années --</option>
-                        </select>
-                        <label style="margin-top:8px;">
-                            <input type="checkbox" id="hydro-type-filter-toggle" onchange="toggleHydroTypeFilter()">
-                            Filtrer par type d'ouvrage
-                        </label>
-                        <div id="hydro-type-chips" class="yfb-type-row" style="display:none;"></div>
-                    </div>
-                    <!-- Travaux linéaires -->
-                    <div class="layer-item">
-                        <div class="layer-swatch" style="background:#16a34a;height:3px;border-radius:0;margin-top:5px;"></div>
-                        <input type="checkbox" id="pres-travaux-lin">
-                        <label for="pres-travaux-lin">Travaux linéaires</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-travaux-lin')">i</div>
-                    </div>
-                    <!-- Travaux ponctuels -->
-                    <div class="layer-item">
-                        <div class="layer-swatch" style="background:#dc2626;border-radius:50%;"></div>
-                        <input type="checkbox" id="pres-travaux-ponc">
-                        <label for="pres-travaux-ponc">Travaux ponctuels</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-travaux-ponc')">i</div>
-                    </div>
-                    <!-- Year + TYPE filter for travaux layers -->
-                    <div class="year-filter-box" style="margin:6px 14px 6px 36px;">
-                        <div class="yfb-title">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
-                            Filtre – Travaux (linéaires & ponctuels)
-                        </div>
-                        <div class="yfb-subtitle">Année (ANNEE) + Type (TYPE)</div>
-                        <label>
-                            <input type="checkbox" id="travaux-year-filter-toggle" onchange="toggleTravauxYearFilter()">
-                            Filtrer par année
-                        </label>
-                        <select id="travaux-year-select" onchange="applyTravauxYearFilter()" disabled style="display:none;">
-                            <option value="">-- Toutes les années --</option>
-                        </select>
-                        <label style="margin-top:8px;">
-                            <input type="checkbox" id="travaux-type-filter-toggle" onchange="toggleTravauxTypeFilter()">
-                            Filtrer par type
-                        </label>
-                        <div id="travaux-type-chips" class="yfb-type-row" style="display:none;"></div>
-                    </div>
-                </div>
+            <div class="layer-swatch" style="background:#f59e0b;border-radius:3px;"></div>
+            <input type="checkbox" id="pres-travaux-global">
+            <label for="pres-travaux-global">Travaux réalisés</label>
+        </div>
+
+        <!-- Filtre global pour les travaux -->
+        <div class="year-filter-box" id="filtre-travaux" style="display:none; margin:6px 14px 6px 36px;">
+            <div class="yfb-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6m0 0l3-3m-3 3L9 5m-7 7h6m0 0l-3 3m3-3l-3-3m13 3h-6m6 0l-3 3m3-3l-3-3"/></svg>
+                Filtre – Travaux
             </div>
+            <label>
+                <input type="checkbox" id="travaux-year-filter-toggle" onchange="toggleTravauxFilter()">
+                Filtrer par année
+            </label>
+            <select id="travaux-year-select" onchange="applyTravauxFilter()" disabled style="display:none; margin-bottom:8px;">
+                <option value="">-- Toutes les années --</option>
+            </select>
+            <label>
+                <input type="checkbox" id="travaux-type-filter-toggle" onchange="toggleTravauxFilter()">
+                Filtrer par type d'aménagement
+            </label>
+            <div id="travaux-type-chips" class="yfb-type-row" style="display:none;"></div>
+        </div>
+
+        <!-- Couche hydraulique douce -->
+        <div class="layer-item">
+            <div class="layer-swatch" style="background:#0ea5e9;opacity:0.6;border:1px solid #0284c7;"></div>
+            <input type="checkbox" id="pres-travaux-hydro">
+            <label for="pres-travaux-hydro">Travaux hydrauliques doux</label>
+        </div>
+        
+        <!-- Filtre existant de l'hydraulique douce -->
+        <div class="year-filter-box" style="margin:6px 14px 6px 36px;">
+            <div class="yfb-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6m0 0l3-3m-3 3L9 5m-7 7h6m0 0l-3 3m3-3l-3-3m13 3h-6m6 0l-3 3m3-3l-3-3"/></svg>
+                Filtre – Plantations Hydrauliques Douces
+            </div>
+            <label>
+                <input type="checkbox" id="hydro-year-filter-toggle" onchange="toggleHydroYearFilter()">
+                Filtrer par année
+            </label>
+            <select id="hydro-year-select" onchange="applyHydroYearFilter()" disabled style="display:none;">
+                <option value="">-- Toutes les années --</option>
+            </select>
+            <label style="margin-top:8px;">
+                <input type="checkbox" id="hydro-type-filter-toggle" onchange="toggleHydroTypeFilter()">
+                Filtrer par type d'ouvrage
+            </label>
+            <div id="hydro-type-chips" class="yfb-type-row" style="display:none;"></div>
         </div>
     </div>
+</div>
 
     <!-- LÉGENDE TAB -->
     <div class="sidebar-body" id="sideContent-legende" style="display:none;">
@@ -1181,10 +1572,6 @@
                 <div class="legend-item"><div class="legend-swatch" style="background:#bfdbfe;border:1px solid #3b82f6;"></div> Bassins versants</div>
             </div>
             <div class="legend-section">
-                <div class="legend-section-title">Réseau Hydrographique</div>
-                <div class="legend-item"><div class="legend-line" style="background:#0ea5e9;"></div> Cours d'eau (Hem, Locquin, Acquine)</div>
-            </div>
-            <div class="legend-section">
                 <div class="legend-section-title">Ruissellement</div>
                 <div class="legend-item"><div class="legend-line" style="background:#06b6d4;"></div> Axes de ruissellement</div>
             </div>
@@ -1208,26 +1595,8 @@
                 <div class="legend-item"><div class="legend-circle" style="background:#222;border:1px solid #fff;box-shadow:0 0 0 1px #555;"></div> Obstacles à l'écoulement</div>
             </div>
             <div class="legend-section">
-                <div class="legend-section-title">Travaux historiques</div>
-                <div class="legend-item"><div class="legend-circle" style="background:#f59e0b;opacity:0.9;"></div> Travaux réalisés</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#d97706;opacity:0.5;"></div> Aménagements anciens</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#0ea5e9;opacity:0.6;border:1px solid #0284c7;"></div> Travaux hydrauliques doux (couleurs par type)</div>
-                <div class="legend-item"><div class="legend-line" style="background:#16a34a;"></div> Travaux linéaires</div>
-                <div class="legend-item"><div class="legend-circle" style="background:#dc2626;"></div> Travaux ponctuels</div>
-            </div>
-            <div class="legend-section">
-                <div class="legend-section-title">Types de travaux (code TYPE)</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#8b5cf6;"></div> PRA1 – Clôtures</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#16a34a;"></div> RBT – Reboisement / diversification ripisylve</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#0ea5e9;"></div> PRA2 – Abreuvoir</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#f59e0b;"></div> PAG – Passage à gué</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#dc2626;"></div> Abattage préventif</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#ec4899;"></div> Passerelle</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#0d9488;"></div> Pont</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#65a30d;"></div> RBT2 – Abattage essences inadaptées</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#9333ea;"></div> RCL2 – Effacement</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#0891b2;"></div> RLC3 – Aménagement seuil résiduel</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#71717a;"></div> Retrait embâcle</div>
+               <div class="legend-section-title">Travaux et Aménagements</div>
+                <div class="legend-item"><div class="legend-swatch" style="background:#0ea5e9;opacity:0.6;border:1px solid #0284c7;"></div> Travaux hydrauliques doux</div>
             </div>
         </div>
     </div>
@@ -1268,6 +1637,7 @@
             <button class="rp-tab" onclick="showRpTab(this,'rpt-methodo')">Méthodologie</button>
         </div>
         <div class="rp-body">
+            <!-- Commune Tab -->
             <div class="rp-tab-content active" id="rpt-commune">
                 <p class="rp-description">Sélectionnez une commune pour zoomer et accéder aux cartes réglementaires.</p>
                 <br>
@@ -1291,6 +1661,7 @@
                 </div>
             </div>
 
+            <!-- PLUi Analysis Tab -->
             <div class="rp-tab-content" id="rpt-analyse">
                 <p class="rp-section-title">Occupation des sols dans l'EBF (%)</p>
                 <div class="chart-toggles">
@@ -1308,6 +1679,7 @@
                 </div>
             </div>
 
+            <!-- Méthodologie Tab -->
             <div class="rp-tab-content" id="rpt-methodo">
                 <div style="font-size:13px;line-height:1.6;color:#444;">
                     <p><strong>De l'espace de liberté à l'EBF :</strong> Le concept d'<strong>Espace de Bon Fonctionnement (EBF)</strong> englobe la mobilité latérale et intègre l'intégralité des fonctionnalités de l'hydrosystème.</p>
@@ -1758,11 +2130,6 @@
                     <li><strong>Bassins versants</strong> – Ensemble du territoire drainé par un cours d'eau. Unité hydrographique de base pour la gestion de l'eau.</li>
                 </ul>
 
-                <h3 style="color:#0ea5e9;">Réseau Hydrographique</h3>
-                <ul>
-                    <li><strong>Cours d'eau (Hem, Locquin, Acquine)</strong> – Réseau hydrographique principal du bassin versant. Les noms des affluents et axes principaux sont affichés sur la carte (champ NOM_C_EAU).</li>
-                </ul>
-
                 <h3 style="color:#06b6d4;">Ruissellement</h3>
                 <ul>
                     <li><strong>Axes de ruissellement</strong> – Chemins préférentiels d'écoulement des eaux de surface lors des pluies. Identifiés par modélisation topographique (MNT + simulation Monte-Carlo).</li>
@@ -1789,34 +2156,15 @@
                     <li><strong>Obstacles à l'écoulement</strong> – Ouvrages (seuils, barrages, buses) fragmentant le cours d'eau et le transit sédimentaire.</li>
                 </ul>
 
-                <h3 style="color:#f59e0b;">Travaux historiques</h3>
+                <h3 style="color:#f59e0b;">Travaux et Aménagements</h3>
                 <ul>
-                    <li><strong>Travaux réalisés</strong> – Localisation des opérations de restauration hydromorphologique effectuées par le SYMVAHEM.</li>
-                    <li><strong>Aménagements anciens</strong> – Ouvrages hydrauliques historiques (berges artificielles, calibrage).</li>
-                    <li><strong>Travaux hydrauliques doux</strong> – Plantations réalisées pour pallier au ruissellement. Aménagements utilisant le génie végétal pour stabiliser les berges sans durcissement. Couleur selon le type d'ouvrage (TYPEOUVRAG).</li>
-                    <li><strong>Travaux linéaires</strong> – Opérations linéaires (clôtures, reboisement, diversification ripisylve). Filtrables par année (ANNEE) et par type (TYPE).</li>
-                    <li><strong>Travaux ponctuels</strong> – Opérations ponctuelles (abreuvoir, passage à gué, abattage préventif, passerelle, pont, effacement, aménagement seuil résiduel, retrait embâcle). Filtrables par année (ANNEE) et par type (TYPE).</li>
-                </ul>
-
-                <h3>Codes TYPE des travaux</h3>
-                <ul style="font-size:12px;">
-                    <li><strong>PRA1</strong> – Clôtures</li>
-                    <li><strong>RBT</strong> – Reboisement ou diversification de la ripisylve</li>
-                    <li><strong>PRA2</strong> – Abreuvoir</li>
-                    <li><strong>PAG</strong> – Passage à gué</li>
-                    <li><strong>Abattage préventif</strong></li>
-                    <li><strong>Passerelle</strong></li>
-                    <li><strong>Pont</strong></li>
-                    <li><strong>RBT2</strong> – Abattage d'essences inadaptées</li>
-                    <li><strong>RCL2</strong> – Effacement</li>
-                    <li><strong>RLC3</strong> – Aménagement seuil résiduel</li>
-                    <li><strong>Retrait embâcle</strong></li>
+                    <li><strong>Travaux hydrauliques doux</strong> – Plantations réalisées pour pallier au ruissellement. Aménagements utilisant le génie végétal pour stabiliser les berges sans durcissement.</li>
                 </ul>
 
                 <h3>Sources des données</h3>
                 <ul style="font-size:11px;color:#666;">
                     <li>PPRI / AZI – DDT Pas-de-Calais, DREAL Hauts-de-France</li>
-                    <li>ZNIEFF / Natura 2000 – DREAL, INPN (MNHN)</li>
+                    <li>ZNIEFF / Natura 2000 – DREAL, INPN </li>
                     <li>Zones humides – Inventaire départemental</li>
                     <li>Trame verte et bleue – SRADDET, SRCE</li>
                     <li>Réservoirs de biodiversité – SRADDET</li>
@@ -1845,12 +2193,31 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+// ===== LOGIN STATE =====
+let currentUser = null;
 
+function performLogin() {
+    const input = document.getElementById('login-username');
+    const error = document.getElementById('login-error');
+    const value = input.value.trim();
+
+    if (!value) {
+        error.style.display = 'block';
+        return;
+    }
+
+    currentUser = value.toUpperCase().substring(0, 3);
+    document.getElementById('user-initials').textContent = currentUser;
+    document.getElementById('user-name').textContent = currentUser;
+
+    document.getElementById('login-overlay').style.display = 'none';
+    initApp();
+}
 
 // ===== MAP INIT =====
 let map, basemapLight, basemapSat, basemapTopo;
 let currentActiveQ = 'Q100';
-let currentView = 'presentation';
+let currentView = 'ebf';
 let currentMode = 'public';
 let searchCommunesLayer, info, prhymoInfo;
 const AGENT_CODE = 'HEM2026&*';
@@ -1863,8 +2230,6 @@ let presLayers = {};
 let presLayerDefs = [];
 let pluiChart;
 let allCommuneNames = [];
-let presHydroLayer = null;
-let presHydroLabelsLayer = null;
 
 // Year filter state for piscicultural layers
 let piscoYearFilterEnabled = false;
@@ -1882,60 +2247,6 @@ let hydroAvailableTypes = [];
 let hydroSelectedTypes = new Set();
 const HYDRO_TYPE_FIELD = 'TYPEOUVRAG';
 const HYDRO_YEAR_FIELD = 'DATEREALIS';
-
-// Type color mapping for hydraulique douce (TYPEOUVRAG) and travaux (TYPE)
-const TRAVAUX_TYPE_COLORS = {
-    'PRA1': '#8b5cf6',
-    'RBT':  '#16a34a',
-    'PRA2': '#0ea5e9',
-    'PAG':  '#f59e0b',
-    'Abattage préventif': '#dc2626',
-    'Passerelle': '#ec4899',
-    'Pont':  '#0d9488',
-    'RBT2': '#65a30d',
-    'RCL2': '#9333ea',
-    'RLC3': '#0891b2',
-    'Retrait embâcle': '#71717a',
-    'Retrait embacle':  '#71717a'
-};
-const TRAVAUX_TYPE_LABELS = {
-    'PRA1': 'Clôtures',
-    'RBT':  'Reboisement / diversification ripisylve',
-    'PRA2': 'Abreuvoir',
-    'PAG':  'Passage à gué',
-    'Abattage préventif': 'Abattage préventif',
-    'Passerelle': 'Passerelle',
-    'Pont':  'Pont',
-    'RBT2': 'Abattage essences inadaptées',
-    'RCL2': 'Effacement',
-    'RLC3': 'Aménagement seuil résiduel',
-    'Retrait embâcle': 'Retrait embâcle',
-    'Retrait embacle':  'Retrait embâcle'
-};
-function typeColor(t) {
-    if (!t) return '#7f8c8d';
-    const k = String(t).trim();
-    if (TRAVAUX_TYPE_COLORS[k]) return TRAVAUX_TYPE_COLORS[k];
-    return TRAVAUX_TYPE_COLORS[k.toUpperCase()] || '#7f8c8d';
-}
-function typeLabel(t) {
-    if (!t) return 'Inconnu';
-    const k = String(t).trim();
-    if (TRAVAUX_TYPE_LABELS[k]) return TRAVAUX_TYPE_LABELS[k];
-    return TRAVAUX_TYPE_LABELS[k.toUpperCase()] || k;
-}
-
-// Year + type filter state for Travaux (linéaires + ponctuels)
-let travauxYearFilterEnabled = false;
-let travauxTypeFilterEnabled = false;
-let travauxYearDataLoaded = false;
-let travauxLinRawData = null;
-let travauxPoncRawData = null;
-let travauxAvailableYears = [];
-let travauxAvailableTypes = [];
-let travauxSelectedTypes = new Set();
-const TRAVAUX_YEAR_FIELD = 'ANNEE';
-const TRAVAUX_TYPE_FIELD = 'TYPE';
 
 // Piscicultural layer year field mapping
 const piscoLayerYearFields = {
@@ -2081,29 +2392,32 @@ function setupPrhymoInfoControl() {
             { k: 'mor_rip', l: 'État de la couverture arborée de la ripisylve (boisement de berges)' },
             { k: 'con_pro', l: 'Rupture de la continuité biologique induite par les obstacles en long' },
             { k: 'con_sed', l: 'Blocage de la continuité sédimentaire et du transit de la charge de fond (sables, graviers)' },
-            { k: 'con_amp', l: 'Perte de connectivité avec les annexes et réduction de l'amplitude du lit majeur' },
+            { k: 'con_amp', l: 'Perte de connectivité avec les annexes et réduction de l’amplitude du lit majeur' },
             { k: 'hyd_dyn', l: 'Perturbation de la dynamique hydrologique et de la typologie des écoulements' },
-            { k: 'hyd_qte', l: 'Altération quantitative du régime hydrologique et des volumes d\'eau circulants' }
+            { k: 'hyd_qte', l: 'Altération quantitative du régime hydrologique et des volumes d’eau circulants' }
         ];
-        const calcMalus = (field) => {
-            const v = props[field];
-            if (v == null || isNaN(parseFloat(v))) return 'N/A';
-            return v;
-        };
-        const malusAgri = calcMalus('agri3w_v');
-        const malusAmenag = calcMalus('txamg_v');
-        let rows = indicators.map(ind => {
-            const v = props[ind.k];
-            const val = (v != null && v !== '') ? v : '–';
-            const color = prhymoLevelColor(v);
-            const lbl = prhymoLevelLabel(v);
-            return `<tr><td title="${ind.l}" style="text-align:left;font-size:10px;padding-right:6px;cursor:help;">${ind.k}</td>
-                <td><b style="color:${color};font-size:12px;">${val}</b></td>
-                <td style="font-size:9px;color:${color};">${lbl}</td></tr>`;
-        }).join('');
+       const calcMalus = (field) => {
+    const v = props[field];
+    if (v == null || isNaN(parseFloat(v))) return 'N/A';
+    return v; // Donnée brute sans .toFixed(1) ni '%'
+};
+
+const malusAgri = calcMalus('agri3w_v');
+const malusAmenag = calcMalus('txamg_v');
+
+let rows = indicators.map(ind => {
+    const v = props[ind.k]; // Donnée brute
+    const val = (v != null && v !== '') ? v : '–';
+    const color = prhymoLevelColor(v);
+    const lbl = prhymoLevelLabel(v);
+
+    return `<tr><td title="${ind.l}" style="text-align:left;font-size:10px;padding-right:6px;cursor:help;">${ind.k}</td>
+        <td><b style="color:${color};font-size:12px;">${val}</b></td>
+        <td style="font-size:9px;color:${color};">${lbl}</td></tr>`;
+}).join('');
 
         this._div.innerHTML = `<h4>Diagnostic PRHYMO</h4>
-            <p style="margin:4px 0 6px;font-size:12px;color:#555;"><b>Score global :</b>
+            <p style="margin:4px 0 6px;font-size:12px;color:#555;"><b>Score global :</b> 
                 <span style="font-weight:700;color:${parseFloat(props.Score_100)>=45?'#c0392b':(parseFloat(props.Score_100)>=25?'#e67e22':'#27ae60')};">${score}</span>
             </p>
             <p style="font-size:10px;color:#999;margin-bottom:6px;">Valeurs 1 (bon) → 5 (critique). Survolez un code pour son libellé.</p>
@@ -2112,9 +2426,9 @@ function setupPrhymoInfoControl() {
                 ${rows}
             </table>
             <div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--color-border);font-size:11px;color:#555;">
-                <div style="margin-bottom:3px;"><b>Malus Agricole :</b>
+                <div style="margin-bottom:3px;"><b>Malus Agricole :</b> 
                     <span style="font-weight:700;color:#c2410c;">${malusAgri}</span></div>
-                <div><b>Malus d'Aménagement :</b>
+                <div><b>Malus d’Aménagement :</b> 
                     <span style="font-weight:700;color:#c2410c;">${malusAmenag}</span></div>
             </div>`;
     };
@@ -2288,7 +2602,6 @@ const definitions = {
     'pres-azi': '<b>AZI – Atlas des Zones Inondables</b>\n\nCartographie des secteurs inondables basée sur des études hydrauliques. Outil de connaissance du risque non opposable.',
     'pres-reperes-crues': '<b>Repères de crues</b>\n\nPoints de marquage des niveaux atteints par les plus hautes eaux connues. Servent de mémoire des événements passés.',
     'pres-bassins': '<b>Bassins versants</b>\n\nEnsemble du territoire drainé par un cours d\'eau. Unité hydrographique de base pour la gestion de l\'eau.',
-    'pres-hydro-noms': '<b>Réseau Hydrographique – Cours d\'eau (Hem, Locquin, Acquine)</b>\n\nAffichage du réseau hydrographique avec les noms des affluents et axes principaux (champ NOM_C_EAU). La Hem, le Locquin et l\'Acquine sont labellisés sur la carte.',
     'pres-axes-ruiss': '<b>Axes de ruissellement</b>\n\nChemins préférentiels d\'écoulement des eaux de surface lors des pluies. Identifiés par modélisation topographique.',
     'pres-zh': '<b>Zones humides</b>\n\nMilieux caractérisés par la présence d\'eau proximité de la surface. Rôle majeur dans l\'épuration, le stockage de l\'eau et la biodiversité.',
     'pres-natura2000': '<b>Natura 2000 – ZSC</b>\n\nZone Spéciale de Conservation (directive européenne Habitats). Réseau de sites naturels d\'importance européenne.',
@@ -2302,11 +2615,7 @@ const definitions = {
     'pres-mares': '<b>Mares</b>\n\nPoints d\'eau stagnante de petite taille. Habitats remarquables pour amphibiens, odonates et flore hygrophile.',
     'pres-stations-suivi': '<b>Stations de suivi piscicole</b>\n\nPoints de pêche électrique permettant d\'évaluer la population de poissons et l\'indice biotique.',
     'pres-obstacles': '<b>Obstacles à l\'écoulement</b>\n\nOuvrages (seuils, barrages, buses) fragmentant le cours d\'eau et le transit sédimentaire.',
-    'pres-travaux': '<b>Travaux réalisés</b>\n\nLocalisation des opérations de restauration hydromorphologique effectuées.',
-    'pres-amenagements': '<b>Aménagements anciens</b>\n\nOuvrages hydrauliques historiques (berges artificielles, calibrage).',
-    'pres-travaux-hydro': '<b>Travaux hydrauliques doux</b>\n\nPlantations réalisées pour pallier au ruissellement. Aménagements utilisant le génie végétal pour stabiliser les berges sans durcissement. Couleur selon le type d\'ouvrage (TYPEOUVRAG).',
-    'pres-travaux-lin': '<b>Travaux linéaires</b>\n\nOpérations linéaires (clôtures, reboisement, diversification de la ripisylve). Filtrables par année (ANNEE) et par type (TYPE).',
-    'pres-travaux-ponc': '<b>Travaux ponctuels</b>\n\nOpérations ponctuelles (abreuvoir, passage à gué, abattage préventif, passerelle, pont, effacement, aménagement seuil résiduel, retrait d\'embâcle). Filtrables par année (ANNEE) et par type (TYPE).',
+    'pres-travaux-hydro': '<b>Travaux hydrauliques doux</b>\n\nPlantations réalisées pour pallier au ruissellement. Aménagements utilisant le génie végétal pour stabiliser les berges sans durcissement.',
     'check-rsa-anguille': '<b>Réseau Spécifique Anguille (RSA62)</b><br><br>Centralise les suivis d\'Abondance piscicole de l\'Anguille européenne à l\'échelle de la Hem. Chroniques couvrant les campagnes 2011, 2014, 2017, 2020 et 2023.',
     'check-sat-saumon': '<b>Suivi Aquatique Territorial Saumon (SAT62)</b><br><br>Suivi de l\'effort de reproduction du Saumon Atlantique via l\'échantillonnage de tacons (juvéniles).',
     'check-frayeres-trf': '<b>Suivi des Frayères de Grands Salmonidés (SNDP)</b><br><br> Répertorie le suivi et l\'emplacement des zones de ponte de la Truite de mer sur le bassin versant.',
@@ -2413,40 +2722,19 @@ function setupBindings() {
 
 // ===== PRESENTATION LAYERS =====
 function setupPresentationLayers() {
-    presHydroLayer = L.geoJSON(null, {
-        style: { color: '#0ea5e9', weight: 3, opacity: 0.9 },
-        onEachFeature: (f, l) => {
-            const nom = f.properties.NOM_C_EAU || 'Non renseigné';
-            l.bindPopup(`<b>Cours d'eau :</b><br>${nom}`);
-        }
-    });
-    presHydroLabelsLayer = L.layerGroup();
-
-    presLayers['pres-travaux-lin'] = L.geoJSON(null, {
-        style: (f) => {
-            const c = typeColor(f.properties[TRAVAUX_TYPE_FIELD]);
-            return { color: c, weight: 3, opacity: 0.9 };
+   presLayerDefs = [
+        { 
+            id: 'pres-hydro-noms', 
+            file: 'Hydro_HEM_WGS.geojson',
+            style: { color: '#3498db', weight: 2, opacity: 0.8 },
+            popup: f => `<b>Cours d'eau :</b> ${f.properties.NOM_C_EAU || 'Non renseigné'}`,
+            onEachExtra: (f, l) => {
+                const nom = (f.properties.NOM_C_EAU || '').toLowerCase();
+                if (nom === 'la hem' || nom === 'le locquin' || nom === "l'acquine" || nom === "l'acquin") {
+                    l.bindTooltip(f.properties.NOM_C_EAU, { permanent: true, direction: 'center', className: 'hydro-label' });
+                }
+            }
         },
-        onEachFeature: (f, l) => {
-            const t = f.properties[TRAVAUX_TYPE_FIELD] || '?';
-            const y = f.properties[TRAVAUX_YEAR_FIELD] || '?';
-            l.bindPopup(`<b>Travaux linéaires</b><br><b>Type :</b> ${typeLabel(t)} (${t})<br><b>Année :</b> ${y}`);
-        }
-    });
-
-    presLayers['pres-travaux-ponc'] = L.geoJSON(null, {
-        pointToLayer: (f, latlng) => {
-            const c = typeColor(f.properties[TRAVAUX_TYPE_FIELD]);
-            return L.circleMarker(latlng, { radius: 6, fillColor: c, color: '#fff', weight: 1.5, fillOpacity: 0.95 });
-        },
-        onEachFeature: (f, l) => {
-            const t = f.properties[TRAVAUX_TYPE_FIELD] || '?';
-            const y = f.properties[TRAVAUX_YEAR_FIELD] || '?';
-            l.bindPopup(`<b>Travaux ponctuels</b><br><b>Type :</b> ${typeLabel(t)} (${t})<br><b>Année :</b> ${y}`);
-        }
-    });
-
-    presLayerDefs = [
         { id: 'pres-ppri', file: 'PPRI_ancien.geojson',
           style: { color: '#3b82f6', weight: 1, fillColor: '#3b82f6', fillOpacity: 0.35 },
           popup: f => `<b>PPRI</b>` },
@@ -2498,24 +2786,25 @@ function setupPresentationLayers() {
         { id: 'pres-obstacles', file: 'Ouvrage_WGS.geojson',
           pointStyle: { radius: 5, fillColor: '#222', color: '#fff', weight: 1, fillOpacity: 0.85 },
           popup: f => `<b>Obstacle à l'écoulement</b><br>${f.properties.NomPrincipalObstEcoul||''}` },
-        { id: 'pres-travaux', file: 'Travaux_realises.geojson',
-          pointStyle: { radius: 6, fillColor: '#f59e0b', color: '#fff', weight: 2, fillOpacity: 0.9 },
-          popup: f => `<b>Travaux réalisés</b>` },
-        { id: 'pres-amenagements', file: 'Amenagements_anciens.geojson',
-          style: { color: '#d97706', weight: 1, fillColor: '#d97706', fillOpacity: 0.25 },
-          popup: f => `<b>Aménagement ancien</b>` },
-        { id: 'pres-travaux-hydro', file: 'Plantations_hydraulique_douce.geojson',
-          style: (f) => {
-              const c = typeColor(f.properties[HYDRO_TYPE_FIELD]);
-              return { color: c, weight: 2, fillColor: c, fillOpacity: 0.5 };
-          },
-          popup: f => `<b>Travaux hydrauliques doux</b><br><b>Date de réalisation :</b> ${f.properties[HYDRO_YEAR_FIELD]||'?'}<br><b>Type d'ouvrage :</b> ${typeLabel(f.properties[HYDRO_TYPE_FIELD])} (${f.properties[HYDRO_TYPE_FIELD]||'?'})`,
-          yearField: HYDRO_YEAR_FIELD, typeField: HYDRO_TYPE_FIELD }
+        { 
+            id: 'pres-travaux-hydro', file: 'Plantations_hydraulique_douce.geojson',
+            style: (f) => {
+                const type = (f.properties.TYPEOUVRAG || '').toLowerCase();
+                let col = '#0ea5e9'; // Couleur par défaut
+                if (type.includes('fascine')) col = '#e67e22';
+                else if (type.includes('haie')) col = '#27ae60';
+                else if (type.includes('noue')) col = '#8b5cf6';
+                return { color: col, weight: 2, fillColor: col, fillOpacity: 0.5 };
+            },
+            popup: f => `<b>Travaux hydrauliques doux</b><br><b>Date de réalisation :</b> ${f.properties.DATEREALIS||'?'}<br><b>Type d'ouvrage :</b> ${f.properties.TYPEOUVRAG||'?'}`,
+            yearField: HYDRO_YEAR_FIELD, typeField: HYDRO_TYPE_FIELD 
+        }
     ];
-
+    
     presLayerDefs.forEach(def => {
-        const onEach = (f, l) => {
-            if (def.popup) l.bindPopup(def.popup(f));
+       const onEach = (f, l) => {
+    if (def.popup) l.bindPopup(def.popup(f));
+    if (def.onEachExtra) def.onEachExtra(f, l);
         };
         if (def.pointStyle) {
             presLayers[def.id] = L.geoJSON(null, {
@@ -2524,8 +2813,6 @@ function setupPresentationLayers() {
             });
         } else if (def.lineStyle) {
             presLayers[def.id] = L.geoJSON(null, { style: def.lineStyle, onEachFeature: onEach });
-        } else if (typeof def.style === 'function') {
-            presLayers[def.id] = L.geoJSON(null, { style: def.style, onEachFeature: onEach });
         } else {
             presLayers[def.id] = L.geoJSON(null, { style: def.style, onEachFeature: onEach });
         }
@@ -2551,112 +2838,6 @@ function setupPresentationLayers() {
             }
         });
     });
-
-    const hydroEl = document.getElementById('pres-hydro-noms');
-    if (hydroEl) {
-        hydroEl.addEventListener('change', function() {
-            if (this.checked) {
-                if (presHydroLayer.getLayers().length > 0) {
-                    presHydroLayer.addTo(map);
-                    presHydroLabelsLayer.addTo(map);
-                } else {
-                    fetch('Hydro_HEM_WGS.geojson').then(r => r.json()).then(d => {
-                        presHydroLayer.addData(d);
-                        presHydroLayer.addTo(map);
-                        buildHydroLabels(d);
-                        presHydroLabelsLayer.addTo(map);
-                    }).catch(() => {
-                        this.checked = false;
-                        console.log('Fichier non disponible : Hydro_HEM_WGS.geojson');
-                    });
-                }
-            } else {
-                map.removeLayer(presHydroLayer);
-                map.removeLayer(presHydroLabelsLayer);
-            }
-        });
-    }
-
-    const linEl = document.getElementById('pres-travaux-lin');
-    if (linEl) {
-        linEl.addEventListener('change', function() {
-            if (this.checked) {
-                if (presLayers['pres-travaux-lin'].getLayers().length > 0) {
-                    presLayers['pres-travaux-lin'].addTo(map);
-                } else {
-                    fetch('Travaux_lineaire_complet.geojson').then(r => r.json()).then(d => {
-                        travauxLinRawData = d;
-                        presLayers['pres-travaux-lin'].addData(d);
-                        presLayers['pres-travaux-lin'].addTo(map);
-                        loadTravauxYearData();
-                    }).catch(() => {
-                        this.checked = false;
-                        console.log('Fichier non disponible : Travaux_lineaire_complet.geojson');
-                    });
-                }
-            } else {
-                map.removeLayer(presLayers['pres-travaux-lin']);
-            }
-        });
-    }
-
-    const poncEl = document.getElementById('pres-travaux-ponc');
-    if (poncEl) {
-        poncEl.addEventListener('change', function() {
-            if (this.checked) {
-                if (presLayers['pres-travaux-ponc'].getLayers().length > 0) {
-                    presLayers['pres-travaux-ponc'].addTo(map);
-                } else {
-                    fetch('Travaux_ponctuels_complet.geojson').then(r => r.json()).then(d => {
-                        travauxPoncRawData = d;
-                        presLayers['pres-travaux-ponc'].addData(d);
-                        presLayers['pres-travaux-ponc'].addTo(map);
-                        loadTravauxYearData();
-                    }).catch(() => {
-                        this.checked = false;
-                        console.log('Fichier non disponible : Travaux_ponctuels_complet.geojson');
-                    });
-                }
-            } else {
-                map.removeLayer(presLayers['pres-travaux-ponc']);
-            }
-        });
-    }
-}
-
-function buildHydroLabels(data) {
-    presHydroLabelsLayer.clearLayers();
-    if (!data || !data.features) return;
-    data.features.forEach(f => {
-        const nom = f.properties.NOM_C_EAU;
-        if (!nom) return;
-        const geom = f.geometry;
-        if (!geom) return;
-        let latlng = null;
-        if (geom.type === 'LineString' && geom.coordinates.length > 0) {
-            const mid = geom.coordinates[Math.floor(geom.coordinates.length / 2)];
-            latlng = L.latLng(mid[1], mid[0]);
-        } else if (geom.type === 'MultiLineString' && geom.coordinates.length > 0) {
-            const line = geom.coordinates[0];
-            if (line && line.length > 0) {
-                const mid = line[Math.floor(line.length / 2)];
-                latlng = L.latLng(mid[1], mid[0]);
-            }
-        } else if (geom.type === 'Point') {
-            latlng = L.latLng(geom.coordinates[1], geom.coordinates[0]);
-        }
-        if (latlng) {
-            L.marker(latlng, {
-                icon: L.divIcon({
-                    className: 'leaflet-label',
-                    html: nom,
-                    iconSize: null,
-                    iconAnchor: [0, 0]
-                }),
-                interactive: false
-            }).addTo(presHydroLabelsLayer);
-        }
-    });
 }
 
 // ===== DATA LOADING =====
@@ -2667,7 +2848,9 @@ function loadData() {
         const promises = [
             fetch('Station.geojson').then(r=>r.json()).then(d=>layerStation.addData(d)).catch(()=>{}),
             fetch('Ouvrage_WGS.geojson').then(r=>r.json()).then(d=>layerOuvrages.addData(d)).catch(()=>{}),
-            fetch('Hydro_HEM_WGS.geojson').then(r=>r.json()).then(d=>{ layerHydroDiag.addData(d); ebfLayers.hydro.addData(d); }).catch(()=>{}),
+            fetch('Hydro_HEM_WGS.geojson').then(r=>r.json()).then(d=>{
+                layerHydroDiag.addData(d); ebfLayers.hydro.addData(d);
+            }).catch(()=>{}),
             fetch('USRA_HEM.geojson').then(r=>r.json()).then(d=>layerPrhymo.addData(d)).catch(()=>{}),
             fetch('Axe_ruissellement_hors_lit_pente.geojson').then(r=>r.json()).then(d=>layerRuissellement.addData(d)).catch(()=>{}),
             fetch('HEM_TON_SOL.geojson').then(r=>r.json()).then(d=>layerParcellesAgr.addData(d)).catch(()=>{}),
@@ -2822,9 +3005,8 @@ function loadHydroYearData(data) {
         hydroAvailableTypes.forEach(t => {
             const chip = document.createElement('span');
             chip.className = 'yfb-type-chip active';
-            chip.textContent = typeLabel(t) + ' (' + t + ')';
+            chip.textContent = t;
             chip.dataset.type = t;
-            chip.style.borderLeft = '4px solid ' + typeColor(t);
             chip.onclick = () => {
                 if (hydroSelectedTypes.has(t)) {
                     hydroSelectedTypes.delete(t);
@@ -2904,167 +3086,9 @@ function rebuildHydroLayer() {
     if (wasOnMap) layer.addTo(map);
 }
 
-// ===== TRAVAUX YEAR + TYPE FILTER (linéaires + ponctuels) =====
-function loadTravauxYearData() {
-    const years = new Set();
-    const types = new Set();
-    [travauxLinRawData, travauxPoncRawData].forEach(data => {
-        if (!data || !data.features) return;
-        data.features.forEach(f => {
-            const y = extractYear(f.properties[TRAVAUX_YEAR_FIELD]);
-            if (y) years.add(y);
-            const t = f.properties[TRAVAUX_TYPE_FIELD];
-            if (t && String(t).trim()) types.add(String(t).trim());
-        });
-    });
-    travauxAvailableYears = [...years].sort((a,b) => b - a);
-    travauxAvailableTypes = [...types].sort((a,b) => a.localeCompare(b,'fr'));
-    travauxYearDataLoaded = true;
-
-    const sel = document.getElementById('travaux-year-select');
-    if (sel) {
-        sel.innerHTML = '<option value="">-- Toutes les années --</option>';
-        travauxAvailableYears.forEach(y => {
-            const o = document.createElement('option');
-            o.value = y; o.textContent = y;
-            sel.appendChild(o);
-        });
-    }
-
-    const chips = document.getElementById('travaux-type-chips');
-    if (chips) {
-        chips.innerHTML = '';
-        travauxAvailableTypes.forEach(t => {
-            const chip = document.createElement('span');
-            chip.className = 'yfb-type-chip active';
-            chip.textContent = typeLabel(t) + ' (' + t + ')';
-            chip.dataset.type = t;
-            chip.style.borderLeft = '4px solid ' + typeColor(t);
-            chip.onclick = () => {
-                if (travauxSelectedTypes.has(t)) {
-                    travauxSelectedTypes.delete(t);
-                    chip.classList.remove('active');
-                } else {
-                    travauxSelectedTypes.add(t);
-                    chip.classList.add('active');
-                }
-                rebuildTravauxLayers();
-            };
-            chips.appendChild(chip);
-            travauxSelectedTypes.add(t);
-        });
-    }
-}
-
-function toggleTravauxYearFilter() {
-    const toggle = document.getElementById('travaux-year-filter-toggle');
-    const sel = document.getElementById('travaux-year-select');
-    travauxYearFilterEnabled = toggle.checked;
-    if (travauxYearFilterEnabled) {
-        sel.disabled = false;
-        sel.style.display = 'block';
-    } else {
-        sel.disabled = true;
-        sel.style.display = 'none';
-        sel.value = '';
-        rebuildTravauxLayers();
-    }
-}
-
-function applyTravauxYearFilter() {
-    rebuildTravauxLayers();
-}
-
-function toggleTravauxTypeFilter() {
-    const toggle = document.getElementById('travaux-type-filter-toggle');
-    const chips = document.getElementById('travaux-type-chips');
-    travauxTypeFilterEnabled = toggle.checked;
-    if (travauxTypeFilterEnabled) {
-        chips.style.display = 'flex';
-    } else {
-        chips.style.display = 'none';
-        travauxSelectedTypes = new Set(travauxAvailableTypes);
-        chips.querySelectorAll('.yfb-type-chip').forEach(c => c.classList.add('active'));
-        rebuildTravauxLayers();
-    }
-}
-
-function rebuildTravauxLayers() {
-    let year = null;
-    if (travauxYearFilterEnabled) {
-        const sel = document.getElementById('travaux-year-select');
-        year = sel && sel.value ? parseInt(sel.value) : null;
-    }
-    const useTypeFilter = travauxTypeFilterEnabled && travauxSelectedTypes.size < travauxAvailableTypes.length;
-
-    ['pres-travaux-lin', 'pres-travaux-ponc'].forEach(id => {
-        const layer = presLayers[id];
-        if (!layer) return;
-        const wasOnMap = map.hasLayer(layer);
-        if (wasOnMap) map.removeLayer(layer);
-
-        const raw = (id === 'pres-travaux-lin') ? travauxLinRawData : travauxPoncRawData;
-        if (!raw) return;
-
-        const filtered = {
-            type: 'FeatureCollection',
-            features: raw.features.filter(f => {
-                const yOk = !year || extractYear(f.properties[TRAVAUX_YEAR_FIELD]) === year;
-                const tOk = !useTypeFilter || travauxSelectedTypes.has(String(f.properties[TRAVAUX_TYPE_FIELD] || '').trim());
-                return yOk && tOk;
-            })
-        };
-
-        layer.clearLayers();
-        layer.addData(filtered);
-
-        if (wasOnMap) layer.addTo(map);
-    });
-}
-
 // ===== ACTIVATE PRES LAYERS =====
 function activatePresLayers() {
     document.querySelectorAll('#presentation-layers input[type="checkbox"]:checked').forEach(cb => {
-        if (cb.id === 'pres-hydro-noms') {
-            if (presHydroLayer.getLayers().length > 0) {
-                presHydroLayer.addTo(map);
-                presHydroLabelsLayer.addTo(map);
-            } else {
-                fetch('Hydro_HEM_WGS.geojson').then(r => r.json()).then(d => {
-                    presHydroLayer.addData(d);
-                    presHydroLayer.addTo(map);
-                    buildHydroLabels(d);
-                    presHydroLabelsLayer.addTo(map);
-                }).catch(() => console.log('Fichier non disponible : Hydro_HEM_WGS.geojson'));
-            }
-            return;
-        }
-        if (cb.id === 'pres-travaux-lin') {
-            if (presLayers['pres-travaux-lin'].getLayers().length > 0) {
-                presLayers['pres-travaux-lin'].addTo(map);
-            } else {
-                fetch('Travaux_lineaire_complet.geojson').then(r => r.json()).then(d => {
-                    travauxLinRawData = d;
-                    presLayers['pres-travaux-lin'].addData(d);
-                    presLayers['pres-travaux-lin'].addTo(map);
-                    loadTravauxYearData();
-                }).catch(() => console.log('Fichier non disponible : Travaux_lineaire_complet.geojson'));
-            }
-            return;
-        }
-        if (cb.id === 'pres-travaux-ponc') {
-            if (presLayers['pres-travaux-ponc'].getLayers().length > 0) {
-                presLayers['pres-travaux-ponc'].addTo(map);
-            } else {
-                fetch('Travaux_ponctuels_complet.geojson').then(r => r.json()).then(d => {
-                    travauxPoncRawData = d;
-                    presLayers['pres-travaux-ponc'].addData(d);
-                    presLayers['pres-travaux-ponc'].addTo(map);
-                    loadTravauxYearData();
-                }).catch(() => console.log('Fichier non disponible : Travaux_ponctuels_complet.geojson'));
-            }
-            return;
-        }
         const def = presLayerDefs.find(d => d.id === cb.id);
         if (!def) return;
         if (presLayers[def.id].getLayers().length > 0) {
@@ -3122,7 +3146,6 @@ function switchView(view) {
         layersQ['Q100'].addTo(map); layerStation.addTo(map); layerOuvrages.addTo(map);
         for (let l in ebfLayers) safeRemove(ebfLayers[l]);
         for (let l in presLayers) safeRemove(presLayers[l]);
-        safeRemove(presHydroLayer); safeRemove(presHydroLabelsLayer);
         document.getElementById('check-station-diag').checked = true;
         document.getElementById('check-ouvrages-diag').checked = true;
         document.getElementById('check-hydro-diag').checked = true;
@@ -3147,7 +3170,6 @@ function switchView(view) {
         safeRemove(layerHydroDiag); safeRemove(layerPrhymo);
         safeRemove(layerRuissellement); safeRemove(layerParcellesAgr); safeRemove(layerBatiImpacte);
         for (let l in presLayers) safeRemove(presLayers[l]);
-        safeRemove(presHydroLayer); safeRemove(presHydroLabelsLayer);
         safeRemove(layerRsaAnguille); safeRemove(layerSatSaumon);
         safeRemove(layerFrayeresTrf); safeRemove(layerFrayeresLpf);
         safeRemove(layerPeGlobal);
@@ -3292,12 +3314,11 @@ function resetAllLayers() {
         document.querySelectorAll('#q-buttons .chart-btn').forEach(b => b.classList.toggle('active', b.textContent === 'Q100'));
         currentActiveQ = 'Q100';
     } else if (currentView === 'presentation') {
-        const defaultChecked = ['pres-ppri', 'pres-reperes-crues', 'pres-hydro-noms', 'pres-axes-ruiss', 'pres-zh', 'pres-natura2000', 'pres-znieff1', 'pres-znieff2', 'pres-reservoirs', 'pres-stations-suivi'];
+        const defaultChecked = ['pres-ppri', 'pres-reperes-crues', 'pres-axes-ruiss', 'pres-zh', 'pres-natura2000', 'pres-znieff1', 'pres-znieff2', 'pres-reservoirs', 'pres-stations-suivi'];
         document.querySelectorAll('#presentation-layers input[type="checkbox"]').forEach(cb => {
             cb.checked = defaultChecked.includes(cb.id);
         });
         for (let l in presLayers) safeRemove(presLayers[l]);
-        safeRemove(presHydroLayer); safeRemove(presHydroLabelsLayer);
         activatePresLayers();
     }
 }
@@ -3316,7 +3337,7 @@ function setMode(btn, mode) {
         diagTab.style.display = 'none';
         downloadBtn.style.display = 'none';
         if (docsTab) docsTab.style.display = 'none';
-        if (currentView === 'diagnostic') switchView('presentation');
+        if (currentView === 'diagnostic') switchView('ebf');
     } else {
         diagTab.style.display = '';
         downloadBtn.style.display = 'flex';
@@ -3543,7 +3564,220 @@ function updateChart(type, btnEl) {
     pluiChart.update();
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.layer-info-btn').forEach(btn => {
+        const layerItem = btn.closest('.layer-item');
+        if (layerItem) {
+            const checkbox = layerItem.querySelector('input[type="checkbox"]');
+            if (checkbox && checkbox.id) {
+                btn.onclick = () => showLayerInfo(checkbox.id);
+                btn.style.cursor = 'pointer';
+            }
+        }
+    });
+});
+
 map && map.on('overlayadd', (e) => { for(let q in layersQ){ if(layersQ[q]===e.layer) currentActiveQ=q; } });
+
+const TRAVAUX_DICT = {
+    'PRA1': { label: 'Clôtures', color: '#8b5cf6' },
+    'RBT':  { label: 'Reboisement / Ripisylve', color: '#10b981' },
+    'PRA2': { label: 'Abreuvoir', color: '#3b82f6' },
+    'PAG':  { label: 'Passage à gué', color: '#f59e0b' },
+    'abattage préventif': { label: 'Abattage préventif', color: '#eab308' },
+    'passerelle': { label: 'Passerelle', color: '#64748b' },
+    'pont': { label: 'Pont', color: '#475569' },
+    'RBT2': { label: 'Abattage d\'essences inadaptées', color: '#ef4444' },
+    'RCL2': { label: 'Effacement', color: '#6366f1' },
+    'RLC3': { label: 'Aménagement seuil résiduel', color: '#f97316' },
+    'retrait embacle': { label: 'Retrait embâcle', color: '#a8a29e' },
+    'retrait embâcle': { label: 'Retrait embâcle', color: '#a8a29e' }
+};
+
+function getTravauxColor(type) { 
+    const t = type ? String(type).trim().toLowerCase() : '';
+    for(let key in TRAVAUX_DICT) {
+        if(key.toLowerCase() === t) return TRAVAUX_DICT[key].color;
+    }
+    return '#555'; 
+}
+
+function getTravauxLabel(type) { 
+    const t = type ? String(type).trim() : '';
+    const tLow = t.toLowerCase();
+    for(let key in TRAVAUX_DICT) {
+        if(key.toLowerCase() === tLow) {
+            return key === key.toUpperCase() ? `${TRAVAUX_DICT[key].label} (${t})` : TRAVAUX_DICT[key].label;
+        }
+    }
+    return t || 'Inconnu'; 
+}
+
+// Définition manuelle des deux couches Leaflet
+let layerTravauxLin = L.geoJSON(null, {
+    style: f => ({ color: getTravauxColor(f.properties.TYPE), weight: 3, opacity: 0.9 }),
+    onEachFeature: (f, l) => l.bindPopup(`<b>Travaux Linéaires</b><br><b>Année :</b> ${f.properties.ANNEE||'?'}<br><b>Type :</b> ${getTravauxLabel(f.properties.TYPE)}`)
+});
+
+let layerTravauxPt = L.geoJSON(null, {
+    pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, weight: 2, fillOpacity: 0.9, color: '#fff' }),
+    onEachFeature: (f, l) => {
+        l.setStyle({ fillColor: getTravauxColor(f.properties.TYPE) });
+        l.bindPopup(`<b>Travaux Ponctuels</b><br><b>Année :</b> ${f.properties.ANNEE||'?'}<br><b>Type :</b> ${getTravauxLabel(f.properties.TYPE)}`);
+    }
+});
+
+let travauxRawData = { lineaire: null, ponctuel: null };
+let travauxAvailableTypes = new Set();
+let travauxAvailableYears = new Set();
+let travauxSelectedTypes = new Set();
+
+document.addEventListener('DOMContentLoaded', () => {
+    const cbTravaux = document.getElementById('pres-travaux-global');
+    const filterDiv = document.getElementById('filtre-travaux');
+    
+    if(cbTravaux) {
+        cbTravaux.addEventListener('change', function() {
+            filterDiv.style.display = this.checked ? 'block' : 'none';
+            if(this.checked) {
+                if(!travauxRawData.lineaire) {
+                    fetch('Travaux_lineaire_complet.geojson').then(r => r.json()).then(d => {
+                        processTravauxData(d, 'lineaire');
+                        applyTravauxFilter();
+                    }).catch(()=>console.log("Fichier linéaire introuvable"));
+                } else {
+                    layerTravauxLin.addTo(map);
+                }
+                
+                if(!travauxRawData.ponctuel) {
+                    fetch('Travaux_ponctuels_complet.geojson').then(r => r.json()).then(d => {
+                        processTravauxData(d, 'ponctuel');
+                        applyTravauxFilter();
+                    }).catch(()=>console.log("Fichier ponctuel introuvable"));
+                } else {
+                    layerTravauxPt.addTo(map);
+                }
+            } else {
+                map.removeLayer(layerTravauxLin);
+                map.removeLayer(layerTravauxPt);
+            }
+        });
+    }
+});
+
+function processTravauxData(data, typeKey) {
+    if (!data || !data.features) return;
+    travauxRawData[typeKey] = data;
+    
+    data.features.forEach(f => {
+        const y = extractYear(f.properties['ANNEE']);
+        if (y) travauxAvailableYears.add(y);
+        const t = f.properties['TYPE'];
+        if (t && String(t).trim()) {
+            travauxAvailableTypes.add(String(t).trim());
+            travauxSelectedTypes.add(String(t).trim());
+        }
+    });
+    updateTravauxFilterUI();
+}
+
+function updateTravauxFilterUI() {
+    const sel = document.getElementById('travaux-year-select');
+    const chips = document.getElementById('travaux-type-chips');
+    if (!sel || !chips) return;
+
+    const years = [...travauxAvailableYears].sort((a,b) => b - a);
+    const currentYear = sel.value;
+    sel.innerHTML = '<option value="">-- Toutes les années --</option>';
+    years.forEach(y => {
+        const o = document.createElement('option'); o.value = y; o.textContent = y;
+        sel.appendChild(o);
+    });
+    sel.value = currentYear;
+
+    const types = [...travauxAvailableTypes].sort((a,b) => getTravauxLabel(a).localeCompare(getTravauxLabel(b)));
+    chips.innerHTML = '';
+    types.forEach(t => {
+        const chip = document.createElement('span');
+        chip.className = travauxSelectedTypes.has(t) ? 'yfb-type-chip active' : 'yfb-type-chip';
+        chip.textContent = getTravauxLabel(t).replace(/\s*\([^)]*\)/, '');
+        chip.style.borderColor = getTravauxColor(t);
+        if(travauxSelectedTypes.has(t)) { 
+            chip.style.backgroundColor = getTravauxColor(t); 
+            chip.style.color = '#fff'; 
+        }
+        
+        chip.onclick = () => {
+            if (travauxSelectedTypes.has(t)) {
+                travauxSelectedTypes.delete(t);
+                chip.classList.remove('active');
+                chip.style.backgroundColor = '#fff'; chip.style.color = 'var(--color-text-muted)';
+            } else {
+                travauxSelectedTypes.add(t);
+                chip.classList.add('active');
+                chip.style.backgroundColor = getTravauxColor(t); chip.style.color = '#fff';
+            }
+            applyTravauxFilter();
+        };
+        chips.appendChild(chip);
+    });
+}
+
+function toggleTravauxFilter() {
+    const yearToggle = document.getElementById('travaux-year-filter-toggle').checked;
+    const typeToggle = document.getElementById('travaux-type-filter-toggle').checked;
+    
+    document.getElementById('travaux-year-select').style.display = yearToggle ? 'block' : 'none';
+    document.getElementById('travaux-year-select').disabled = !yearToggle;
+    document.getElementById('travaux-type-chips').style.display = typeToggle ? 'flex' : 'none';
+    
+    if(!typeToggle) travauxSelectedTypes = new Set(travauxAvailableTypes); 
+    if(!yearToggle) document.getElementById('travaux-year-select').value = '';
+    
+    updateTravauxFilterUI();
+    applyTravauxFilter();
+}
+
+function applyTravauxFilter() {
+    const isChecked = document.getElementById('pres-travaux-global').checked;
+    if (!isChecked) return;
+
+    const yearToggle = document.getElementById('travaux-year-filter-toggle').checked;
+    const typeToggle = document.getElementById('travaux-type-filter-toggle').checked;
+    const selYear = document.getElementById('travaux-year-select').value;
+    const filterYear = (yearToggle && selYear) ? parseInt(selYear) : null;
+
+    if (travauxRawData.lineaire) {
+        const wasOnMapLin = map.hasLayer(layerTravauxLin);
+        if (wasOnMapLin) map.removeLayer(layerTravauxLin);
+        layerTravauxLin.clearLayers();
+        layerTravauxLin.addData({
+            type: 'FeatureCollection',
+            features: travauxRawData.lineaire.features.filter(f => {
+                const yOk = !filterYear || extractYear(f.properties['ANNEE']) === filterYear;
+                const tOk = !typeToggle || travauxSelectedTypes.has(String(f.properties['TYPE'] || '').trim());
+                return yOk && tOk;
+            })
+        });
+        layerTravauxLin.addTo(map);
+    }
+
+    if (travauxRawData.ponctuel) {
+        const wasOnMapPt = map.hasLayer(layerTravauxPt);
+        if (wasOnMapPt) map.removeLayer(layerTravauxPt);
+        layerTravauxPt.clearLayers();
+        layerTravauxPt.addData({
+            type: 'FeatureCollection',
+            features: travauxRawData.ponctuel.features.filter(f => {
+                const yOk = !filterYear || extractYear(f.properties['ANNEE']) === filterYear;
+                const tOk = !typeToggle || travauxSelectedTypes.has(String(f.properties['TYPE'] || '').trim());
+                return yOk && tOk;
+            })
+        });
+        layerTravauxPt.addTo(map);
+    }
+}
+
 </script>
 </body>
 </html>
