@@ -281,7 +281,7 @@
         </svg>
         <h1>Vallée de la Hem</h1>
         <p>Outil de gestion intégrée du bassin versant</p>
-        <input type="text" id="login-username" class="login-input" placeholder="Entrez vos initiales (ex: CM)" onkeypress="if(event.key==='Enter')performLogin()">
+       <input type="text" id="login-username" class="login-input" placeholder="Entrez vos initiales (ex: CM)">
         <button class="login-btn" onclick="performLogin()">Accéder à l'application</button>
         <p id="login-error" class="login-error">Veuillez entrer vos initiales.</p>
     </div>
@@ -3578,6 +3578,17 @@ function updateChart(type, btnEl) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    // --- GESTION DE LA TOUCHE ENTRÉE SUR LE LOGIN ---
+    const loginInput = document.getElementById('login-username');
+    if (loginInput) {
+        loginInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                performLogin();
+            }
+        });
+    }
+
+    // --- GESTION DES BOUTONS D'INFO (code d'origine) ---
     document.querySelectorAll('.layer-info-btn').forEach(btn => {
         const layerItem = btn.closest('.layer-item');
         if (layerItem) {
@@ -3589,7 +3600,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
-
 map && map.on('overlayadd', (e) => { for(let q in layersQ){ if(layersQ[q]===e.layer) currentActiveQ=q; } });
 </script>
 </body>
