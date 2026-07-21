@@ -281,9 +281,6 @@
         </svg>
         <h1>Vallée de la Hem</h1>
         <p>Outil de gestion intégrée du bassin versant</p>
-       <input type="text" id="login-username" class="login-input" placeholder="Entrez vos initiales (ex: CM)">
-        <button class="login-btn" onclick="performLogin()">Accéder à l'application</button>
-        <p id="login-error" class="login-error">Veuillez entrer vos initiales.</p>
     </div>
 </div>
 
@@ -3577,29 +3574,6 @@ function updateChart(type, btnEl) {
     pluiChart.update();
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // --- GESTION DE LA TOUCHE ENTRÉE SUR LE LOGIN ---
-    const loginInput = document.getElementById('login-username');
-    if (loginInput) {
-        loginInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                performLogin();
-            }
-        });
-    }
-
-    // --- GESTION DES BOUTONS D'INFO (code d'origine) ---
-    document.querySelectorAll('.layer-info-btn').forEach(btn => {
-        const layerItem = btn.closest('.layer-item');
-        if (layerItem) {
-            const checkbox = layerItem.querySelector('input[type="checkbox"]');
-            if (checkbox && checkbox.id) {
-                btn.onclick = () => showLayerInfo(checkbox.id);
-                btn.style.cursor = 'pointer';
-            }
-        }
-    });
-});
 map && map.on('overlayadd', (e) => { for(let q in layersQ){ if(layersQ[q]===e.layer) currentActiveQ=q; } });
 </script>
 </body>
