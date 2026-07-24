@@ -1493,78 +1493,82 @@
     </div>
 </div>
 
-    <!-- LÉGENDE TAB -->
+   <!-- LÉGENDE TAB -->
     <div class="sidebar-body" id="sideContent-legende" style="display:none;">
+        
         <!-- EBF legend (shown in EBF view) -->
         <div id="legend-ebf">
             <div class="legend-section">
                 <div class="legend-section-title">EBF Optimal (EFO)</div>
-                <div class="legend-item">
+                <div class="legend-item" data-layer="check-efo">
                     <div class="legend-swatch" style="background:#FFAA00;opacity:0.5;border:2px solid #FFAA00;"></div>
                     EBF Optimal Définitif
                 </div>
-                <div class="legend-item">
+                <div class="legend-item" data-layer="check-buf-ero-efo">
                     <div class="legend-swatch" style="background:#FFAA00;opacity:0.4;"></div>
                     Espace morphologique
                 </div>
-                <div class="legend-item">
+                <div class="legend-item" data-layer="check-mrvbf">
                     <div class="legend-swatch" style="background:#3498db;opacity:0.5;"></div>
                     Enveloppe hydraulique (MRVBF)
                 </div>
-                <div class="legend-item">
+                <div class="legend-item" data-layer="check-geol">
                     <div class="legend-swatch" style="background:#a6cee3;opacity:0.6;"></div>
                     Enveloppe hydrogéologique
                 </div>
-                <div class="legend-item">
+                <div class="legend-item" data-layer="check-geo25">
                     <div class="legend-swatch" style="background:#f1c40f;opacity:0.5;"></div>
                     Enveloppe biogéochimique (25m)
                 </div>
-                <div class="legend-item">
+                <div class="legend-item" data-layer="check-zhe-efo">
                     <div class="legend-swatch" style="background:#27ae60;opacity:0.7;"></div>
                     Enveloppe biologique (ZHE)
                 </div>
-                <div class="legend-item">
+                <div class="legend-item" data-layer="check-zdh">
                     <div class="legend-swatch" style="background:#2ecc71;opacity:0.6;"></div>
                     Zones à dominante humide
                 </div>
-                <div class="legend-item">
+                <div class="legend-item" data-layer="check-perche">
                     <div class="legend-swatch" style="background:#8e44ad;opacity:0.7;"></div>
                     Lits perchés
                 </div>
             </div>
+            
             <div class="legend-section">
                 <div class="legend-section-title">EBF Nécessaire (EFN)</div>
-                <div class="legend-item">
+                <div class="legend-item" data-layer="check-efn">
                     <div class="legend-swatch" style="background:transparent;border:2px dashed #e67e22;"></div>
                     EBF Nécessaire Définitif
                 </div>
-                <div class="legend-item">
+                <div class="legend-item" data-layer="check-azi-efn">
                     <div class="legend-swatch" style="background:transparent;border:2px solid #3498db;opacity:0.7;"></div>
                     Enveloppe hydraulique (AZI)
                 </div>
-                <div class="legend-item">
+                <div class="legend-item" data-layer="check-geo5">
                     <div class="legend-swatch" style="background:transparent;border:2px solid #f1c40f;opacity:0.7;"></div>
                     Enveloppe biogéochimique (5m)
                 </div>
             </div>
+            
             <div class="legend-section">
                 <div class="legend-section-title">Zonage PLUi</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#a6da59;opacity:0.8;border:1px solid #888;"></div> A – Agricole</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:rgb(51,160,44);opacity:0.8;border:1px solid #888;"></div> N – Naturel</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:rgb(217,217,217);border:1px solid #888;"></div> U – Urbain</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:rgb(250,172,76);opacity:0.8;border:1px solid #888;"></div> AU – À urbaniser</div>
+                <div class="legend-item" data-layer="check-plui-efo, check-plui-efn"><div class="legend-swatch" style="background:#a6da59;opacity:0.8;border:1px solid #888;"></div> A – Agricole</div>
+                <div class="legend-item" data-layer="check-plui-efo, check-plui-efn"><div class="legend-swatch" style="background:rgb(51,160,44);opacity:0.8;border:1px solid #888;"></div> N – Naturel</div>
+                <div class="legend-item" data-layer="check-plui-efo, check-plui-efn"><div class="legend-swatch" style="background:rgb(217,217,217);border:1px solid #888;"></div> U – Urbain</div>
+                <div class="legend-item" data-layer="check-plui-efo, check-plui-efn"><div class="legend-swatch" style="background:rgb(250,172,76);opacity:0.8;border:1px solid #888;"></div> AU – À urbaniser</div>
             </div>
+            
             <div class="legend-section">
                 <div class="legend-section-title">Contexte géographique</div>
-                <div class="legend-item">
+                <div class="legend-item" data-layer="check-hydro">
                     <div class="legend-line" style="background:#3498db;"></div>
                     Réseau hydrographique
                 </div>
-                <div class="legend-item">
+                <div class="legend-item" data-layer="check-communes">
                     <div class="legend-swatch" style="background:transparent;border:2px dashed #444;"></div>
                     Limites communales
                 </div>
-                <div class="legend-item">
+                <div class="legend-item" data-layer="check-bati">
                     <div class="legend-swatch" style="background:#e74c3c;opacity:0.8;"></div>
                     Bâti &amp; Infrastructures
                 </div>
@@ -1575,33 +1579,36 @@
         <div id="legend-diagnostic" style="display:none;">
             <div class="legend-section">
                 <div class="legend-section-title">Puissance spécifique (Ps)</div>
-                <div class="legend-item"><div class="legend-line" style="background:#3182bd;"></div> E1 – Dépôt dominant (&lt;10 W/m²)</div>
-                <div class="legend-item"><div class="legend-line" style="background:#31a354;"></div> E2 – Ajustements lents (10–30)</div>
-                <div class="legend-item"><div class="legend-line" style="background:#fd8d3c;"></div> E3 – Équilibre dynamique (30–100)</div>
-                <div class="legend-item"><div class="legend-line" style="background:#de2d26;"></div> E4 – Érosion active (&gt;100)</div>
+                <div class="legend-item" data-layer="check-q-Q2, check-q-Q5, check-q-Q10, check-q-Q20, check-q-Q50, check-q-Q100"><div class="legend-line" style="background:#3182bd;"></div> E1 – Dépôt dominant (&lt;10 W/m²)</div>
+                <div class="legend-item" data-layer="check-q-Q2, check-q-Q5, check-q-Q10, check-q-Q20, check-q-Q50, check-q-Q100"><div class="legend-line" style="background:#31a354;"></div> E2 – Ajustements lents (10–30)</div>
+                <div class="legend-item" data-layer="check-q-Q2, check-q-Q5, check-q-Q10, check-q-Q20, check-q-Q50, check-q-Q100"><div class="legend-line" style="background:#fd8d3c;"></div> E3 – Équilibre dynamique (30–100)</div>
+                <div class="legend-item" data-layer="check-q-Q2, check-q-Q5, check-q-Q10, check-q-Q20, check-q-Q50, check-q-Q100"><div class="legend-line" style="background:#de2d26;"></div> E4 – Érosion active (&gt;100)</div>
             </div>
+            
             <div class="legend-section">
                 <div class="legend-section-title">Dégradation PRHYMO</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#2ecc71;opacity:0.7;"></div> Altération faible (&lt;25%)</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#f39c12;opacity:0.7;"></div> Altération modérée (25–45%)</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#e74c3c;opacity:0.7;"></div> Altération forte (&gt;45%)</div>
+                <div class="legend-item" data-layer="check-prhymo"><div class="legend-swatch" style="background:#2ecc71;opacity:0.7;"></div> Altération faible (&lt;25%)</div>
+                <div class="legend-item" data-layer="check-prhymo"><div class="legend-swatch" style="background:#f39c12;opacity:0.7;"></div> Altération modérée (25–45%)</div>
+                <div class="legend-item" data-layer="check-prhymo"><div class="legend-swatch" style="background:#e74c3c;opacity:0.7;"></div> Altération forte (&gt;45%)</div>
             </div>
+            
             <div class="legend-section">
                 <div class="legend-section-title">Parcelles agricoles &amp; bâti</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#27ae60;opacity:0.7;"></div> Préservation (Couvert herbeux)</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#c0392b;opacity:0.8;"></div> Urgence – Haie / Fascine</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#e67e22;opacity:0.8;"></div> Consolidation (MAEC)</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#f39c12;opacity:0.7;"></div> Surveillance agronomique</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#9b59b6;opacity:0.7;"></div> Bande enherbée existante</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#bdc3c7;"></div> Non impacté / Risque faible</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#e74c3c;opacity:0.9;"></div> Sécurité bâti – Urgence</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#f1c40f;opacity:0.9;"></div> Veille inondation bâti</div>
+                <div class="legend-item" data-layer="check-parcelles-agr"><div class="legend-swatch" style="background:#27ae60;opacity:0.7;"></div> Préservation (Couvert herbeux)</div>
+                <div class="legend-item" data-layer="check-parcelles-agr"><div class="legend-swatch" style="background:#c0392b;opacity:0.8;"></div> Urgence – Haie / Fascine</div>
+                <div class="legend-item" data-layer="check-parcelles-agr"><div class="legend-swatch" style="background:#e67e22;opacity:0.8;"></div> Consolidation (MAEC)</div>
+                <div class="legend-item" data-layer="check-parcelles-agr"><div class="legend-swatch" style="background:#f39c12;opacity:0.7;"></div> Surveillance agronomique</div>
+                <div class="legend-item" data-layer="check-parcelles-agr"><div class="legend-swatch" style="background:#9b59b6;opacity:0.7;"></div> Bande enherbée existante</div>
+                <div class="legend-item" data-layer="check-parcelles-agr"><div class="legend-swatch" style="background:#bdc3c7;"></div> Non impacté / Risque faible</div>
+                <div class="legend-item" data-layer="check-bati-impacte"><div class="legend-swatch" style="background:#e74c3c;opacity:0.9;"></div> Sécurité bâti – Urgence</div>
+                <div class="legend-item" data-layer="check-bati-impacte"><div class="legend-swatch" style="background:#f1c40f;opacity:0.9;"></div> Veille inondation bâti</div>
             </div>
+            
             <div class="legend-section">
                 <div class="legend-section-title">Infrastructure</div>
-                <div class="legend-item"><div class="legend-circle" style="background:#0078A8;border:2px solid #fff;box-shadow:0 0 0 1px #0078A8;"></div> Stations hydrométriques</div>
-                <div class="legend-item"><div class="legend-circle" style="background:#222;border:1px solid #fff;box-shadow:0 0 0 1px #555;"></div> Ouvrages / Obstacles</div>
-                <div class="legend-item">
+                <div class="legend-item" data-layer="check-station-diag"><div class="legend-circle" style="background:#0078A8;border:2px solid #fff;box-shadow:0 0 0 1px #0078A8;"></div> Stations hydrométriques</div>
+                <div class="legend-item" data-layer="check-ouvrages-diag"><div class="legend-circle" style="background:#222;border:1px solid #fff;box-shadow:0 0 0 1px #555;"></div> Ouvrages / Obstacles</div>
+                <div class="legend-item" data-layer="check-ruissellement">
                     <div class="legend-line-dashed" style="border-color:#3498db;"></div>
                     Axes de ruissellement
                 </div>
@@ -1611,57 +1618,76 @@
         <!-- Presentation legend -->
         <div id="legend-presentation" style="display:none;">
             <div class="legend-section">
-    <div class="legend-section-title">Territoire & PNR</div>
-    <div class="legend-item">
-        <div class="legend-swatch" style="background:transparent;border:2px dashed #444;"></div>
-        Communes (Vallée de la Hem)
-    </div>
-    <div class="legend-item">
-        <div class="legend-swatch" style="background:rgba(16, 185, 129, 0.1);border:2px solid #10b981;"></div>
-        PNR 2013-2028 (Périmètre + Communes)
-    </div>
-    <div class="legend-item">
-        <div class="legend-swatch" style="background:rgba(225, 29, 72, 0.1);border:2px solid #e11d48;"></div>
-        PNR 2028-2044 (Périmètre + Communes)
-    </div>
-    <div class="legend-item">
-        <div class="legend-circle" style="background:#0284c7;border:2px solid #fff;"></div>
-        Exutoire de la Hem
-    </div>
-</div>
+                <div class="legend-section-title">Territoire & PNR</div>
+                <div class="legend-item" data-layer="pres-communes-hem">
+                    <div class="legend-swatch" style="background:transparent;border:2px dashed #444;"></div>
+                    Communes (Vallée de la Hem)
+                </div>
+                <div class="legend-item" data-layer="pres-pnr-2013">
+                    <div class="legend-swatch" style="background:rgba(16, 185, 129, 0.1);border:2px solid #10b981;"></div>
+                    PNR 2013-2028 (Périmètre)
+                </div>
+                <div class="legend-item" data-layer="pres-communes-2013">
+                    <div class="legend-swatch" style="background:transparent;border:1px dashed #10b981;"></div>
+                    Communes PNR 2013-2028
+                </div>
+                <div class="legend-item" data-layer="pres-pnr-2028">
+                    <div class="legend-swatch" style="background:rgba(225, 29, 72, 0.1);border:2px solid #e11d48;"></div>
+                    PNR 2028-2044 (Périmètre)
+                </div>
+                <div class="legend-item" data-layer="pres-communes-2028">
+                    <div class="legend-swatch" style="background:transparent;border:1px dashed #e11d48;"></div>
+                    Communes PNR 2028-2044
+                </div>
+                <div class="legend-item" data-layer="pres-exutoire">
+                    <div class="legend-circle" style="background:#0284c7;border:2px solid #fff;"></div>
+                    Exutoire de la Hem
+                </div>
+            </div>
+            
             <div class="legend-section">
                 <div class="legend-section-title">Inondation</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#3b82f6;opacity:0.7;"></div> Zones inondables (PPRI)</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#93c5fd;opacity:0.7;"></div> Atlas des zones inondables</div>
-                <div class="legend-item"><div class="legend-circle" style="background:#1d4ed8;border:2px solid #fff;box-shadow:0 0 0 1px #1d4ed8;"></div> Repères de crues</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#bfdbfe;border:1px solid #3b82f6;"></div> Bassins versants</div>
+                <div class="legend-item" data-layer="pres-ppri"><div class="legend-swatch" style="background:#3b82f6;opacity:0.7;"></div> Zones inondables (PPRI)</div>
+                <div class="legend-item" data-layer="pres-azi"><div class="legend-swatch" style="background:#93c5fd;opacity:0.7;"></div> Atlas des zones inondables</div>
+                <div class="legend-item" data-layer="pres-reperes-crues"><div class="legend-circle" style="background:#1d4ed8;border:2px solid #fff;box-shadow:0 0 0 1px #1d4ed8;"></div> Repères de crues</div>
+                <div class="legend-item" data-layer="pres-bassins"><div class="legend-swatch" style="background:#bfdbfe;border:1px solid #3b82f6;"></div> Bassins versants</div>
             </div>
+            
             <div class="legend-section">
                 <div class="legend-section-title">Ruissellement</div>
-                <div class="legend-item"><div class="legend-line" style="background:#06b6d4;"></div> Axes de ruissellement</div>
+                <div class="legend-item" data-layer="pres-axes-ruiss"><div class="legend-line" style="background:#06b6d4;"></div> Axes de ruissellement</div>
             </div>
+            
             <div class="legend-section">
                 <div class="legend-section-title">Biodiversité</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#4ade80;opacity:0.7;"></div> Zones humides</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#16a34a;opacity:0.7;"></div> ZCS – Natura 2000</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#a3e635;opacity:0.8;"></div> ZNIEFF type 1</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#86efac;opacity:0.8;"></div> ZNIEFF type 2</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#f97316;opacity:0.6;"></div> Réservoirs de biodiversité</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#fbbf24;opacity:0.7;border:1px solid #d97706;"></div> Sites classés</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#a78bfa;opacity:0.6;"></div> Réserve de biosphère</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#84cc16;opacity:0.6;"></div> Trame verte</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#0ea5e9;opacity:0.5;border:1px dashed #0284c7;"></div> Trame bleue</div>
-                <div class="legend-item"><div class="legend-circle" style="background:#6ee7b7;border:1.5px solid #059669;"></div> Mares</div>
+                <div class="legend-item" data-layer="pres-zh"><div class="legend-swatch" style="background:#4ade80;opacity:0.7;"></div> Zones humides</div>
+                <div class="legend-item" data-layer="pres-natura2000"><div class="legend-swatch" style="background:#16a34a;opacity:0.7;"></div> ZCS – Natura 2000</div>
+                <div class="legend-item" data-layer="pres-znieff1"><div class="legend-swatch" style="background:#a3e635;opacity:0.8;"></div> ZNIEFF type 1</div>
+                <div class="legend-item" data-layer="pres-znieff2"><div class="legend-swatch" style="background:#86efac;opacity:0.8;"></div> ZNIEFF type 2</div>
+                <div class="legend-item" data-layer="pres-reservoirs"><div class="legend-swatch" style="background:#f97316;opacity:0.6;"></div> Réservoirs de biodiversité</div>
+                <div class="legend-item" data-layer="pres-sites-classes"><div class="legend-swatch" style="background:#fbbf24;opacity:0.7;border:1px solid #d97706;"></div> Sites classés</div>
+                <div class="legend-item" data-layer="pres-reserve-bio"><div class="legend-swatch" style="background:#a78bfa;opacity:0.6;"></div> Réserve de biosphère</div>
+                <div class="legend-item" data-layer="pres-trame-vert"><div class="legend-swatch" style="background:#84cc16;opacity:0.6;"></div> Trame verte</div>
+                <div class="legend-item" data-layer="pres-trame-bleu"><div class="legend-swatch" style="background:#0ea5e9;opacity:0.5;border:1px dashed #0284c7;"></div> Trame bleue</div>
+                <div class="legend-item" data-layer="pres-mares"><div class="legend-circle" style="background:#6ee7b7;border:1.5px solid #059669;"></div> Mares</div>
             </div>
+            
             <div class="legend-section">
                 <div class="legend-section-title">Suivi piscicole</div>
-                <div class="legend-item"><div class="legend-circle" style="background:#0891b2;border:2px solid #fff;box-shadow:0 0 0 1px #0891b2;"></div> Stations de suivi</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#22d3ee;opacity:0.7;"></div> Peuplements piscicoles</div>
-                <div class="legend-item"><div class="legend-circle" style="background:#222;border:1px solid #fff;box-shadow:0 0 0 1px #555;"></div> Obstacles à l'écoulement</div>
+                <div class="legend-item" data-layer="pres-stations-suivi"><div class="legend-circle" style="background:#0891b2;border:2px solid #fff;box-shadow:0 0 0 1px #0891b2;"></div> Stations de suivi</div>
+                <div class="legend-item" data-layer="check-rsa-anguille, check-sat-saumon"><div class="legend-swatch" style="background:#22d3ee;opacity:0.7;"></div> Peuplements piscicoles (RSA/SAT)</div>
+                <div class="legend-item" data-layer="check-frayeres-trf, check-frayeres-lpf, check-pe-global"><div class="legend-swatch" style="background:#e74c3c;opacity:0.7;border-radius:50%;"></div> Inventaires & Frayères</div>
+                <div class="legend-item" data-layer="pres-obstacles"><div class="legend-circle" style="background:#222;border:1px solid #fff;box-shadow:0 0 0 1px #555;"></div> Obstacles à l'écoulement</div>
             </div>
+            
             <div class="legend-section">
                <div class="legend-section-title">Travaux et Aménagements</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#0ea5e9;opacity:0.6;border:1px solid #0284c7;"></div> Travaux hydrauliques doux</div>
+                <div class="legend-item" data-layer="pres-travaux-global">
+                    <div class="legend-swatch" style="background:#f59e0b;border-radius:3px;"></div> Travaux réalisés (global)
+                </div>
+                <div class="legend-item" data-layer="pres-travaux-hydro">
+                    <div class="legend-swatch" style="background:#0ea5e9;opacity:0.6;border:1px solid #0284c7;"></div> Travaux hydrauliques doux
+                </div>
             </div>
         </div>
     </div>
@@ -2361,6 +2387,7 @@ function initApp() {
 
     document.getElementById('tab-diagnostic').style.display = 'none';
     document.getElementById('btn-download-data').style.display = 'none';
+    updateLegendVisibility();
 }
 
 // ===== COLOR HELPERS =====
@@ -2688,6 +2715,30 @@ const definitions = {
     'check-pe-global': '<b>Stations de Pêches Électriques (PE_FD62)</b><br><br>Données géoréférencées de l\'ensemble des inventaires piscicoles et suivis de peuplements menés par la Fédération Départementale de Pêche 62.'
 };
 
+function updateLegendVisibility() {
+    // 1. Mettre à jour chaque élément de légende individuel
+    document.querySelectorAll('.legend-item[data-layer]').forEach(item => {
+        const layerId = item.getAttribute('data-layer');
+        // Permet de gérer les légendes liées à plusieurs cases (ex: PLUi EFO ou EFN)
+        const layerIds = layerId.split(','); 
+        const isChecked = layerIds.some(id => {
+            const cb = document.getElementById(id.trim());
+            return cb && cb.checked;
+        });
+
+        item.style.display = isChecked ? 'flex' : 'none';
+    });
+
+    // 2. Cacher les titres de sections entières si tout est décoché à l'intérieur
+    document.querySelectorAll('.legend-section').forEach(section => {
+        const hasDynamicItems = section.querySelectorAll('.legend-item[data-layer]').length > 0;
+        if (hasDynamicItems) {
+            const visibleItems = Array.from(section.querySelectorAll('.legend-item')).filter(item => item.style.display !== 'none');
+            section.style.display = visibleItems.length > 0 ? 'block' : 'none';
+        }
+    });
+}
+    
 function setupBindings() {
     const qBtns = document.getElementById('q-buttons');
     const qControls = document.getElementById('q-layer-controls');
@@ -2739,6 +2790,8 @@ function setupBindings() {
             } else {
                 map.removeLayer(layer);
             }
+            document.querySelectorAll('#left-sidebar input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', updateLegendVisibility);
         });
     }
 
