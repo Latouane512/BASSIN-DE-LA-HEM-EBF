@@ -1201,32 +1201,50 @@
 
         <!-- PRESENTATION LAYERS (shown in presentation view) -->
         <div id="presentation-layers" style="display:none;">
-            <!-- Territoire & Contexte (Nouveau groupe) -->
+
 <div class="layer-group open">
     <div class="layer-group-header" onclick="toggleGroup(this)">
         <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/><circle cx="12" cy="12" r="9"/></svg>
-        <span class="group-title">Territoire & Périmètres</span>
-        <span class="group-count">3</span>
+        <span class="group-title">Territoire & PNR</span>
+        <span class="group-count">6</span>
         <span class="group-chevron">&#9654;</span>
     </div>
     <div class="layer-group-body">
+        
         <div class="layer-item">
-            <div class="layer-swatch" style="border:2px dashed #444;background:transparent;"></div>
-            <input type="checkbox" id="pres-communes" checked>
-            <label for="pres-communes"><b>Limites Communales</b></label>
-            <div class="layer-info-btn" onclick="showLayerInfo('check-communes')">i</div>
+            <div class="layer-swatch" style="border:1.5px dashed #444;background:transparent;"></div>
+            <input type="checkbox" id="pres-communes-hem" checked>
+            <label for="pres-communes-hem"><b>Communes de la HEM</b></label>
+            <div class="layer-info-btn" onclick="showLayerInfo('check-communes-hem')">i</div>
+        </div>
+
+        <div class="layer-item">
+            <div class="layer-swatch" style="border:2px solid #10b981;background:rgba(16, 185, 129, 0.1);"></div>
+            <input type="checkbox" id="pres-pnr-2013">
+            <label for="pres-pnr-2013">Périmètre PNR (2013-2028)</label>
+            <div class="layer-info-btn" onclick="showLayerInfo('check-pnr-2013')">i</div>
         </div>
         <div class="layer-item">
-            <div class="layer-swatch" style="background:#10b981;border:1px dashed #059669;opacity:0.6;"></div>
-            <input type="checkbox" id="pres-pnr" checked>
-            <label for="pres-pnr"><b>PNR Caps et Marais d'Opale</b></label>
-            <div class="layer-info-btn" onclick="showLayerInfo('pres-pnr')">i</div>
+            <div class="layer-swatch" style="border:1px dashed #10b981;background:transparent;"></div>
+            <input type="checkbox" id="pres-communes-2013">
+            <label for="pres-communes-2013">Communes PNR (2013-2028)</label>
+        </div>
+
+        <div class="layer-item">
+            <div class="layer-swatch" style="border:2px solid #e11d48;background:rgba(225, 29, 72, 0.1);"></div>
+            <input type="checkbox" id="pres-pnr-2028">
+            <label for="pres-pnr-2028">Périmètre PNR (2028-2044)</label>
+            <div class="layer-info-btn" onclick="showLayerInfo('check-pnr-2028')">i</div>
         </div>
         <div class="layer-item">
-            <div class="layer-swatch" style="background:#e11d48;border-radius:50%;"></div>
+            <div class="layer-swatch" style="border:1px dashed #e11d48;background:transparent;"></div>
+            <input type="checkbox" id="pres-communes-2028">
+            <label for="pres-communes-2028">Communes PNR (2028-2044)</label>
+        </div>
+        <div class="layer-item">
+            <div class="layer-swatch" style="background:#0284c7;border-radius:50%;"></div>
             <input type="checkbox" id="pres-exutoire" checked>
             <label for="pres-exutoire"><b>Exutoire de la Hem</b></label>
-            <div class="layer-info-btn" onclick="showLayerInfo('pres-exutoire')">i</div>
         </div>
     </div>
 </div>
@@ -1593,17 +1611,21 @@
         <!-- Presentation legend -->
         <div id="legend-presentation" style="display:none;">
             <div class="legend-section">
-    <div class="legend-section-title">Territoire</div>
+    <div class="legend-section-title">Territoire & PNR</div>
     <div class="legend-item">
         <div class="legend-swatch" style="background:transparent;border:2px dashed #444;"></div>
-        Limites communales
+        Communes (Vallée de la Hem)
     </div>
     <div class="legend-item">
-        <div class="legend-swatch" style="background:#10b981;opacity:0.4;border:1px dashed #059669;"></div>
-        PNR Caps et Marais d'Opale
+        <div class="legend-swatch" style="background:rgba(16, 185, 129, 0.1);border:2px solid #10b981;"></div>
+        PNR 2013-2028 (Périmètre + Communes)
     </div>
     <div class="legend-item">
-        <div class="legend-circle" style="background:#e11d48;border:2px solid #fff;box-shadow:0 0 0 1px #e11d48;"></div>
+        <div class="legend-swatch" style="background:rgba(225, 29, 72, 0.1);border:2px solid #e11d48;"></div>
+        PNR 2028-2044 (Périmètre + Communes)
+    </div>
+    <div class="legend-item">
+        <div class="legend-circle" style="background:#0284c7;border:2px solid #fff;"></div>
         Exutoire de la Hem
     </div>
 </div>
@@ -2767,22 +2789,50 @@ function setupBindings() {
 function setupPresentationLayers() {
    presLayerDefs = [
         { 
-            id: 'pres-communes', 
-            file: 'communes.geojson',
+            id: 'pres-communes-hem', 
+            file: 'communes.geojson', 
             style: { color: '#444', weight: 1.5, dashArray: '5,5', fillOpacity: 0.05 },
-            popup: f => `<b>Commune :</b> ${f.properties.nom || f.properties.NOM || f.properties.NOM_COM || ''}` 
+            popup: f => `<b>Commune (HEM) :</b> ${f.properties.nom || f.properties.NOM || f.properties.NOM_COM || ''}` 
         },
+
+        // 2. PNR CMO (2013-2028)
         { 
-            id: 'pres-pnr', 
-            file: 'PNR_CMO_2013-2028.geojson', // Nom de votre fichier PNR
-            style: { color: '#059669', weight: 2, dashArray: '4,4', fillColor: '#10b981', fillOpacity: 0.15 },
-            popup: f => `<b>Périmètre PNR :</b><br>${f.properties.NOM_SITE || 'Parc Naturel Régional des Caps et Marais d\'Opale'}` 
+            id: 'pres-pnr-2013', 
+            file: 'PNR_CMO_2013-2028.geojson', 
+            style: { color: '#10b981', weight: 2, fillColor: '#10b981', fillOpacity: 0.1 },
+            popup: f => `<b>Périmètre PNR CMO (2013-2028)</b><br>Surface : ${f.properties.Surf_ha || ''} ha` 
         },
+
+        // 3. Communes PNR (2013-2028)
+        { 
+            id: 'pres-communes-2013', 
+            file: 'Communes_2013-2028.geojson', 
+            style: { color: '#10b981', weight: 1, dashArray: '4,4', fillOpacity: 0 },
+            popup: f => `<b>Commune PNR (2013-2028) :</b> ${f.properties.nom || ''}<br>Code INSEE : ${f.properties.insee || ''}` 
+        },
+
+        // 4. PNR CMO (2028-2044)
+        { 
+            id: 'pres-pnr-2028', 
+            file: 'PNR_CMO_2028-2044.geojson', 
+            style: { color: '#e11d48', weight: 2, fillColor: '#e11d48', fillOpacity: 0.1 },
+            popup: f => `<b>Périmètre PNR CMO (2028-2044)</b><br>Surface : ${f.properties.Surf_ha || ''} ha` 
+        },
+
+        // 5. Communes PNR (2028-2044)
+        { 
+            id: 'pres-communes-2028', 
+            file: 'Communes_2028-2044.geojson', 
+            style: { color: '#e11d48', weight: 1, dashArray: '4,4', fillOpacity: 0 },
+            popup: f => `<b>Commune PNR (2028-2044) :</b> ${f.properties.nom || ''}<br>Code INSEE : ${f.properties.insee || ''}` 
+        },
+
+        // 6. Exutoire de la Hem
         { 
             id: 'pres-exutoire', 
-            file: 'exutoire_hem.geojson', // Ou un point créé manuellement si pas de fichier GeoJSON
-            pointStyle: { radius: 8, fillColor: '#e11d48', color: '#ffffff', weight: 2, fillOpacity: 0.95 },
-            popup: f => `<b>Exutoire de la Hem</b><br>Secteur : Polincove / Jonction canal d'Aa` 
+            file: 'Exutoire_HEM.geojson', 
+            pointStyle: { radius: 8, fillColor: '#0284c7', color: '#ffffff', weight: 2, fillOpacity: 0.95 },
+            popup: f => `<b>Exutoire de la Hem</b>` 
         },
        
        { 
