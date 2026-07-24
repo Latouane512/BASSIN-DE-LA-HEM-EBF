@@ -1644,7 +1644,13 @@
                     Exutoire de la Hem
                 </div>
             </div>
-            
+            <div class="legend-section">
+                <div class="legend-section-title">Réseau Hydrographique</div>
+                <div class="legend-item" data-layer="pres-hydro-noms">
+                    <div class="legend-line" style="background:#3498db;"></div>
+                    Cours d'eau principaux
+                </div>
+            </div>
             <div class="legend-section">
                 <div class="legend-section-title">Inondation</div>
                 <div class="legend-item" data-layer="pres-ppri"><div class="legend-swatch" style="background:#3b82f6;opacity:0.7;"></div> Zones inondables (PPRI)</div>
@@ -2716,10 +2722,10 @@ const definitions = {
 };
 
 function updateLegendVisibility() {
-    // 1. Mettre à jour chaque élément de légende individuel
     document.querySelectorAll('.legend-item[data-layer]').forEach(item => {
         const layerId = item.getAttribute('data-layer');
-        // Permet de gérer les légendes liées à plusieurs cases (ex: PLUi EFO ou EFN)
+        if (!layerId) return;
+        
         const layerIds = layerId.split(','); 
         const isChecked = layerIds.some(id => {
             const cb = document.getElementById(id.trim());
@@ -2729,12 +2735,17 @@ function updateLegendVisibility() {
         item.style.display = isChecked ? 'flex' : 'none';
     });
 
-    // 2. Cacher les titres de sections entières si tout est décoché à l'intérieur
     document.querySelectorAll('.legend-section').forEach(section => {
-        const hasDynamicItems = section.querySelectorAll('.legend-item[data-layer]').length > 0;
-        if (hasDynamicItems) {
-            const visibleItems = Array.from(section.querySelectorAll('.legend-item')).filter(item => item.style.display !== 'none');
-            section.style.display = visibleItems.length > 0 ? 'block' : 'none';
+        const items = section.querySelectorAll('.legend-item[data-layer]');
+        if (items.length > 0) {
+            let hasVisible = false;
+            items.forEach(item => {
+
+                if (item.style.display !== 'none') {
+                    hasVisible = true;
+                }
+            });
+            section.style.display = hasVisible ? 'block' : 'none';
         }
     });
 }
@@ -3393,8 +3404,15 @@ function showRpTab(btn, contentId) {
 function showSideTab(tab) {
     document.getElementById('sideTab-couches').classList.toggle('active', tab === 'couches');
     document.getElementById('sideTab-legende').classList.toggle('active', tab === 'legende');
-    document.getElementById('sideContent-couches').style.display = tab === 'couches' ? '' : 'none';
-    document.getElementById('sideContent-legende').style.display = tab === 'legende' ? '' : 'none';
+    
+    // On force 'block' au lieu de '' pour être sûr que ça s'affiche
+    document.getElementById('sideContent-couches').style.display = tab === 'couches' ? 'block' : 'none';
+    document.getElementById('sideContent-legende').style.display = tab === 'legende' ? 'block' : 'none';
+    
+    // On force l'actualisation de la légende quand on ouvre l'onglet
+    if (tab === 'legende') {
+        updateLegendVisibility();
+    }
 }
 
 // ===== HEADER SEARCH AUTOCOMPLETE =====
@@ -4004,7 +4022,12 @@ function applyTravauxFilter() {
         layerTravauxPt.addTo(map);
     }
 }
-
+// Écouteur global : détecte le moindre clic sur une case à cocher du menu de gauche
+document.getElementById('left-sidebar').addEventListener('change', function(e) {
+    if (e.target.tagName.toLowerCase() === 'input' && e.target.type === 'checkbox') {
+        updateLegendVisibility();
+    }
+});
 </script>
 </body>
 </html>
