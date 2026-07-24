@@ -1201,7 +1201,35 @@
 
         <!-- PRESENTATION LAYERS (shown in presentation view) -->
         <div id="presentation-layers" style="display:none;">
-
+            <!-- Territoire & Contexte (Nouveau groupe) -->
+<div class="layer-group open">
+    <div class="layer-group-header" onclick="toggleGroup(this)">
+        <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/><circle cx="12" cy="12" r="9"/></svg>
+        <span class="group-title">Territoire & Périmètres</span>
+        <span class="group-count">3</span>
+        <span class="group-chevron">&#9654;</span>
+    </div>
+    <div class="layer-group-body">
+        <div class="layer-item">
+            <div class="layer-swatch" style="border:2px dashed #444;background:transparent;"></div>
+            <input type="checkbox" id="pres-communes" checked>
+            <label for="pres-communes"><b>Limites Communales</b></label>
+            <div class="layer-info-btn" onclick="showLayerInfo('check-communes')">i</div>
+        </div>
+        <div class="layer-item">
+            <div class="layer-swatch" style="background:#10b981;border:1px dashed #059669;opacity:0.6;"></div>
+            <input type="checkbox" id="pres-pnr" checked>
+            <label for="pres-pnr"><b>PNR Caps et Marais d'Opale</b></label>
+            <div class="layer-info-btn" onclick="showLayerInfo('pres-pnr')">i</div>
+        </div>
+        <div class="layer-item">
+            <div class="layer-swatch" style="background:#e11d48;border-radius:50%;"></div>
+            <input type="checkbox" id="pres-exutoire" checked>
+            <label for="pres-exutoire"><b>Exutoire de la Hem</b></label>
+            <div class="layer-info-btn" onclick="showLayerInfo('pres-exutoire')">i</div>
+        </div>
+    </div>
+</div>
             <div class="layer-group open">
         <div class="layer-group-header" onclick="toggleGroup(this)">
             <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
@@ -1564,6 +1592,21 @@
 
         <!-- Presentation legend -->
         <div id="legend-presentation" style="display:none;">
+            <div class="legend-section">
+    <div class="legend-section-title">Territoire</div>
+    <div class="legend-item">
+        <div class="legend-swatch" style="background:transparent;border:2px dashed #444;"></div>
+        Limites communales
+    </div>
+    <div class="legend-item">
+        <div class="legend-swatch" style="background:#10b981;opacity:0.4;border:1px dashed #059669;"></div>
+        PNR Caps et Marais d'Opale
+    </div>
+    <div class="legend-item">
+        <div class="legend-circle" style="background:#e11d48;border:2px solid #fff;box-shadow:0 0 0 1px #e11d48;"></div>
+        Exutoire de la Hem
+    </div>
+</div>
             <div class="legend-section">
                 <div class="legend-section-title">Inondation</div>
                 <div class="legend-item"><div class="legend-swatch" style="background:#3b82f6;opacity:0.7;"></div> Zones inondables (PPRI)</div>
@@ -2724,6 +2767,25 @@ function setupBindings() {
 function setupPresentationLayers() {
    presLayerDefs = [
         { 
+            id: 'pres-communes', 
+            file: 'communes.geojson',
+            style: { color: '#444', weight: 1.5, dashArray: '5,5', fillOpacity: 0.05 },
+            popup: f => `<b>Commune :</b> ${f.properties.nom || f.properties.NOM || f.properties.NOM_COM || ''}` 
+        },
+        { 
+            id: 'pres-pnr', 
+            file: 'PNR_CMO_2013-2028.geojson', // Nom de votre fichier PNR
+            style: { color: '#059669', weight: 2, dashArray: '4,4', fillColor: '#10b981', fillOpacity: 0.15 },
+            popup: f => `<b>Périmètre PNR :</b><br>${f.properties.NOM_SITE || 'Parc Naturel Régional des Caps et Marais d\'Opale'}` 
+        },
+        { 
+            id: 'pres-exutoire', 
+            file: 'exutoire_hem.geojson', // Ou un point créé manuellement si pas de fichier GeoJSON
+            pointStyle: { radius: 8, fillColor: '#e11d48', color: '#ffffff', weight: 2, fillOpacity: 0.95 },
+            popup: f => `<b>Exutoire de la Hem</b><br>Secteur : Polincove / Jonction canal d'Aa` 
+        },
+       
+       { 
             id: 'pres-hydro-noms', 
             file: 'Hydro_HEM_WGS.geojson',
             style: { color: '#3498db', weight: 2, opacity: 0.8 },
@@ -3316,7 +3378,10 @@ function resetAllLayers() {
         document.querySelectorAll('#q-buttons .chart-btn').forEach(b => b.classList.toggle('active', b.textContent === 'Q100'));
         currentActiveQ = 'Q100';
    } else if (currentView === 'presentation') {
-        const defaultChecked = ['pres-hydro-noms', 'pres-ppri', 'pres-reperes-crues', 'pres-axes-ruiss', 'pres-zh', 'pres-natura2000', 'pres-znieff1', 'pres-znieff2', 'pres-reservoirs', 'pres-stations-suivi'];
+        const defaultChecked = ['pres-communes', 'pres-pnr', 'pres-exutoire',
+    'pres-hydro-noms', 'pres-ppri', 'pres-reperes-crues', 
+    'pres-axes-ruiss', 'pres-zh', 'pres-natura2000', 
+    'pres-znieff1', 'pres-znieff2', 'pres-reservoirs', 'pres-stations-suivi'];
         document.querySelectorAll('#presentation-layers input[type="checkbox"]').forEach(cb => {
             cb.checked = defaultChecked.includes(cb.id);
         });
