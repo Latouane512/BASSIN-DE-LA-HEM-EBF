@@ -3257,19 +3257,35 @@ function rebuildHydroLayer() {
 
 // ===== ACTIVATE PRES LAYERS =====
 function activatePresLayers() {
-    document.querySelectorAll('#presentation-layers input[type="checkbox"]:checked').forEach(cb => {
+    document.querySelectorAll('#presentation-layers input[type="checkbox"]').forEach(cb => {
         const def = presLayerDefs.find(d => d.id === cb.id);
         if (!def) return;
-        if (presLayers[def.id].getLayers().length > 0) {
-            presLayers[def.id].addTo(map);
-        } else {
-            fetch(def.file).then(r => r.json()).then(d => {
-                presLayers[def.id].addData(d);
+        
+        if (cb.checked) {
+            if (presLayers[def.id].getLayers().length > 0) {
                 presLayers[def.id].addTo(map);
-                if (def.yearField) loadHydroYearData(d);
-            }).catch(() => console.log('Fichier non disponible : ' + def.file));
+            } else {
+                fetch(def.file).then(r => {
+                    if (!r.ok) throw new Error("Fichier introuvable");
+                    return r.json();
+                }).then(d => {
+                    presLayers[def.id].addData(d);
+                    presLayers[def.id].addTo(map);
+                    if (def.yearField) loadHydroYearData(d);
+                }).catch(() => {
+                    console.log('Fichier non disponible : ' + def.file);
+                    cb.checked = false; 
+                    updateLegendVisibility(); 
+                });
+            }
+        } else {
+            if (map.hasLayer(presLayers[def.id])) {
+                map.removeLayer(presLayers[def.id]);
+            }
         }
     });
+
+    updateLegendVisibility();
 }
 
 // ===== VIEW SWITCHING =====
@@ -3310,16 +3326,16 @@ function switchView(view) {
     function safeRemoveControl(ctrl) { try { ctrl.remove(); } catch(e){} }
 
    if (view === 'diagnostic') {
-        info.addTo(map);
-        prhymoInfo.addTo(map);
-        layersQ['Q100'].addTo(map); layerStation.addTo(map); layerOuvrages.addTo(map);
-        for (let l in ebfLayers) safeRemove(ebfLayers[l]);
-        for (let l in presLayers) safeRemove(presLayers[l]);
-        safeRemove(layerTravauxLin); safeRemove(layerTravauxPt); // AJOUT ICI
-        document.getElementById('check-station-diag').checked = true;
-        document.getElementById('check-ouvrages-diag').checked = true;
-        document.getElementById('check-hydro-diag').checked = true;
-        layerHydroDiag.addTo(map);
+       info.addTo(map);
+       prhymoInfo.addTo(map);
+       layersQ['Q100'].addTo(map); layerStation.addTo(map); layerOuvrages.addTo(map);
+       for (let l in ebfLayers) safeRemove(ebfLayers[l]);
+       for (let l in presLayers) safeRemove(presLayers[l]);
+       safeRemove(layerTravauxLin); safeRemove(layerTravauxPt);
+       document.getElementById('check-station-diag').checked = true;
+       document.getElementById('check-ouvrages-diag').checked = true;
+       document.getElementById('check-hydro-diag').checked = true;
+       layerHydroDiag.addTo(map);
     } else if (view === 'presentation') {
         safeRemoveControl(info);
         safeRemoveControl(prhymoInfo);
@@ -3340,13 +3356,15 @@ function switchView(view) {
         safeRemove(layerHydroDiag); safeRemove(layerPrhymo);
         safeRemove(layerRuissellement); safeRemove(layerParcellesAgr); safeRemove(layerBatiImpacte);
         for (let l in presLayers) safeRemove(presLayers[l]);
-        safeRemove(layerTravauxLin); safeRemove(layerTravauxPt); // AJOUT ICI
+        safeRemove(layerTravauxLin); safeRemove(layerTravauxPt);
         safeRemove(layerRsaAnguille); safeRemove(layerSatSaumon);
         safeRemove(layerFrayeresTrf); safeRemove(layerFrayeresLpf);
         safeRemove(layerPeGlobal);
         if (document.getElementById('check-hydro').checked) ebfLayers.hydro.addTo(map);
         if (document.getElementById('check-communes').checked) ebfLayers.communes.addTo(map);
     }
+    
+    updateLegendVisibility();
 }
 
 // ===== RIGHT PANEL =====
@@ -3485,10 +3503,12 @@ function resetAllLayers() {
         document.querySelectorAll('#q-buttons .chart-btn').forEach(b => b.classList.toggle('active', b.textContent === 'Q100'));
         currentActiveQ = 'Q100';
    } else if (currentView === 'presentation') {
-        const defaultChecked = ['pres-communes', 'pres-pnr', 'pres-exutoire',
-    'pres-hydro-noms', 'pres-ppri', 'pres-reperes-crues', 
-    'pres-axes-ruiss', 'pres-zh', 'pres-natura2000', 
-    'pres-znieff1', 'pres-znieff2', 'pres-reservoirs', 'pres-stations-suivi'];
+    
+        const defaultChecked = ['pres-communes-hem', 'pres-pnr-2013', 'pres-exutoire',
+        'pres-hydro-noms', 'pres-ppri', 'pres-reperes-crues', 
+        'pres-axes-ruiss', 'pres-zh', 'pres-natura2000', 
+        'pres-znieff1', 'pres-znieff2', 'pres-reservoirs', 'pres-stations-suivi'];
+        
         document.querySelectorAll('#presentation-layers input[type="checkbox"]').forEach(cb => {
             cb.checked = defaultChecked.includes(cb.id);
         });
@@ -3500,6 +3520,7 @@ function resetAllLayers() {
         safeRemove(layerTravauxLin); safeRemove(layerTravauxPt);
         activatePresLayers();
     }
+    updateLegendVisibility();
 }
 
 // ===== MODE TOGGLE =====
