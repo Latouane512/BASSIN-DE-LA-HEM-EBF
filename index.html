@@ -2722,32 +2722,40 @@ const definitions = {
 };
 
 function updateLegendVisibility() {
-    document.querySelectorAll('.legend-item[data-layer]').forEach(item => {
-        const layerId = item.getAttribute('data-layer');
-        if (!layerId) return;
-        
-        const layerIds = layerId.split(','); 
-        const isChecked = layerIds.some(id => {
-            const cb = document.getElementById(id.trim());
-            return cb && cb.checked;
+    try {
+
+        const views = ['ebf', 'diagnostic', 'presentation'];
+        views.forEach(v => {
+            const legendContainer = document.getElementById('legend-' + v);
+            if (legendContainer) {
+                legendContainer.style.display = (v === currentView) ? 'block' : 'none';
+            }
         });
 
-        item.style.display = isChecked ? 'flex' : 'none';
-    });
+        document.querySelectorAll('.legend-section').forEach(section => {
+            let sectionHasVisibleItems = false;
+           
+            section.querySelectorAll('.legend-item[data-layer]').forEach(item => {
+                const layerId = item.getAttribute('data-layer');
+                if (!layerId) return;
+         
+                const isChecked = layerId.split(',').some(id => {
+                    const cb = document.getElementById(id.trim());
+                    return cb && cb.checked; 
+                });
 
-    document.querySelectorAll('.legend-section').forEach(section => {
-        const items = section.querySelectorAll('.legend-item[data-layer]');
-        if (items.length > 0) {
-            let hasVisible = false;
-            items.forEach(item => {
-
-                if (item.style.display !== 'none') {
-                    hasVisible = true;
+                item.style.display = isChecked ? 'flex' : 'none';
+               
+                if (isChecked) {
+                    sectionHasVisibleItems = true;
                 }
             });
-            section.style.display = hasVisible ? 'block' : 'none';
-        }
-    });
+
+            section.style.display = sectionHasVisibleItems ? 'block' : 'none';
+        });
+    } catch (e) {
+        console.error("Erreur lors de la mise à jour de la légende :", e);
+    }
 }
     
 function setupBindings() {
