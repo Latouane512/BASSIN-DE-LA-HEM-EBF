@@ -1531,7 +1531,7 @@
         </div>
 
         <!-- ================= DIAGNOSTIC ================= -->
-        <div id="legend-diagnostic" style="display:none;">
+        <div id="legend-diagnostic">
             <div class="legend-section">
                 <div class="legend-section-title">Hydrologie (Ps)</div>
                 <div class="legend-item"><div class="legend-line" style="background:#3182bd;"></div> E1 – Dépôt dominant (&lt;10 W/m²)</div>
@@ -1566,7 +1566,7 @@
         </div>
 
         <!-- ================= PRESENTATION ================= -->
-        <div id="legend-presentation" style="display:none;">
+        <div id="legend-presentation">
             <div class="legend-section">
                 <div class="legend-section-title">Territoire & PNR</div>
                 <div class="legend-item"><div class="legend-swatch" style="border:2px dashed #444;background:transparent;"></div> Communes de la HEM</div>
@@ -2651,7 +2651,7 @@ function updateLegendVisibility() {
     views.forEach(v => {
         const legendContainer = document.getElementById('legend-' + v);
         if (legendContainer) {
-            legendContainer.style.display = (v === currentView) ? 'block' : 'none';
+            legendContainer.style.display = 'block';
         }
     });
 }
@@ -3216,13 +3216,6 @@ function switchView(view) {
     document.getElementById('rp-ebf').style.display = view === 'ebf' ? 'flex' : 'none';
     document.getElementById('rp-diag').style.display = view === 'diagnostic' ? 'flex' : 'none';
     document.getElementById('rp-presentation').style.display = view === 'presentation' ? 'flex' : 'none';
-
-    const legendEbf  = document.getElementById('legend-ebf');
-    const legendDiag = document.getElementById('legend-diagnostic');
-    const legendPres = document.getElementById('legend-presentation');
-    if (legendEbf)  legendEbf.style.display  = view === 'ebf' ? 'block' : 'none';
-    if (legendDiag) legendDiag.style.display = view === 'diagnostic' ? 'block' : 'none';
-    if (legendPres) legendPres.style.display = view === 'presentation' ? 'block' : 'none';
 
     document.getElementById('modal-ebf').style.display = view === 'ebf' ? 'block' : 'none';
     document.getElementById('modal-diagnostic').style.display = view === 'diagnostic' ? 'block' : 'none';
