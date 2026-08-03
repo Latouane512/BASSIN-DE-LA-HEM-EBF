@@ -3,100 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vallée de la Hem – Outil de gestion intégrée</title>
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <title>Vallée de la Hem – Gestion environnementale</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
         :root {
+            --header-h: 56px;
+            --bottom-h: 32px;
+            --left-w: 320px;
+            --right-w: 380px;
             --color-primary: #1a7a4a;
             --color-primary-light: #e8f5ee;
-            --color-primary-mid: #2d9e63;
-            --color-accent: #0ea5e9;
-            --color-e1: #3182bd; --color-e2: #31a354; --color-e3: #fd8d3c; --color-e4: #de2d26;
-            --color-bg: #f7f8fa;
-            --color-sidebar: #ffffff;
-            --color-border: #e5e7eb;
-            --color-text: #1a202c;
+            --color-text: #1a1a1a;
             --color-text-muted: #6b7280;
             --color-text-light: #9ca3af;
+            --color-border: #e5e7eb;
+            --color-bg: #f9fafb;
+            --color-sidebar: #fff;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.10);
-            --shadow-lg: 0 8px 24px rgba(0,0,0,0.14);
-            --header-h: 58px;
-            --left-w: 240px;
-            --right-w: 360px;
-            --bottom-h: 36px;
-            --color-a: #a6da59;
-            --color-au: rgb(250, 172, 76);
-            --color-n: rgb(51, 160, 44);
-            --color-u: rgb(217, 217, 217);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.15);
         }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-            background: var(--color-bg);
-            overflow: hidden;
-            color: var(--color-text);
-            font-size: 13px;
+            font-family: 'Inter', Arial, sans-serif;
+            background: #f0f0f0; color: var(--color-text);
+            overflow: hidden; height: 100vh;
         }
 
         /* =========== HEADER =========== */
         #app-header {
-            position: fixed; top: 0; left: 0; right: 0;
-            height: var(--header-h);
-            background: #fff;
-            border-bottom: 1px solid var(--color-border);
-            display: flex; align-items: center; gap: 12px;
-            padding: 0 16px;
-            z-index: 3000;
-            box-shadow: var(--shadow-sm);
+            position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
+            background: #fff; border-bottom: 1px solid var(--color-border);
+            display: flex; align-items: center; gap: 12px; padding: 0 16px;
+            z-index: 3000; box-shadow: var(--shadow-sm);
         }
-
-        .header-logo {
-            display: flex; align-items: center; gap: 10px;
-            flex-shrink: 0;
-            text-decoration: none;
-        }
-        .logo-icon {
-            width: 36px; height: 36px;
-        }
-        .logo-text h1 { font-size: 15px; font-weight: 700; color: var(--color-primary); line-height: 1.2; }
-        .logo-text p  { font-size: 10px; color: var(--color-text-muted); font-weight: 400; }
-
-        .header-divider { width: 1px; height: 30px; background: var(--color-border); flex-shrink: 0; }
-
-        .header-search {
-            flex: 1; max-width: 420px;
-            display: flex; align-items: center;
-            background: var(--color-bg); border: 1px solid var(--color-border);
-            border-radius: 8px; padding: 0 12px; gap: 8px;
-            transition: border-color 0.2s;
-        }
-        .header-search:focus-within { border-color: var(--color-primary); }
-        .header-search input {
-            border: none; background: transparent; outline: none;
-            font-size: 13px; color: var(--color-text); width: 100%; padding: 8px 0;
-            font-family: inherit;
-        }
-        .header-search input::placeholder { color: var(--color-text-light); }
+        .header-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+        .logo-icon { width: 36px; height: 36px; }
+        .logo-text h1 { font-size: 14px; font-weight: 700; color: var(--color-text); line-height: 1.1; }
+        .logo-text p { font-size: 10px; color: var(--color-text-muted); }
+        .header-divider { width: 1px; height: 32px; background: var(--color-border); flex-shrink: 0; }
+        .header-search { display: flex; align-items: center; gap: 6px; flex: 1; max-width: 280px; }
         .search-icon { color: var(--color-text-muted); flex-shrink: 0; }
-
+        .header-search input {
+            border: 1px solid var(--color-border); border-radius: 7px;
+            padding: 6px 10px; font-size: 12px; width: 100%; font-family: inherit;
+            outline: none; transition: border-color 0.2s;
+        }
+        .header-search input:focus { border-color: var(--color-primary); }
         #search-dropdown {
-            position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+            position: absolute; top: 100%; left: 0; right: 0;
             background: #fff; border: 1px solid var(--color-border);
-            border-radius: 8px; box-shadow: var(--shadow-md);
-            list-style: none; max-height: 220px; overflow-y: auto;
-            z-index: 4000; display: none;
+            border-radius: 0 0 8px 8px; box-shadow: var(--shadow-md);
+            list-style: none; max-height: 240px; overflow-y: auto;
+            display: none; z-index: 3500;
         }
         #search-dropdown.open { display: block; }
         #search-dropdown li {
-            padding: 8px 14px; cursor: pointer; font-size: 13px;
+            padding: 8px 12px; font-size: 12px; cursor: pointer;
             color: var(--color-text); transition: background 0.1s;
             display: flex; align-items: center; gap: 8px;
         }
@@ -161,14 +127,14 @@
         .header-icon-btn:hover { background: var(--color-bg); color: var(--color-text); }
 
         .hydro-label {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    color: #0284c7;
-    font-weight: 700;
-    font-size: 11px;
-    text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
-}
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            color: #0284c7;
+            font-weight: 700;
+            font-size: 11px;
+            text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
+        }
         .header-view-select {
             display: flex; align-items: center; gap: 0;
             border: 1px solid var(--color-border); border-radius: 7px; overflow: hidden;
@@ -376,10 +342,29 @@
             border-radius: 3px; margin-top: 1px;
         }
         .legend br { clear: left; }
-        .legend-swatch { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
-        .legend-line { width: 18px; height: 3px; border-radius: 1px; flex-shrink: 0; }
-        .legend-line-dashed { width: 18px; border-top: 2px dashed; flex-shrink: 0; }
-        .legend-circle { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+
+        /* =========== FIXED LEGEND OVERLAY =========== */
+        #legend-overlay {
+            position: fixed;
+            bottom: calc(var(--bottom-h) + 12px);
+            right: 12px;
+            z-index: 1500;
+            background: rgba(255,255,255,0.97);
+            border-radius: 10px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--color-border);
+            font-family: 'Inter', Arial, sans-serif;
+            max-width: 260px;
+            max-height: calc(100vh - var(--header-h) - var(--bottom-h) - 24px);
+            overflow-y: auto;
+            pointer-events: none;
+        }
+        #legend-overlay::-webkit-scrollbar { width: 4px; }
+        #legend-overlay::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+        #legend-overlay .legend-section { padding: 10px 12px 4px; }
+        #legend-overlay .legend-section:first-child { padding-top: 12px; }
+        #legend-overlay .legend-item { font-size: 11px; padding: 3px 4px; }
+        #legend-overlay .legend-section-title { font-size: 10px; }
 
         /* =========== RIGHT DETAIL PANEL =========== */
         #right-panel {
@@ -841,12 +826,6 @@
 
 <!-- ========== LEFT SIDEBAR ========== -->
 <aside id="left-sidebar">
-    <div class="sidebar-tabs">
-        <button class="sidebar-tab active" id="sideTab-couches" onclick="showSideTab('couches')">Couches</button>
-        <button class="sidebar-tab" id="sideTab-legende" onclick="showSideTab('legende')">Légende</button>
-    </div>
-
-    <!-- COUCHES TAB -->
     <div class="sidebar-body" id="sideContent-couches">
 
         <!-- EBF LAYERS (shown in EBF view) -->
@@ -1133,135 +1112,78 @@
                         <input type="checkbox" id="pisco-year-filter-toggle" onchange="togglePiscoYearFilter()">
                         Filtrer par année
                     </label>
-                    <select id="pisco-year-select" onchange="applyPiscoYearFilter()" disabled style="display:none;">
-                        <option value="">-- Toutes les années --</option>
-                    </select>
-                </div>
-
-                <div class="layer-group open" style="margin-bottom: 10px;">
-                    <div class="layer-group-header" onclick="toggleGroup(this)">
-                        <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#9b59b6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                        <span class="group-title">Grands Migrateurs (RSA / SAT)</span>
-                        <span class="group-count">2</span>
-                        <span class="group-chevron">&#9654;</span>
-                    </div>
-                    <div class="layer-group-body">
-                        <div class="layer-item">
-                            <div class="layer-swatch" style="background:#9b59b6; border-radius:50%;"></div>
-                            <input type="checkbox" id="check-rsa-anguille">
-                            <label for="check-rsa-anguille">Réseau Spécifique Anguille (RSA 2011-2023)</label>
-                            <div class="layer-info-btn" onclick="showLayerInfo('check-rsa-anguille')">i</div>
-                        </div>
-                        <div class="layer-item">
-                            <div class="layer-swatch" style="background:#1abc9c; border-radius:50%;"></div>
-                            <input type="checkbox" id="check-sat-saumon">
-                            <label for="check-sat-saumon">Indices Abondance Saumon (SAT62)</label>
-                            <div class="layer-info-btn" onclick="showLayerInfo('check-sat-saumon')">i</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="layer-group open" style="margin-bottom: 10px;">
-                    <div class="layer-group-header" onclick="toggleGroup(this)">
-                        <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#e74c3c" stroke-width="2"><path d="M6.5 12c.94-3.46 4.94-6 10.5-6-3 3-4 6-4 6s1 3 4 6c-5.56 0-9.56-2.54-10.5-6z"/><circle cx="17" cy="10" r="1" fill="#e74c3c"/></svg>
-                        <span class="group-title">Inventaires & Frayères (SNDP / PE)</span>
-                        <span class="group-count">3</span>
-                        <span class="group-chevron">&#9654;</span>
-                    </div>
-                    <div class="layer-group-body">
-                        <div class="layer-item">
-                            <div class="layer-swatch" style="background:#e74c3c; border-radius:50%;"></div>
-                            <input type="checkbox" id="check-frayeres-trf">
-                            <label for="check-frayeres-trf">Frayères Salmonidés</label>
-                            <div class="layer-info-btn" onclick="showLayerInfo('check-frayeres-trf')">i</div>
-                        </div>
-                        <div class="layer-item">
-                            <div class="layer-swatch" style="background:#e67e22; border-radius:50%;"></div>
-                            <input type="checkbox" id="check-frayeres-lpf">
-                            <label for="check-frayeres-lpf">Frayères Lamproies (Agnathes)</label>
-                            <div class="layer-info-btn" onclick="showLayerInfo('check-frayeres-lpf')">i</div>
-                        </div>
-                        <div class="layer-item">
-                            <div class="layer-swatch" style="background:#3498db; border-radius:50%;"></div>
-                            <input type="checkbox" id="check-pe-global">
-                            <label for="check-pe-global">Stations Pêches Électriques (PE_FD62)</label>
-                            <div class="layer-info-btn" onclick="showLayerInfo('check-pe-global')">i</div>
-                        </div>
-                    </div>
+                    <select id="pisco-year-select" style="display:none;margin-top:6px;"></select>
+                    <label style="margin-top:8px;">
+                        <input type="checkbox" id="pisco-type-filter-toggle" onchange="togglePiscoTypeFilter()">
+                        Filtrer par type
+                    </label>
+                    <div id="pisco-type-chips" class="yfb-type-row" style="display:none;"></div>
                 </div>
             </div>
         </div>
 
         <!-- PRESENTATION LAYERS (shown in presentation view) -->
         <div id="presentation-layers" style="display:none;">
-
-<div class="layer-group open">
-    <div class="layer-group-header" onclick="toggleGroup(this)">
-        <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/><circle cx="12" cy="12" r="9"/></svg>
-        <span class="group-title">Territoire & PNR</span>
-        <span class="group-count">6</span>
-        <span class="group-chevron">&#9654;</span>
-    </div>
-    <div class="layer-group-body">
-        
-        <div class="layer-item">
-            <div class="layer-swatch" style="border:1.5px dashed #444;background:transparent;"></div>
-           <input type="checkbox" id="pres-communes-hem" checked>
-            <label for="pres-communes-hem"><b>Communes de la HEM</b></label>
-           <div class="layer-info-btn" onclick="showLayerInfo('pres-communes-hem')">i</div>
-        </div>
-
-        <div class="layer-item">
-            <div class="layer-swatch" style="border:2px solid #10b981;background:rgba(16, 185, 129, 0.1);"></div>
-            <input type="checkbox" id="pres-pnr-2013">
-            <label for="pres-pnr-2013">Périmètre PNR (2013-2028)</label>
-            <div class="layer-info-btn" onclick="showLayerInfo('check-pnr-2013')">i</div>
-        </div>
-        <div class="layer-item">
-            <div class="layer-swatch" style="border:1px dashed #10b981;background:transparent;"></div>
-            <input type="checkbox" id="pres-communes-2013">
-            <label for="pres-communes-2013">Communes PNR (2013-2028)</label>
-        </div>
-
-        <div class="layer-item">
-            <div class="layer-swatch" style="border:2px solid #e11d48;background:rgba(225, 29, 72, 0.1);"></div>
-            <input type="checkbox" id="pres-pnr-2028">
-            <label for="pres-pnr-2028">Périmètre PNR (2028-2044)</label>
-            <div class="layer-info-btn" onclick="showLayerInfo('check-pnr-2028')">i</div>
-        </div>
-        <div class="layer-item">
-            <div class="layer-swatch" style="border:1px dashed #e11d48;background:transparent;"></div>
-            <input type="checkbox" id="pres-communes-2028">
-            <label for="pres-communes-2028">Communes PNR (2028-2044)</label>
-        </div>
-        <div class="layer-item">
-            <div class="layer-swatch" style="background:#0284c7;border-radius:50%;"></div>
-            <input type="checkbox" id="pres-exutoire" checked>
-            <label for="pres-exutoire"><b>Exutoire de la Hem</b></label>
-        </div>
-    </div>
-</div>
-            <div class="layer-group open">
-        <div class="layer-group-header" onclick="toggleGroup(this)">
-            <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
-            <span class="group-title">Réseau Hydrographique</span>
-            <span class="group-count">1</span>
-            <span class="group-chevron">&#9654;</span>
-        </div>
-        <div class="layer-group-body">
-            <div class="layer-item">
-                <div class="layer-swatch" style="background:#3498db;height:3px;border-radius:0;margin-top:5px;"></div>
-                <input type="checkbox" id="pres-hydro-noms" checked>
-                <label for="pres-hydro-noms">Cours d'eau principaux</label>
-            </div>
-        </div>
-    </div>
-            <!-- Inondation -->
             <div class="layer-group open">
                 <div class="layer-group-header" onclick="toggleGroup(this)">
-                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2">
-                        <path d="M3 12h1m16 0h1M5.6 5.6l.7.7m12.1-.7-.7.7M12 3v1m0 16v1M8 16c0 2.2 1.8 4 4 4s4-1.8 4-4c0-3-4-7-4-7s-4 4-4 7z"/>
-                    </svg>
+                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M12 2C8 2 4 6 4 10c0 4 8 12 8 12s8-8 8-12c0-4-4-8-8-8z"/></svg>
+                    <span class="group-title">Territoire & PNR</span>
+                    <span class="group-count">6</span>
+                    <span class="group-chevron">&#9654;</span>
+                </div>
+                <div class="layer-group-body">
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="border:2px dashed #444;background:transparent;"></div>
+                        <input type="checkbox" id="pres-communes-hem" checked>
+                        <label for="pres-communes-hem">Communes de la HEM</label>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="border:2px solid #10b981;background:rgba(16, 185, 129, 0.1);"></div>
+                        <input type="checkbox" id="pres-pnr-2013" checked>
+                        <label for="pres-pnr-2013">PNR 2013-2028</label>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="border:1px dashed #10b981;background:transparent;"></div>
+                        <input type="checkbox" id="pres-communes-pnr-2013">
+                        <label for="pres-communes-pnr-2013">Communes PNR 2013-2028</label>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="border:2px solid #e11d48;background:rgba(225, 29, 72, 0.1);"></div>
+                        <input type="checkbox" id="pres-pnr-2028">
+                        <label for="pres-pnr-2028">PNR 2028-2044</label>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="border:1px dashed #e11d48;background:transparent;"></div>
+                        <input type="checkbox" id="pres-communes-pnr-2028">
+                        <label for="pres-communes-pnr-2028">Communes PNR 2028-2044</label>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="background:#0284c7;border-radius:50%;"></div>
+                        <input type="checkbox" id="pres-exutoire" checked>
+                        <label for="pres-exutoire">Exutoire de la Hem</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layer-group open">
+                <div class="layer-group-header" onclick="toggleGroup(this)">
+                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#3498db" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/><circle cx="12" cy="12" r="9"/></svg>
+                    <span class="group-title">Réseau Hydrographique</span>
+                    <span class="group-count">2</span>
+                    <span class="group-chevron">&#9654;</span>
+                </div>
+                <div class="layer-group-body">
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="background:#3498db;"></div>
+                        <input type="checkbox" id="pres-hydro-noms" checked>
+                        <label for="pres-hydro-noms">Cours d'eau principaux</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layer-group">
+                <div class="layer-group-header" onclick="toggleGroup(this)">
+                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M2 12c5 0 5-6 10-6s5 6 10 6-5 6-10 6-5-6-10-6z"/></svg>
                     <span class="group-title">Inondation</span>
                     <span class="group-count">4</span>
                     <span class="group-chevron">&#9654;</span>
@@ -1271,59 +1193,44 @@
                         <div class="layer-swatch" style="background:#3b82f6;opacity:0.7;"></div>
                         <input type="checkbox" id="pres-ppri" checked>
                         <label for="pres-ppri">Zones inondables (PPRI)</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-ppri')">i</div>
                     </div>
                     <div class="layer-item">
                         <div class="layer-swatch" style="background:#93c5fd;opacity:0.7;"></div>
                         <input type="checkbox" id="pres-azi">
                         <label for="pres-azi">Atlas des zones inondables</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-azi')">i</div>
                     </div>
                     <div class="layer-item">
                         <div class="layer-swatch" style="background:#1d4ed8;border-radius:50%;"></div>
                         <input type="checkbox" id="pres-reperes-crues" checked>
                         <label for="pres-reperes-crues">Repères de crues</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-reperes-crues')">i</div>
                     </div>
                     <div class="layer-item">
                         <div class="layer-swatch" style="background:#bfdbfe;border:1px solid #3b82f6;"></div>
-                        <input type="checkbox" id="pres-bassins">
-                        <label for="pres-bassins">Bassins versants</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-bassins')">i</div>
+                        <input type="checkbox" id="pres-bv">
+                        <label for="pres-bv">Bassins versants</label>
                     </div>
                 </div>
             </div>
 
-            <!-- Ruissellement -->
-            <div class="layer-group open">
+            <div class="layer-group">
                 <div class="layer-group-header" onclick="toggleGroup(this)">
-                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M3 6v14h16Z"/>
-                        <line x1="8" y1="5" x2="17" y2="13"/>
-                        <polyline points="12 13 17 13 17 8"/>
-                    </svg>
+                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"><path d="M3 6c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1M3 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1M3 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.5 0 2.5 2 5 2 1.3 0 1.9-.5 2.5-1"/></svg>
                     <span class="group-title">Ruissellement</span>
                     <span class="group-count">1</span>
                     <span class="group-chevron">&#9654;</span>
                 </div>
                 <div class="layer-group-body">
                     <div class="layer-item">
-                        <div class="layer-swatch" style="background:#06b6d4;height:3px;border-radius:0;margin-top:5px;"></div>
+                        <div class="layer-swatch" style="background:#06b6d4;"></div>
                         <input type="checkbox" id="pres-axes-ruiss" checked>
                         <label for="pres-axes-ruiss">Axes de ruissellement</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-axes-ruiss')">i</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Biodiversité -->
-            <div class="layer-group open">
+            <div class="layer-group">
                 <div class="layer-group-header" onclick="toggleGroup(this)">
-                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2">
-                        <path d="M12 2a10 10 0 0 1 0 20C6 22 2 14 12 2z"/>
-                        <path d="M12 2c6 10 2 18-4 18"/>
-                        <line x1="12" y1="12" x2="12" y2="22"/>
-                    </svg>
+                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
                     <span class="group-title">Biodiversité</span>
                     <span class="group-count">10</span>
                     <span class="group-chevron">&#9654;</span>
@@ -1333,298 +1240,142 @@
                         <div class="layer-swatch" style="background:#4ade80;opacity:0.7;"></div>
                         <input type="checkbox" id="pres-zh" checked>
                         <label for="pres-zh">Zones humides</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-zh')">i</div>
                     </div>
                     <div class="layer-item">
                         <div class="layer-swatch" style="background:#16a34a;opacity:0.7;"></div>
                         <input type="checkbox" id="pres-natura2000" checked>
-                        <label for="pres-natura2000">ZCS – Natura 2000</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-natura2000')">i</div>
+                        <label for="pres-natura2000">ZSC – Natura 2000</label>
                     </div>
                     <div class="layer-item">
                         <div class="layer-swatch" style="background:#a3e635;opacity:0.8;"></div>
                         <input type="checkbox" id="pres-znieff1" checked>
                         <label for="pres-znieff1">ZNIEFF type 1</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-znieff1')">i</div>
                     </div>
                     <div class="layer-item">
                         <div class="layer-swatch" style="background:#86efac;opacity:0.8;"></div>
                         <input type="checkbox" id="pres-znieff2" checked>
                         <label for="pres-znieff2">ZNIEFF type 2</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-znieff2')">i</div>
                     </div>
                     <div class="layer-item">
                         <div class="layer-swatch" style="background:#f97316;opacity:0.6;"></div>
                         <input type="checkbox" id="pres-reservoirs" checked>
                         <label for="pres-reservoirs">Réservoirs de biodiversité</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-reservoirs')">i</div>
                     </div>
                     <div class="layer-item">
                         <div class="layer-swatch" style="background:#fbbf24;opacity:0.7;border:1px solid #d97706;"></div>
                         <input type="checkbox" id="pres-sites-classes">
                         <label for="pres-sites-classes">Sites classés</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-sites-classes')">i</div>
                     </div>
                     <div class="layer-item">
                         <div class="layer-swatch" style="background:#a78bfa;opacity:0.6;"></div>
-                        <input type="checkbox" id="pres-reserve-bio">
-                        <label for="pres-reserve-bio">Réserve de biosphère</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-reserve-bio')">i</div>
+                        <input type="checkbox" id="pres-biosphere">
+                        <label for="pres-biosphere">Réserve de biosphère</label>
                     </div>
                     <div class="layer-item">
                         <div class="layer-swatch" style="background:#84cc16;opacity:0.6;"></div>
-                        <input type="checkbox" id="pres-trame-vert">
-                        <label for="pres-trame-vert">Trame verte</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-trame-vert')">i</div>
+                        <input type="checkbox" id="pres-trame-verte">
+                        <label for="pres-trame-verte">Trame verte</label>
                     </div>
                     <div class="layer-item">
                         <div class="layer-swatch" style="background:#0ea5e9;opacity:0.5;border:1px dashed #0284c7;"></div>
-                        <input type="checkbox" id="pres-trame-bleu">
-                        <label for="pres-trame-bleu">Trame bleue</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-trame-bleu')">i</div>
+                        <input type="checkbox" id="pres-trame-bleue">
+                        <label for="pres-trame-bleue">Trame bleue</label>
                     </div>
                     <div class="layer-item">
-                        <div class="layer-swatch" style="background:#6ee7b7;border-radius:50%;border:1px solid #059669;"></div>
+                        <div class="layer-swatch" style="background:#6ee7b7;border-radius:50%;border:1.5px solid #059669;"></div>
                         <input type="checkbox" id="pres-mares">
                         <label for="pres-mares">Mares</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-mares')">i</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Suivi piscicole -->
-            <div class="layer-group open">
+            <div class="layer-group">
                 <div class="layer-group-header" onclick="toggleGroup(this)">
-                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#0891b2" stroke-width="2">
-                        <path d="M6.5 12c.94-3.46 4.94-6 10.5-6-3 3-4 6-4 6s1 3 4 6c-5.56 0-9.56-2.54-10.5-6z"/>
-                        <path d="M6.5 12c-2.5-1-4.5-1-6.5 0"/>
-                        <circle cx="17" cy="10" r="1" fill="#0891b2"/>
-                    </svg>
-                    <span class="group-title">Suivi et Obstacles</span>
-                    <span class="group-count">3</span>
+                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#0891b2" stroke-width="2"><path d="M18 14h4v6H2v-6h4"/><path d="M14 6l-4-4-4 4"/><path d="M10 2v12"/></svg>
+                    <span class="group-title">Suivi piscicole & Obstacles</span>
+                    <span class="group-count">7</span>
                     <span class="group-chevron">&#9654;</span>
                 </div>
                 <div class="layer-group-body">
                     <div class="layer-item">
-                        <div class="layer-swatch" style="background:#0891b2;border-radius:50%;"></div>
+                        <div class="layer-swatch" style="background:#0891b2;border-radius:50%;border:2px solid #fff;"></div>
                         <input type="checkbox" id="pres-stations-suivi" checked>
                         <label for="pres-stations-suivi">Stations de suivi</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-stations-suivi')">i</div>
                     </div>
                     <div class="layer-item">
-                        <div class="layer-swatch" style="background:#222;border-radius:50%;border:1px solid #888;"></div>
+                        <div class="layer-swatch" style="background:#9b59b6;border-radius:50%;"></div>
+                        <input type="checkbox" id="pres-rsa">
+                        <label for="pres-rsa">RSA (Anguille)</label>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="background:#1abc9c;border-radius:50%;"></div>
+                        <input type="checkbox" id="pres-sat">
+                        <label for="pres-sat">SAT (Saumon)</label>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="background:#e74c3c;border-radius:50%;"></div>
+                        <input type="checkbox" id="pres-frayeres-trf">
+                        <label for="pres-frayeres-trf">Frayères Salmonidés</label>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="background:#e67e22;border-radius:50%;"></div>
+                        <input type="checkbox" id="pres-frayeres-lpf">
+                        <label for="pres-frayeres-lpf">Frayères Lamproies</label>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="background:#3498db;border-radius:50%;"></div>
+                        <input type="checkbox" id="pres-pe-electriques">
+                        <label for="pres-pe-electriques">Pêches Électriques</label>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="background:#222;border-radius:50%;border:1px solid #fff;"></div>
                         <input type="checkbox" id="pres-obstacles">
                         <label for="pres-obstacles">Obstacles à l'écoulement</label>
-                        <div class="layer-info-btn" onclick="showLayerInfo('pres-obstacles')">i</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Travaux historiques -->
             <div class="layer-group">
                 <div class="layer-group-header" onclick="toggleGroup(this)">
-                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2">
-                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
-                    </svg>
+                    <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                     <span class="group-title">Travaux et Aménagements</span>
                     <span class="group-count">2</span>
                     <span class="group-chevron">&#9654;</span>
                 </div>
                 <div class="layer-group-body">
                     <div class="layer-item">
-            <div class="layer-swatch" style="background:#f59e0b;border-radius:3px;"></div>
-            <input type="checkbox" id="pres-travaux-global">
-            <label for="pres-travaux-global">Travaux réalisés</label>
-        </div>
-
-        <!-- Filtre global pour les travaux -->
-        <div class="year-filter-box" id="filtre-travaux" style="display:none; margin:6px 14px 6px 36px;">
-            <div class="yfb-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6m0 0l3-3m-3 3L9 5m-7 7h6m0 0l-3 3m3-3l-3-3m13 3h-6m6 0l-3 3m3-3l-3-3"/></svg>
-                Filtre – Travaux
-            </div>
-            <label>
-                <input type="checkbox" id="travaux-year-filter-toggle" onchange="toggleTravauxFilter()">
-                Filtrer par année
-            </label>
-            <select id="travaux-year-select" onchange="applyTravauxFilter()" disabled style="display:none; margin-bottom:8px;">
-                <option value="">-- Toutes les années --</option>
-            </select>
-            <label>
-                <input type="checkbox" id="travaux-type-filter-toggle" onchange="toggleTravauxFilter()">
-                Filtrer par type d'aménagement
-            </label>
-            <div id="travaux-type-chips" class="yfb-type-row" style="display:none;"></div>
-        </div>
-
-        <!-- Couche hydraulique douce -->
-        <div class="layer-item">
-            <div class="layer-swatch" style="background:#0ea5e9;opacity:0.6;border:1px solid #0284c7;"></div>
-            <input type="checkbox" id="pres-travaux-hydro">
-            <label for="pres-travaux-hydro">Travaux hydrauliques doux</label>
-        </div>
-        
-        <!-- Filtre existant de l'hydraulique douce -->
-        <div class="year-filter-box" style="margin:6px 14px 6px 36px;">
-            <div class="yfb-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6m0 0l3-3m-3 3L9 5m-7 7h6m0 0l-3 3m3-3l-3-3m13 3h-6m6 0l-3 3m3-3l-3-3"/></svg>
-                Filtre – Plantations Hydrauliques Douces
-            </div>
-            <label>
-                <input type="checkbox" id="hydro-year-filter-toggle" onchange="toggleHydroYearFilter()">
-                Filtrer par année
-            </label>
-            <select id="hydro-year-select" onchange="applyHydroYearFilter()" disabled style="display:none;">
-                <option value="">-- Toutes les années --</option>
-            </select>
-            <label style="margin-top:8px;">
-                <input type="checkbox" id="hydro-type-filter-toggle" onchange="toggleHydroTypeFilter()">
-                Filtrer par type d'ouvrage
-            </label>
-            <div id="hydro-type-chips" class="yfb-type-row" style="display:none;"></div>
-        </div>
-    </div>
-</div>
-
-   <!-- LÉGENDE TAB -->
-    <div class="sidebar-body" id="sideContent-legende" style="display:none;">
-        
-        <!-- ================= EBF ================= -->
-        <div id="legend-ebf">
-            <div class="legend-section">
-                <div class="legend-section-title">EBF Optimal</div>
-                <div class="legend-item"><div class="legend-swatch" style="border:2px solid #FFAA00;background:transparent;"></div> EBF Optimal Définitif</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#FFAA00;"></div> Espace morphologique</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#3498db;"></div> Enveloppe hydraulique</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#a6cee3;"></div> Enveloppe hydrogéologique</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#f1c40f;"></div> Enveloppe biogéochimique</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#27ae60;"></div> Enveloppe biologique</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#2ecc71;"></div> Zones à dominantes humides</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#8e44ad;"></div> Lits perchés</div>
-            </div>
-            <div class="legend-section">
-                <div class="legend-section-title">EBF Nécessaire</div>
-                <div class="legend-item"><div class="legend-swatch" style="border:2px dashed #e67e22;background:transparent;"></div> EBF Nécessaire Définitif</div>
-                <div class="legend-item"><div class="legend-swatch" style="border:1px solid #FFAA00;background:transparent;"></div> Espace morphologique</div>
-                <div class="legend-item"><div class="legend-swatch" style="border:1px solid #3498db;background:transparent;"></div> Enveloppe hydraulique</div>
-                <div class="legend-item"><div class="legend-swatch" style="border:1px solid #a6cee3;background:transparent;"></div> Enveloppe hydrogéologique</div>
-                <div class="legend-item"><div class="legend-swatch" style="border:1px solid #f1c40f;background:transparent;"></div> Enveloppe biogéochimique</div>
-                <div class="legend-item"><div class="legend-swatch" style="border:1px solid #27ae60;background:transparent;"></div> Enveloppe biologique</div>
-                <div class="legend-item"><div class="legend-swatch" style="border:1px solid #8e44ad;background:transparent;"></div> Lits perchés</div>
-            </div>
-            <div class="legend-section">
-                <div class="legend-section-title">Enjeux & Urbanisme</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#e74c3c;"></div> Bâti & Infrastructures</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#a6da59;"></div> Zonage PLUi</div>
-                <div class="plui-legend" style="margin-left: 22px; margin-top: 0;">
-                    <div class="plui-legend-item"><div class="plui-swatch" style="background:#a6da59;"></div> Agricole</div>
-                    <div class="plui-legend-item"><div class="plui-swatch" style="background:rgb(51,160,44);"></div> Naturel</div>
-                    <div class="plui-legend-item"><div class="plui-swatch" style="background:rgb(217,217,217);"></div> Urbain</div>
-                    <div class="plui-legend-item"><div class="plui-swatch" style="background:rgb(250,172,76);"></div> A urbaniser</div>
+                        <div class="layer-swatch" style="background:#f59e0b;border-radius:3px;"></div>
+                        <input type="checkbox" id="pres-travaux-global">
+                        <label for="pres-travaux-global">Travaux réalisés (global)</label>
+                    </div>
+                    <div id="filtre-travaux" style="display:none;padding:4px 14px 4px 36px;">
+                        <div class="year-filter-box" style="margin:0;">
+                            <div class="yfb-title">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 12c.94-3.46 4.94-6 10.5-6-3 3-4 6-4 6s1 3 4 6c-5.56 0-9.56-2.54-10.5-6z"/><circle cx="17" cy="10" r="1" fill="currentColor"/></svg>
+                                Filtre – Travaux
+                            </div>
+                            <label>
+                                <input type="checkbox" id="travaux-year-filter-toggle" onchange="toggleTravauxFilter()">
+                                Filtrer par année
+                            </label>
+                            <select id="travaux-year-select" style="display:none;margin-top:6px;"></select>
+                            <label style="margin-top:8px;">
+                                <input type="checkbox" id="travaux-type-filter-toggle" onchange="toggleTravauxFilter()">
+                                Filtrer par type
+                            </label>
+                            <div id="travaux-type-chips" class="yfb-type-row" style="display:none;"></div>
+                        </div>
+                    </div>
+                    <div class="layer-item">
+                        <div class="layer-swatch" style="background:#0ea5e9;opacity:0.6;border:1px solid #0284c7;"></div>
+                        <input type="checkbox" id="pres-travaux-hydrauliques">
+                        <label for="pres-travaux-hydrauliques">Travaux hydrauliques doux</label>
+                    </div>
                 </div>
             </div>
-            <div class="legend-section">
-                <div class="legend-section-title">Contexte géographique</div>
-                <div class="legend-item"><div class="legend-line" style="background:#3498db;"></div> Réseau hydrographique</div>
-                <div class="legend-item"><div class="legend-swatch" style="border:2px dashed #444;background:transparent;"></div> Limites communales</div>
-            </div>
         </div>
 
-        <!-- ================= DIAGNOSTIC ================= -->
-        <div id="legend-diagnostic">
-            <div class="legend-section">
-                <div class="legend-section-title">Hydrologie (Ps)</div>
-                <div class="legend-item"><div class="legend-line" style="background:#3182bd;"></div> E1 – Dépôt dominant (&lt;10 W/m²)</div>
-                <div class="legend-item"><div class="legend-line" style="background:#31a354;"></div> E2 – Ajustements lents (10–30)</div>
-                <div class="legend-item"><div class="legend-line" style="background:#fd8d3c;"></div> E3 – Équilibre dynamique (30–100)</div>
-                <div class="legend-item"><div class="legend-line" style="background:#de2d26;"></div> E4 – Érosion active (&gt;100)</div>
-            </div>
-            <div class="legend-section">
-                <div class="legend-section-title">Diagnostic altération du réseau</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#2ecc71;"></div> Altération faible (&lt;25%)</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#f39c12;"></div> Altération modérée (25–45%)</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#e74c3c;"></div> Altération forte (&gt;45%)</div>
-            </div>
-            <div class="legend-section">
-                <div class="legend-section-title">Diagnostic Ruissellement</div>
-                <div class="legend-item"><div class="legend-line-dashed" style="border-color:#3498db;"></div> Axes Ruissellement (Pente)</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#27ae60;"></div> Préservation (Couvert herbeux)</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#c0392b;"></div> Urgence – Haie / Fascine</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#e67e22;"></div> Consolidation (MAEC)</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#f39c12;"></div> Surveillance agronomique</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#9b59b6;"></div> Bande enherbée existante</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#bdc3c7;"></div> Non impacté / Risque faible</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#e74c3c;"></div> Sécurité bâti – Urgence</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#f1c40f;"></div> Veille inondation bâti</div>
-            </div>
-            <div class="legend-section">
-                <div class="legend-section-title">Infrastructure & Stations</div>
-                <div class="legend-item"><div class="legend-circle" style="background:#0078A8;border:2px solid #fff;"></div> Stations hydrométriques</div>
-                <div class="legend-item"><div class="legend-circle" style="background:#222;border:1px solid #fff;"></div> Ouvrages / Obstacles</div>
-                <div class="legend-item"><div class="legend-line" style="background:#3498db;"></div> Réseau Hydrographique</div>
-            </div>
-        </div>
-
-        <!-- ================= PRESENTATION ================= -->
-        <div id="legend-presentation">
-            <div class="legend-section">
-                <div class="legend-section-title">Territoire & PNR</div>
-                <div class="legend-item"><div class="legend-swatch" style="border:2px dashed #444;background:transparent;"></div> Communes de la HEM</div>
-                <div class="legend-item"><div class="legend-swatch" style="border:2px solid #10b981;background:rgba(16, 185, 129, 0.1);"></div> PNR 2013-2028</div>
-                <div class="legend-item"><div class="legend-swatch" style="border:1px dashed #10b981;background:transparent;"></div> Communes PNR 2013-2028</div>
-                <div class="legend-item"><div class="legend-swatch" style="border:2px solid #e11d48;background:rgba(225, 29, 72, 0.1);"></div> PNR 2028-2044</div>
-                <div class="legend-item"><div class="legend-swatch" style="border:1px dashed #e11d48;background:transparent;"></div> Communes PNR 2028-2044</div>
-                <div class="legend-item"><div class="legend-circle" style="background:#0284c7;border:2px solid #fff;"></div> Exutoire de la Hem</div>
-            </div>
-            <div class="legend-section">
-                <div class="legend-section-title">Réseau Hydrographique</div>
-                <div class="legend-item"><div class="legend-line" style="background:#3498db;"></div> Cours d'eau principaux</div>
-            </div>
-            <div class="legend-section">
-                <div class="legend-section-title">Inondation</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#3b82f6;opacity:0.7;"></div> Zones inondables (PPRI)</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#93c5fd;opacity:0.7;"></div> Atlas des zones inondables</div>
-                <div class="legend-item"><div class="legend-circle" style="background:#1d4ed8;border:2px solid #fff;"></div> Repères de crues</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#bfdbfe;border:1px solid #3b82f6;"></div> Bassins versants</div>
-            </div>
-            <div class="legend-section">
-                <div class="legend-section-title">Ruissellement</div>
-                <div class="legend-item"><div class="legend-line" style="background:#06b6d4;"></div> Axes de ruissellement</div>
-            </div>
-            <div class="legend-section">
-                <div class="legend-section-title">Biodiversité</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#4ade80;opacity:0.7;"></div> Zones humides</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#16a34a;opacity:0.7;"></div> ZCS – Natura 2000</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#a3e635;opacity:0.8;"></div> ZNIEFF type 1</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#86efac;opacity:0.8;"></div> ZNIEFF type 2</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#f97316;opacity:0.6;"></div> Réservoirs de biodiversité</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#fbbf24;opacity:0.7;border:1px solid #d97706;"></div> Sites classés</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#a78bfa;opacity:0.6;"></div> Réserve de biosphère</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#84cc16;opacity:0.6;"></div> Trame verte</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#0ea5e9;opacity:0.5;border:1px dashed #0284c7;"></div> Trame bleue</div>
-                <div class="legend-item"><div class="legend-circle" style="background:#6ee7b7;border:1.5px solid #059669;"></div> Mares</div>
-            </div>
-            <div class="legend-section">
-                <div class="legend-section-title">Suivi piscicole & Obstacles</div>
-                <div class="legend-item"><div class="legend-circle" style="background:#0891b2;border:2px solid #fff;"></div> Stations de suivi</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#9b59b6;border-radius:50%;"></div> RSA (Anguille)</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#1abc9c;border-radius:50%;"></div> SAT (Saumon)</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#e74c3c;border-radius:50%;"></div> Frayères Salmonidés</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#e67e22;border-radius:50%;"></div> Frayères Lamproies</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#3498db;border-radius:50%;"></div> Pêches Électriques</div>
-                <div class="legend-item"><div class="legend-circle" style="background:#222;border:1px solid #fff;"></div> Obstacles à l'écoulement</div>
-            </div>
-            <div class="legend-section">
-                <div class="legend-section-title">Travaux et Aménagements</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#f59e0b;border-radius:3px;"></div> Travaux réalisés (global)</div>
-                <div class="legend-item"><div class="legend-swatch" style="background:#0ea5e9;opacity:0.6;border:1px solid #0284c7;"></div> Travaux hydrauliques doux</div>
-            </div>
-        </div>
     </div>
-
-       
-
-
 
     <div class="sidebar-footer">
         <button class="footer-action-btn btn-reset" onclick="resetAllLayers()">
@@ -1637,6 +1388,138 @@
         </button>
     </div>
 </aside>
+
+<!-- ========== FIXED LEGEND OVERLAY (non-interactive) ========== -->
+<div id="legend-overlay">
+    <div id="legend-ebf">
+        <div class="legend-section">
+            <div class="legend-section-title">EBF Optimal</div>
+            <div class="legend-item"><div class="legend-swatch" style="border:2px solid #FFAA00;background:transparent;"></div> EBF Optimal Définitif</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#FFAA00;"></div> Espace morphologique</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#3498db;"></div> Enveloppe hydraulique</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#a6cee3;"></div> Enveloppe hydrogéologique</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#f1c40f;"></div> Enveloppe biogéochimique</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#27ae60;"></div> Enveloppe biologique</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#2ecc71;"></div> Zones à dominantes humides</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#8e44ad;"></div> Lits perchés</div>
+        </div>
+        <div class="legend-section">
+            <div class="legend-section-title">EBF Nécessaire</div>
+            <div class="legend-item"><div class="legend-swatch" style="border:2px dashed #e67e22;background:transparent;"></div> EBF Nécessaire Définitif</div>
+            <div class="legend-item"><div class="legend-swatch" style="border:1px solid #FFAA00;background:transparent;"></div> Espace morphologique</div>
+            <div class="legend-item"><div class="legend-swatch" style="border:1px solid #3498db;background:transparent;"></div> Enveloppe hydraulique</div>
+            <div class="legend-item"><div class="legend-swatch" style="border:1px solid #a6cee3;background:transparent;"></div> Enveloppe hydrogéologique</div>
+            <div class="legend-item"><div class="legend-swatch" style="border:1px solid #f1c40f;background:transparent;"></div> Enveloppe biogéochimique</div>
+            <div class="legend-item"><div class="legend-swatch" style="border:1px solid #27ae60;background:transparent;"></div> Enveloppe biologique</div>
+            <div class="legend-item"><div class="legend-swatch" style="border:1px solid #8e44ad;background:transparent;"></div> Lits perchés</div>
+        </div>
+        <div class="legend-section">
+            <div class="legend-section-title">Enjeux & Urbanisme</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#e74c3c;"></div> Bâti & Infrastructures</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#a6da59;"></div> Zonage PLUi</div>
+            <div class="plui-legend" style="margin-left: 22px; margin-top: 0;">
+                <div class="plui-legend-item"><div class="plui-swatch" style="background:#a6da59;"></div> Agricole</div>
+                <div class="plui-legend-item"><div class="plui-swatch" style="background:rgb(51,160,44);"></div> Naturel</div>
+                <div class="plui-legend-item"><div class="plui-swatch" style="background:rgb(217,217,217);"></div> Urbain</div>
+                <div class="plui-legend-item"><div class="plui-swatch" style="background:rgb(250,172,76);"></div> A urbaniser</div>
+            </div>
+        </div>
+        <div class="legend-section">
+            <div class="legend-section-title">Contexte géographique</div>
+            <div class="legend-item"><div class="legend-line" style="background:#3498db;"></div> Réseau hydrographique</div>
+            <div class="legend-item"><div class="legend-swatch" style="border:2px dashed #444;background:transparent;"></div> Limites communales</div>
+        </div>
+    </div>
+
+    <div id="legend-diagnostic" style="display:none;">
+        <div class="legend-section">
+            <div class="legend-section-title">Hydrologie (Ps)</div>
+            <div class="legend-item"><div class="legend-line" style="background:#3182bd;"></div> E1 – Dépôt dominant (&lt;10 W/m²)</div>
+            <div class="legend-item"><div class="legend-line" style="background:#31a354;"></div> E2 – Ajustements lents (10–30)</div>
+            <div class="legend-item"><div class="legend-line" style="background:#fd8d3c;"></div> E3 – Équilibre dynamique (30–100)</div>
+            <div class="legend-item"><div class="legend-line" style="background:#de2d26;"></div> E4 – Érosion active (&gt;100)</div>
+        </div>
+        <div class="legend-section">
+            <div class="legend-section-title">Diagnostic altération du réseau</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#2ecc71;"></div> Altération faible (&lt;25%)</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#f39c12;"></div> Altération modérée (25–45%)</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#e74c3c;"></div> Altération forte (&gt;45%)</div>
+        </div>
+        <div class="legend-section">
+            <div class="legend-section-title">Diagnostic Ruissellement</div>
+            <div class="legend-item"><div class="legend-line-dashed" style="border-color:#3498db;"></div> Axes Ruissellement (Pente)</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#27ae60;"></div> Préservation (Couvert herbeux)</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#c0392b;"></div> Urgence – Haie / Fascine</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#e67e22;"></div> Consolidation (MAEC)</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#f39c12;"></div> Surveillance agronomique</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#9b59b6;"></div> Bande enherbée existante</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#bdc3c7;"></div> Non impacté / Risque faible</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#e74c3c;"></div> Sécurité bâti – Urgence</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#f1c40f;"></div> Veille inondation bâti</div>
+        </div>
+        <div class="legend-section">
+            <div class="legend-section-title">Infrastructure & Stations</div>
+            <div class="legend-item"><div class="legend-circle" style="background:#0078A8;border:2px solid #fff;"></div> Stations hydrométriques</div>
+            <div class="legend-item"><div class="legend-circle" style="background:#222;border:1px solid #fff;"></div> Ouvrages / Obstacles</div>
+            <div class="legend-item"><div class="legend-line" style="background:#3498db;"></div> Réseau Hydrographique</div>
+        </div>
+    </div>
+
+    <div id="legend-presentation" style="display:none;">
+        <div class="legend-section">
+            <div class="legend-section-title">Territoire & PNR</div>
+            <div class="legend-item"><div class="legend-swatch" style="border:2px dashed #444;background:transparent;"></div> Communes de la HEM</div>
+            <div class="legend-item"><div class="legend-swatch" style="border:2px solid #10b981;background:rgba(16, 185, 129, 0.1);"></div> PNR 2013-2028</div>
+            <div class="legend-item"><div class="legend-swatch" style="border:1px dashed #10b981;background:transparent;"></div> Communes PNR 2013-2028</div>
+            <div class="legend-item"><div class="legend-swatch" style="border:2px solid #e11d48;background:rgba(225, 29, 72, 0.1);"></div> PNR 2028-2044</div>
+            <div class="legend-item"><div class="legend-swatch" style="border:1px dashed #e11d48;background:transparent;"></div> Communes PNR 2028-2044</div>
+            <div class="legend-item"><div class="legend-circle" style="background:#0284c7;border:2px solid #fff;"></div> Exutoire de la Hem</div>
+        </div>
+        <div class="legend-section">
+            <div class="legend-section-title">Réseau Hydrographique</div>
+            <div class="legend-item"><div class="legend-line" style="background:#3498db;"></div> Cours d'eau principaux</div>
+        </div>
+        <div class="legend-section">
+            <div class="legend-section-title">Inondation</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#3b82f6;opacity:0.7;"></div> Zones inondables (PPRI)</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#93c5fd;opacity:0.7;"></div> Atlas des zones inondables</div>
+            <div class="legend-item"><div class="legend-circle" style="background:#1d4ed8;border:2px solid #fff;"></div> Repères de crues</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#bfdbfe;border:1px solid #3b82f6;"></div> Bassins versants</div>
+        </div>
+        <div class="legend-section">
+            <div class="legend-section-title">Ruissellement</div>
+            <div class="legend-item"><div class="legend-line" style="background:#06b6d4;"></div> Axes de ruissellement</div>
+        </div>
+        <div class="legend-section">
+            <div class="legend-section-title">Biodiversité</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#4ade80;opacity:0.7;"></div> Zones humides</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#16a34a;opacity:0.7;"></div> ZCS – Natura 2000</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#a3e635;opacity:0.8;"></div> ZNIEFF type 1</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#86efac;opacity:0.8;"></div> ZNIEFF type 2</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#f97316;opacity:0.6;"></div> Réservoirs de biodiversité</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#fbbf24;opacity:0.7;border:1px solid #d97706;"></div> Sites classés</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#a78bfa;opacity:0.6;"></div> Réserve de biosphère</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#84cc16;opacity:0.6;"></div> Trame verte</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#0ea5e9;opacity:0.5;border:1px dashed #0284c7;"></div> Trame bleue</div>
+            <div class="legend-item"><div class="legend-circle" style="background:#6ee7b7;border:1.5px solid #059669;"></div> Mares</div>
+        </div>
+        <div class="legend-section">
+            <div class="legend-section-title">Suivi piscicole & Obstacles</div>
+            <div class="legend-item"><div class="legend-circle" style="background:#0891b2;border:2px solid #fff;"></div> Stations de suivi</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#9b59b6;border-radius:50%;"></div> RSA (Anguille)</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#1abc9c;border-radius:50%;"></div> SAT (Saumon)</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#e74c3c;border-radius:50%;"></div> Frayères Salmonidés</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#e67e22;border-radius:50%;"></div> Frayères Lamproies</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#3498db;border-radius:50%;"></div> Pêches Électriques</div>
+            <div class="legend-item"><div class="legend-circle" style="background:#222;border:1px solid #fff;"></div> Obstacles à l'écoulement</div>
+        </div>
+        <div class="legend-section">
+            <div class="legend-section-title">Travaux et Aménagements</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#f59e0b;border-radius:3px;"></div> Travaux réalisés (global)</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#0ea5e9;opacity:0.6;border:1px solid #0284c7;"></div> Travaux hydrauliques doux</div>
+        </div>
+    </div>
+</div>
 
 <!-- ========== MAP ========== -->
 <div id="map"></div>
@@ -1783,7 +1666,7 @@
                         <span style="font-weight:600;">52 tronçons</span>
                         <span style="color:var(--color-text-muted);font-size:11px;">(37,7%)</span>
                     </div>
-                    <div style="display:flex;align-items:center;gap:10px;">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
                         <span style="display:inline-block;width:16px;height:16px;border-radius:3px;background:#de2d26;"></span>
                         <b style="width:30px;">E4</b>
                         <span style="flex:1;">Érosion active</span>
@@ -1791,81 +1674,94 @@
                         <span style="color:var(--color-text-muted);font-size:11px;">(13,0%)</span>
                     </div>
                 </div>
-                <p class="rp-section-title" style="margin-top:16px;">Secteurs prioritaires</p>
-                <div class="rp-description" style="font-size:11px;">
-                    <b style="color:#c0392b;">Haute priorité</b> : Amont Pays de Licques (Ps > 100 W/m²) – érosion de berge active<br>
-                    <b style="color:#e67e22;">Priorité moyenne</b> : Secteur de Acquin-Atte – rectification historique, encaissement<br>
-                    <b style="color:#f39c12;">Surveillance</b> : Aval plaine maritime – dépôt de fines, colmatage
-                </div>
             </div>
+
             <div class="rp-tab-content" id="rpt-diag-ps">
-                <p class="rp-section-title">Sélection de crue de référence</p>
-                <div id="q-buttons" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;"></div>
-                <p class="rp-section-title">Interprétation (Malavoi, 2007)</p>
-                <div style="font-size:12px;line-height:1.9;">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#3182bd;"></span> <b>E1 (&lt; 10 W/m²)</b> – <i>Sédimentation, atterrissement</i></div>
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#31a354;"></span> <b>E2 (10–30 W/m²)</b> – <i>Mobilité réduite, ajustements décennaires</i></div>
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#fd8d3c;"></span> <b>E3 (30–100 W/m²)</b> – <i>Équilibre morphodynamique actif</i></div>
-                    <div style="display:flex;align-items:center;gap:8px;"><span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#de2d26;"></span> <b>E4 (&gt; 100 W/m²)</b> – <i>Incision, érosion latérale forte</i></div>
+                <p class="rp-section-title">Puissance spécifique (Ps)</p>
+                <p class="rp-description">La puissance spécifique permet de qualifier la dynamique hydrosédimentaire des tronçons. Elle est calculée à partir du débit de crue de période de retour 100 ans (Q100) et de la pente.</p>
+                <div style="margin-top:16px;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                        <div style="background:#dbeafe;border-radius:10px;padding:14px;text-align:center;">
+                            <div style="font-size:11px;color:#1e40af;">Ps min</div>
+                            <div style="font-size:24px;font-weight:700;">2 W/m²</div>
+                        </div>
+                        <div style="background:#fee2e2;border-radius:10px;padding:14px;text-align:center;">
+                            <div style="font-size:11px;color:#991b1b;">Ps max</div>
+                            <div style="font-size:24px;font-weight:700;">312 W/m²</div>
+                        </div>
+                    </div>
                 </div>
-                <p class="rp-section-title" style="margin-top:14px;">Formule utilisée</p>
-                <div class="rp-description" style="font-size:11px;background:var(--color-bg);padding:10px;border-radius:8px;">
-                    <b>Ps = ρ × g × Q × S / L</b><br>
-                    où ρ = 1000 kg/m³ (masse volumique eau), g = 9,81 m/s², Q = débit (m³/s), S = pente (m/m), L = largeur (m)
+                <p class="rp-section-title" style="margin-top:20px;">Classes de puissance</p>
+                <div style="font-size:12px;line-height:1.9;">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:16px;height:16px;border-radius:3px;background:#3182bd;"></span>
+                        <b>E1</b> – Dépôt dominant (&lt;10 W/m²)
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:16px;height:16px;border-radius:3px;background:#31a354;"></span>
+                        <b>E2</b> – Ajustements lents (10–30 W/m²)
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:16px;height:16px;border-radius:3px;background:#fd8d3c;"></span>
+                        <b>E3</b> – Équilibre dynamique (30–100 W/m²)
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:16px;height:16px;border-radius:3px;background:#de2d26;"></span>
+                        <b>E4</b> – Érosion active (&gt;100 W/m²)
+                    </div>
                 </div>
             </div>
+
             <div class="rp-tab-content" id="rpt-diag-prhymo">
-                <p class="rp-section-title">Indice de Dégradation (PRHYMO)</p>
-                <p class="rp-description">Score moyen du bassin : <b style="color:#e67e22;">32,3 %</b><br>Extrêmes observés : 12,7 % (secteur préservé) à 62,5 % (secteur très altéré)</p>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;margin-bottom:14px;">
-                    <div style="background:#d4edda;border-radius:8px;padding:12px;text-align:center;">
-                        <div style="font-size:22px;font-weight:700;color:#155724;">45</div>
-                        <div style="font-size:10px;color:#155724;">tronçons faiblement altérés</div>
-                    </div>
-                    <div style="background:#e74c3c;border-radius:8px;padding:12px;text-align:center;">
-                        <div style="font-size:22px;font-weight:700;color:#fff;">22</div>
-                        <div style="font-size:10px;color:#fff;">tronçons très dégradés</div>
-                    </div>
+                <p class="rp-section-title">Méthode PRHYMO</p>
+                <p class="rp-description">PRHYMO est une méthode d'évaluation de l'altération physique des cours d'eau basée sur 6 indicateurs : lit, berges, ripisylve, occupation, connectivité, débit.</p>
+                <p class="rp-section-title">Score global</p>
+                <div style="background:linear-gradient(135deg,#e8f5ee 0%,#fff7ed 100%);border-radius:10px;padding:16px;text-align:center;margin-bottom:14px;">
+                    <div style="font-size:32px;font-weight:700;color:var(--color-text);">32,3%</div>
+                    <div style="font-size:11px;color:var(--color-text-muted);">altération modérée du réseau</div>
                 </div>
-                <p class="rp-section-title">Critères d'évaluation</p>
-                <div style="font-size:11px;line-height:1.8;color:var(--color-text-muted);">
-                    <div>&#8226; <b>Continuité longitudinale</b> – obstacles à l'écoulement (seuils, biefs)</div>
-                    <div>&#8226; <b>Continuité latérale</b> – ripisylve, berges artificialisées</div>
-                    <div>&#8226; <b>Occupation du lit</b> – atterrissement, végétation invasive</div>
-                    <div>&#8226; <b>Plan fonctionnel</b> – expansion crue, nappe d'accompagnement</div>
-                </div>
-                <p class="rp-section-title" style="margin-top:14px;">Recommandations</p>
-                <div class="rp-description" style="font-size:11px;">
-                    <b>&gt; 45%</b> : Restauration urgente – effacement seuils, reméandération<br>
-                    <b>25–45%</b> : Actions ciblées – végétalisation berges, reconnexion<br>
-                    <b>&lt; 25%</b> : Préservation – maintien des fonctionnalités
+                <p class="rp-section-title">Répartition des classes d'altération</p>
+                <div style="font-size:12px;line-height:1.9;">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:16px;height:16px;border-radius:3px;background:#2ecc71;"></span>
+                        <b>Faible</b> (&lt;25%) – 42 tronçons
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:16px;height:16px;border-radius:3px;background:#f39c12;"></span>
+                        <b>Modérée</b> (25–45%) – 68 tronçons
+                    </div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:16px;height:16px;border-radius:3px;background:#e74c3c;"></span>
+                        <b>Forte</b> (&gt;45%) – 28 tronçons
+                    </div>
                 </div>
             </div>
+
             <div class="rp-tab-content" id="rpt-diag-ruiss">
-                <p class="rp-section-title">Diagnostic ruissellement agricole</p>
-                <p class="rp-description" style="margin-bottom:12px;">Analyse croisée : pente × occupation du sol × axes de concentration</p>
+                <p class="rp-section-title">Diagnostic du ruissellement</p>
+                <p class="rp-description">Analyse des axes d'écoulement préférentiels et des zones à risque de ruissellement impactant les parcelles agricoles et le bâti.</p>
+                <p class="rp-section-title" style="margin-top:16px;">Catégories d'intervention</p>
                 <div style="font-size:12px;line-height:1.9;">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:8px;background:#fee2e2;border-radius:8px;">
-                        <span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#c0392b;"></span>
-                        <div><b>URGENCE</b> – 168 parcelles, 644 ha<br><span style="font-size:10px;color:var(--color-text-muted);">Pente >10%, culture annuelle, axe concentré</span></div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:16px;height:16px;border-radius:3px;background:#27ae60;"></span>
+                        <b>Préservation</b> – Couvert herbeux
                     </div>
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:8px;background:#fff7ed;border-radius:8px;">
-                        <span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#e67e22;"></span>
-                        <div><b>CONSOLIDATION</b> – 166 parcelles<br><span style="font-size:10px;color:var(--color-text-muted);">Pente 5-10%, vulnérabilité moyenne</span></div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:16px;height:16px;border-radius:3px;background:#c0392b;"></span>
+                        <b>Urgence</b> – Haie / Fascine
                     </div>
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:8px;background:#fef3c7;border-radius:8px;">
-                        <span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#f39c12;"></span>
-                        <div><b>SURVEILLANCE</b> – 229 parcelles, 701 ha<br><span style="font-size:10px;color:var(--color-text-muted);">Pente 2-5%, pratiques à surveiller</span></div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:16px;height:16px;border-radius:3px;background:#e67e22;"></span>
+                        <b>Consolidation</b> – MAEC
                     </div>
-                    <div style="display:flex;align-items:center;gap:8px;padding:8px;background:#e8f5ee;border-radius:8px;">
-                        <span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#27ae60;"></span>
-                        <div><b>PRAIRIE TAMPON</b> – 165 parcelles, 412 ha<br><span style="font-size:10px;color:var(--color-text-muted);">Couvert permanent, rôle épurateur</span></div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:16px;height:16px;border-radius:3px;background:#f39c12;"></span>
+                        <b>Surveillance</b> – Agronomique
                     </div>
-                </div>
-                <p class="rp-section-title" style="margin-top:14px;">Bâti à risque</p>
-                <div style="font-size:12px;line-height:1.8;">
-                    <div><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#e74c3c;margin-right:8px;"></span><b>Sécurité urgente</b> : 12 bâtiments en zone de concentration</div>
-                    <div><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#f1c40f;margin-right:8px;"></span><b>Veille inondation</b> : 34 bâtiments en zone d'expansion</div>
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                        <span style="display:inline-block;width:16px;height:16px;border-radius:3px;background:#e74c3c;"></span>
+                        <b>Sécurité bâti</b> – Urgence
+                    </div>
                 </div>
             </div>
         </div>
@@ -1875,109 +1771,49 @@
     <div id="rp-presentation" style="display:none;flex-direction:column;height:100%;">
         <div class="rp-header">
             <div class="rp-title-row">
-                <div class="rp-title">Présentation de la Vallée de la Hem</div>
+                <div class="rp-title">Présentation de la Vallée</div>
                 <div class="rp-close" onclick="closeRightPanel()">&#215;</div>
             </div>
             <div class="rp-tags">
-                <span class="rp-tag tag-green">Inondation</span>
+                <span class="rp-tag tag-green">PNR</span>
                 <span class="rp-tag tag-blue">Biodiversité</span>
-                <span class="rp-tag" style="background:#fff7ed;color:#c2410c;">Hydraulique</span>
             </div>
         </div>
         <div class="rp-tabs">
-            <button class="rp-tab active" onclick="showRpTab(this,'rpt-pres-info')">Présentation</button>
-            <button class="rp-tab" onclick="showRpTab(this,'rpt-pres-donnees')">Données</button>
-            <button class="rp-tab pres-docs-tab" onclick="showRpTab(this,'rpt-pres-docs')" style="display:none;">Documents</button>
+            <button class="rp-tab active" onclick="showRpTab(this,'rpt-pres-territoire')">Territoire</button>
+            <button class="rp-tab" onclick="showRpTab(this,'rpt-pres-biodiv')">Biodiversité</button>
+            <button class="rp-tab" onclick="showRpTab(this,'rpt-pres-pisco')">Pisciculture</button>
+            <button class="rp-tab pres-docs-tab" onclick="showRpTab(this,'rpt-pres-docs')">Documents</button>
         </div>
         <div class="rp-body">
-            <div class="rp-tab-content active" id="rpt-pres-info">
-                <img src="IMAGE/HEM.jpg" alt="Présentation de la vallée" style="width:100%;border-radius:8px;margin-bottom:14px;object-fit:cover;max-height:160px;">
-                <p class="rp-section-title">Le bassin versant de la Hem</p>
-                <p class="rp-description">
-                    Situé dans le bassin hydrographique Artois-Picardie, la Hem constitue un axe hydraulique majeur du Pas-de-Calais. Ce cours d'eau prend sa source sur le <b>plateau d'Escoeuilles</b> à environ 115 m d'altitude et parcourt un linéaire de <b>26 km</b> avant de rejoindre le système des Wateringues à Polincove, puis l'Aa. Son bassin versant couvre environ <b>150 km²</b> répartis sur une quarantaine de communes.
-                </p>
-                <p class="rp-description" style="margin-top:10px;font-size:11px;color:var(--color-text-muted);">
-                    La vallée présente une dualité géomorphologique marquée : en amont (Pays de Licques), un talweg encaissé avec bocage dense et prairies humides ; en aval (plaine maritime flamande), un évasement topographique avec relief quasi-inexistant et écoulement dépendant d'une gestion hydraulique artificielle.
-                </p>
-                <p class="rp-section-title" style="margin-top:14px;">Enjeux du territoire</p>
-                <div style="font-size:12px;line-height:1.8;color:var(--color-text-muted);">
-                    <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px;">
-                        <span style="color:#3b82f6;font-size:16px;line-height:1;">&#9679;</span>
-                        <span><b style="color:var(--color-text);">Inondations récurrentes</b> – épisodes critiques hiver 2023-2024, forte sensibilité aux crues et ruissellement sur versants argileux</span>
-                    </div>
-                    <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px;">
-                        <span style="color:#16a34a;font-size:16px;line-height:1;">&#9679;</span>
-                        <span><b style="color:var(--color-text);">Continuité écologique fragmentée</b> – 209 ouvrages historiques (moulins, seuils), obstacles au transit sédimentaire et aux grands migrateurs</span>
-                    </div>
-                    <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px;">
-                        <span style="color:#f59e0b;font-size:16px;line-height:1;">&#9679;</span>
-                        <span><b style="color:var(--color-text);">Pressions agricoles</b> – 68% du territoire, ruissellement diffus, coulées de boue sur pentes du Pays de Licques</span>
-                    </div>
-                    <div style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px;">
-                        <span style="color:#8b5cf6;font-size:16px;line-height:1;">&#9679;</span>
-                        <span><b style="color:var(--color-text);">Qualité des nappes</b> – état chimique médiocre (nitrates, pesticides), nappe de la craie de l'Audomarois classée prioritaire dégradée</span>
-                    </div>
-                </div>
+            <div class="rp-tab-content active" id="rpt-pres-territoire">
+                <p class="rp-description">Le bassin versant de la Hem couvre environ 200 km² au cœur du Pas-de-Calais. Il s'étend sur 38 communes et abrite le <b>Parc Naturel Régional des Caps et Marais d'Opale</b>.</p>
+                <p class="rp-section-title">Parc Naturel Régional</p>
+                <p class="rp-description">Le PNR des Caps et Marais d'Opale couvre la période 2013-2028. Une nouvelle charte est en cours d'agrément pour la période 2028-2044, étendant le périmètre à de nouvelles communes.</p>
+                <p class="rp-section-title">Réseau hydrographique</p>
+                <p class="rp-description">La Hem est un affluent de l'Aa. Son cours principal s'étend sur environ 28 km, avec un réseau de fossés et de petits affluents drainant le plateau agricole.</p>
             </div>
-            <div class="rp-tab-content" id="rpt-pres-donnees">
-                <p class="rp-section-title">Données du bassin</p>
-                <div style="font-size:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
-                    <div style="background:var(--color-bg);border-radius:8px;padding:10px;text-align:center;">
-                        <div style="font-size:20px;font-weight:700;color:var(--color-primary);">150</div>
-                        <div style="color:var(--color-text-muted);font-size:11px;">km² de bassin versant</div>
-                    </div>
-                    <div style="background:var(--color-bg);border-radius:8px;padding:10px;text-align:center;">
-                        <div style="font-size:20px;font-weight:700;color:#3b82f6;">26</div>
-                        <div style="color:var(--color-text-muted);font-size:11px;">km de linéaire (Hem)</div>
-                    </div>
-                    <div style="background:var(--color-bg);border-radius:8px;padding:10px;text-align:center;">
-                        <div style="font-size:20px;font-weight:700;color:#16a34a;">40</div>
-                        <div style="color:var(--color-text-muted);font-size:11px;">communes du bassin</div>
-                    </div>
-                    <div style="background:var(--color-bg);border-radius:8px;padding:10px;text-align:center;">
-                        <div style="font-size:20px;font-weight:700;color:#f59e0b;">79</div>
-                        <div style="color:var(--color-text-muted);font-size:11px;">ouvrages restaurés / 209</div>
-                    </div>
-                    <div style="background:var(--color-bg);border-radius:8px;padding:10px;text-align:center;">
-                        <div style="font-size:20px;font-weight:700;color:#0891b2;">23</div>
-                        <div style="color:var(--color-text-muted);font-size:11px;">communes SYMVAHEM</div>
-                    </div>
-                    <div style="background:var(--color-bg);border-radius:8px;padding:10px;text-align:center;">
-                        <div style="font-size:20px;font-weight:700;color:#dc2626;">100</div>
-                        <div style="color:var(--color-text-muted);font-size:11px;">km réseau hydrographique</div>
-                    </div>
-                </div>
-                <p class="rp-section-title" style="margin-top:16px;">Sources de données</p>
-                <div style="font-size:12px;color:var(--color-text-muted);line-height:1.7;">
-                    <div>&#8226; BD Topo / IGN – Réseau hydrographique</div>
-                    <div>&#8226; BRGM – Géologie et alluvions</div>
-                    <div>&#8226; DREAL Hauts-de-France – ZNIEFF, Natura 2000</div>
-                    <div>&#8226; Agence de l'Eau Artois-Picardie</div>
-                    <div>&#8226; RPG / ASP – Parcellaire agricole</div>
-                    <div>&#8226; SANDRE – Hydrométrie et débits</div>
-                </div>
+            <div class="rp-tab-content" id="rpt-pres-biodiv">
+                <p class="rp-section-title">Zones humides</p>
+                <p class="rp-description">Les zones humides de la vallée jouent un rôle crucial dans l'épuration des eaux, le laminage des crues et l'accueil de la biodiversité.</p>
+                <p class="rp-section-title">Natura 2000 & ZNIEFF</p>
+                <p class="rp-description">Le territoire comprend plusieurs sites désignés Natura 2000 (ZSC) et des zones ZNIEFF de type 1 et 2, identifiant les secteurs à enjeu écologique majeur.</p>
+                <p class="rp-section-title">Trames verte et bleue</p>
+                <p class="rp-description">La trame verte et la trame bleue identifient les corridors écologiques reliant les réservoirs de biodiversité.</p>
+            </div>
+            <div class="rp-tab-content" id="rpt-pres-pisco">
+                <p class="rp-section-title">Suivi piscicole</p>
+                <p class="rp-description">Le suivi piscicole est assuré par la FDAAPPMA et l'OFB. Il comprend des stations de suivi, des pêches électriques, et des inventaires de frayères.</p>
+                <p class="rp-section-title">Espèces suivies</p>
+                <p class="rp-description">Le bassin de la Hem accueille des populations de <b>truite fario</b>, de <b>saumon atlantique</b>, d'<b>anguille européenne</b> et de <b>lamproies</b>.</p>
             </div>
             <div class="rp-tab-content" id="rpt-pres-docs">
                 <p class="rp-section-title">Documents de référence</p>
-                <div style="font-size:12px;color:var(--color-text-muted);line-height:1.7;margin-bottom:12px;">
-                    <div>&#8226; <b>SDAGE Artois-Picardie 2022-2027</b> – Disposition A-5.1 sur l'EBF</div>
-                    <div>&#8226; <b>SAGE du Delta de l'Aa</b> – Hem identifiée secteur prioritaire</div>
-                    <div>&#8226; <b>Directive Cadre sur l'Eau (DCE)</b> – Objectif bon état écologique</div>
-                    <div>&#8226; <b>Compétence GEMAPI</b> – Gestion des milieux aquatiques et prévention des inondations</div>
+                <div style="font-size:12px;line-height:1.8;">
+                    <p><b>SDAGE Artois-Picardie 2022-2027</b><br><span style="color:var(--color-text-muted);">Schéma directeur d'aménagement et de gestion des eaux</span></p>
+                    <p><b>Contrat de rivière Hem</b><br><span style="color:var(--color-text-muted);">Programme d'actions 2020-2025</span></p>
+                    <p><b>Charte PNR Caps et Marais d'Opale</b><br><span style="color:var(--color-text-muted);">Période 2013-2028</span></p>
                 </div>
-                <p class="rp-section-title" style="margin-top:14px;">L'Espace de Bon Fonctionnement (EBF)</p>
-                <p class="rp-description" style="font-size:11px;">
-                    L'EBF vise à préserver cinq dimensions écologiques interdépendantes : <b>morphologie</b> (dynamique sédimentaire), <b>hydraulique</b> (expansion des crues), <b>biogéochimie</b> (auto-épuration), <b>hydrogéologie</b> (échanges nappes-rivière) et <b>biologie</b> (habitats, zones humides). Deux périmètres sont modélisés : l'<b>EBF Optimal</b> (enveloppe maximale théorique, 2 522 ha) et l'<b>EBF Nécessaire</b> (corridor minimal intégrant les contraintes anthropiques, 1 989 ha).
-                </p>
-                <a href="#" class="dl-link" onclick="return false;">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                    Rapport de diagnostic (Mémoire)
-                </a>
-                <a href="#" class="dl-link" onclick="return false;">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                    Plan de gestion (PPRE)
-                </a>
-                
             </div>
         </div>
     </div>
@@ -1987,1216 +1823,227 @@
 <div id="infoModal" class="modal" onclick="if(event.target===this)closeInfoModal()">
     <div class="modal-card">
         <div class="modal-close" onclick="closeInfoModal()">&#215;</div>
-        <div id="modal-diagnostic" style="display:none;">
-            <h2>Méthodologie – Diagnostic Morphodynamique</h2>
-            <div class="modal-body-scroll">
-                <p>L'évaluation de la résilience du cours d'eau et de sa capacité d'ajustement repose sur la quantification de son <strong>énergie morphogène</strong> (capacité d'érosion et de transport).</p>
-
-                <h3>1. Calcul de la Puissance Spécifique (méthode Malavoi, 2007)</h3>
-                <p>Pour chaque tronçon et chaque crue, la puissance spécifique (Ps, en W/m²) est calculée selon la formule :</p>
-                <div style="background:#f0f0f0;padding:10px;border-radius:6px;margin:8px 0;font-family:monospace;text-align:center;">
-                    Ps = (ρ × g × Q_local × J) / L
-                </div>
-                <p style="font-size:12px;">Avec : ρ = 1000 kg/m³, g = 9.81 m/s², J = pente locale, L = largeur au plein bord</p>
-
-                <h4>Discrétisation en 4 classes d'énergie</h4>
-                <table class="rmc-table" style="margin:10px 0;">
-                    <thead><tr><th>Classe</th><th>Puissance</th><th>Description</th></tr></thead>
-                    <tbody>
-                        <tr><td style="color:#3182bd;font-weight:bold;">E1</td><td>&lt; 10 W/m²</td><td>Sédimentation, dépôts fins, atterrissement</td></tr>
-                        <tr><td style="color:#31a354;font-weight:bold;">E2</td><td>10 – 30 W/m²</td><td>Ajustements lents, transit modéré</td></tr>
-                        <tr><td style="color:#fd8d3c;font-weight:bold;">E3</td><td>30 – 100 W/m²</td><td>Équilibre dynamique morphologique</td></tr>
-                        <tr><td style="color:#de2d26;font-weight:bold;">E4</td><td>&gt; 100 W/m²</td><td>Érosion active, risque d'incision</td></tr>
-                    </tbody>
-                </table>
-
-                <h3>2. Délimitation des périmètres morphologiques</h3>
-                <p>L'identification des classes d'énergie préalable à la mise en géométrie de l'enveloppe morphologique :</p>
-                <table class="rmc-table" style="margin:10px 0;font-size:11px;">
-                    <thead><tr><th>Type de secteur</th><th>EBFO (Optimal)</th><th>EBFN (Nécessaire)</th></tr></thead>
-                    <tbody>
-                        <tr><td>Secteurs mobiles (E3/E4)</td><td>15 × Largeur (Amplitude max)</td><td>10 × Largeur (Amplitude moy)</td></tr>
-                        <tr><td>Secteurs peu mobiles (E1/E2)</td><td>6 × Largeur</td><td>3 × Largeur</td></tr>
-                        <tr><td>Petits cours d'eau (Strahler 1/2)</td><td>+ 10 m de part et d'autre</td><td>+ 5 m de part et d'autre</td></tr>
-                    </tbody>
-                </table>
-                <p style="font-size:11px;color:#666;"><em>Note : Contrairement à la zone inondable, les enveloppes de mobilité n'ont pas été découpées par les limites du fond de vallée. Lorsqu'un cours d'eau divague et vient frôler un versant, sa puissance énergétique provoque une érosion par sapement basal.</em></p>
-
-                <h3>3. Enveloppe Biogéochimique – Bandes tampons dynamiques</h3>
-                <p>L'objectif est d'évaluer la capacité de filtration du bassin versant. Deux scénarios basés sur la réglementation des ZNT (Zones Non Traitées) :</p>
+        <h2>Méthodologie & Aide</h2>
+        <div class="modal-body-scroll">
+            <div id="modal-ebf">
+                <h3>EBF – Espace de Bon Fonctionnement</h3>
+                <p>L'EBF est l'espace dans lequel le cours d'eau assure sa dynamique hydrosédimentaire et ses fonctions écologiques. Il est décliné en deux enveloppes :</p>
                 <ul>
-                    <li><strong>EBFN (5 m)</strong> : Distance minimale des ZNT pour protéger des pesticides. Formule : Rayon = (w_moy)/2 + 5</li>
-                    <li><strong>EBFO (25 m)</strong> : Zone de protection élargie pour une meilleure filtration. Formule : Rayon = (w_moy)/2 + 25</li>
+                    <li><b>EBF Optimal (EFO)</b> : espace de liberté complet, incluant la mobilité latérale.</li>
+                    <li><b>EBF Nécessaire (EFN)</b> : espace minimal pour maintenir les fonctions essentielles.</li>
                 </ul>
-
-                <h4>Reclassification de l'occupation du sol (OCSGE + RPG)</h4>
-                <ul style="font-size:12px;">
-                    <li><strong>Classe « Urbain »</strong> (efficacité nulle) : bâti, infrastructures, surfaces imperméabilisées</li>
-                    <li><strong>Classe « Fonctionnel »</strong> : forêts, zones humides, prairies permanentes (PPH)</li>
-                    <li><strong>Classe « Potentiel restaurable »</strong> : cultures, prairies temporaires (gisement foncier mobilisable)</li>
-                </ul>
-
-                <h3>4. Protocole PRHYMO – Score de dégradation</h3>
-                <p>Le protocole PRHYMO (Agence de l'Eau Artois-Picardie) génère un <strong>Score_100</strong> de 0 à 100% évaluant le niveau de dégradation physique.</p>
-
-                <h4>9 indicateurs qualitatifs (1 à 5 points chacun)</h4>
-                <ul style="font-size:12px;">
-                    <li><strong>mor_pll</strong> : Altération du profil en long (seuils, rupture de pente)</li>
-                    <li><strong>mor_ssl</strong> : Altération de la section du lit (calibrage, encaissement)</li>
-                    <li><strong>mor_riv</strong> : Dégradation des rives et berges</li>
-                    <li><strong>mor_rip</strong> : État de la ripisylve</li>
-                    <li><strong>con_pro</strong> : Rupture de continuité biologique (obstacles)</li>
-                    <li><strong>con_sed</strong> : Blocage du transit sédimentaire</li>
-                    <li><strong>con_amp</strong> : Perte de connectivité avec les annexes</li>
-                    <li><strong>hyd_dyn</strong> : Perturbation de la dynamique hydrologique</li>
-                    <li><strong>hyd_qte</strong> : Altération quantitative des volumes d'eau</li>
-                </ul>
-
-                <h4>2 variables quantitatives continues (jusqu'à 20 pts chacune)</h4>
-                <ul style="font-size:12px;">
-                    <li><strong>Malus Agricole</strong> = agri3w_v × 0,2 (pression des cultures en bordure)</li>
-                    <li><strong>Malus Aménagement</strong> = txamg_v × 0,2 (taux d'artificialisation des berges)</li>
-                </ul>
-
-                <h4>Formule de normalisation</h4>
-                <div style="background:#f0f0f0;padding:8px;border-radius:6px;margin:8px 0;font-family:monospace;font-size:12px;">
-                    Score_100 = (Score_Brut − 9) / (85 − 9) × 100
-                </div>
-
-                <h4>Classes d'altération</h4>
-                <ul>
-                    <li><strong>&lt; 25%</strong> : Altération faible – secteurs fonctionnels, zones refuges</li>
-                    <li><strong>25 – 45%</strong> : Altération modérée – cœur cible de la petite restauration</li>
-                    <li><strong>&gt; 45%</strong> : Altération forte – anomalies physiques maximales</li>
-                </ul>
-
-                <h3>5. Outil d'Aide à la Décision (OAD) pour le PPRE</h3>
-                <p>L'OAD traduit le diagnostic en programme de travaux opérationnel (Programme Pluriannuel de Restauration et d'Entretien).</p>
-
-                <h4>Phase 1 : Urgence (alertes critiques ≥ 4)</h4>
-                <p>Restauration lourde : effacement d'ouvrages, désimperméabilisation, confortement de berges.</p>
-
-                <h4>Phase 2 : Consolidation (alertes modérées = 3)</h4>
-                <p>Génie végétal souple : fascinages, densification ripisylve, curage léger des annexes.</p>
-
-                <h3>6. Modélisation de l'aléa ruissellement</h3>
-                <p>Approche probabiliste inspirée d'Exzeco avec 50 simulations Monte-Carlo sur MNT pour identifier les « autoroutes de ruissellement » persistantes.</p>
-                <ul style="font-size:12px;">
-                    <li><strong>Bâti exposé pente ≥ 5%</strong> → Priorité sécurité (noues, batardeaux)</li>
-                    <li><strong>Cultures pente > 10%</strong> → Urgence : fascines vivantes</li>
-                    <li><strong>Cultures pente modérée</strong> → Bandes enherbées, MAEC</li>
-                </ul>
-
-                <h3>Sources des données</h3>
-                <ul style="font-size:11px;color:#666;">
-                    <li>MNT – RGE ALTI 5m (IGN)</li>
-                    <li>Réseau hydrographique – BD Topage / BD CARTHAGE</li>
-                    <li>Géologie – Carte BRGM</li>
-                    <li>Occupation du sol – OCS GE (IGN) + RPG (ASP)</li>
-                    <li>PRHYMO – Agence de l'Eau Artois-Picardie (référentiel juin 2025)</li>
-                </ul>
+                <p>Chaque enveloppe est composée de 5 sous-enveloppes : morphologique, hydraulique, biogéochimique, hydrogéologique et biologique.</p>
+                <h3>Intégration dans le PLUi</h3>
+                <p>L'EBF est un outil d'aide à la décision pour l'urbanisme. Il permet d'identifier les zones à préserver dans le PLUi (zones N, A, ou OAP).</p>
             </div>
-        </div>
-        <div id="modal-ebf">
-            <h2>Cadre Conceptuel – Espace de Bon Fonctionnement (EBF)</h2>
-            <div class="modal-body-scroll">
-                <p><strong>De l'espace de liberté à l'EBF :</strong> Le concept d'<strong>Espace de Bon Fonctionnement (EBF)</strong> englobe la mobilité latérale et intègre l'intégralité des fonctionnalités de l'hydrosystème. Deux périmètres sont modélisés : l'<strong>EBF Optimal</strong> (enveloppe théorique maximale) et l'<strong>EBF Nécessaire</strong> (corridor vital de compromis).</p>
-
-                <h3>Matrice Technique (Guide RMC)</h3>
-                <table class="rmc-table">
-                    <thead><tr><th>Catégorie</th><th>EFO (Optimal)</th><th>EFN (Nécessaire)</th><th>Outils SIG</th></tr></thead>
-                    <tbody>
-                        <tr><td class="rmc-cat">Philosophie</td><td class="rmc-efo"><span class="rmc-badge badge-efo">EFO</span> Enveloppe théorique maximale. La rivière y a tout l'espace nécessaire.</td><td class="rmc-efn"><span class="rmc-badge badge-efn">EFN</span> Enveloppe réaliste, respecte les usages humains incompressibles.</td><td class="rmc-sig">Concepts EBF fluvial</td></tr>
-                        <tr><td class="rmc-cat">Aménagement</td><td class="rmc-efo">Sans contrainte de bâti.</td><td class="rmc-efn">Rabotage : soustraction routes + bâtiments (BD Topo).</td><td class="rmc-sig">Corine Land Cover, BD Topo, ROE</td></tr>
-                        <tr><td class="rmc-cat">Hydraulique</td><td class="rmc-efo">MRVBF – plaine inondable théorique.</td><td class="rmc-efn">AZI – Atlas zones inondation.</td><td class="rmc-sig">RGE ALTI 5m, PPRi, TRI</td></tr>
-                        <tr><td class="rmc-cat">Hydrogéologie</td><td class="rmc-efo">Alluvions récentes – emprise maximale.</td><td class="rmc-efn">Alluvions contraintes (BRGM).</td><td class="rmc-sig">Carte géologique BRGM, HGM</td></tr>
-                        <tr><td class="rmc-cat">Écologie</td><td class="rmc-efo">ZDH + ZHE stratégiques.</td><td class="rmc-efn">ZHE – zones stratégiques seulement.</td><td class="rmc-sig">RHOMEO, PIFH, TVB, SRADDET</td></tr>
-                        <tr><td class="rmc-cat">Biogéochimie</td><td class="rmc-efo">Filtre anti-pesticides 25m.</td><td class="rmc-efn">Filtre réglementaire 5m.</td><td class="rmc-sig">RPG, buffer linéaire</td></tr>
-                    </tbody>
-                </table>
-
-                <h3>Les 5 dimensions écologiques de l'EBF</h3>
+            <div id="modal-diagnostic" style="display:none;">
+                <h3>Diagnostic Morphodynamique</h3>
+                <p>Le diagnostic évalue l'état du réseau hydrographique à partir de deux approches complémentaires :</p>
                 <ul>
-                    <li><strong>Morphologie :</strong> Dynamique hydrosédimentaire et habitats.</li>
-                    <li><strong>Hydraulique :</strong> Laminage des crues par expansion.</li>
-                    <li><strong>Biogéochimie :</strong> Auto-épuration, qualité physico-chimique.</li>
-                    <li><strong>Hydrogéologie :</strong> Échanges rivière/nappes superficielles.</li>
-                    <li><strong>Biologie :</strong> Zones Humides, habitats de reproduction.</li>
+                    <li><b>Puissance spécifique (Ps)</b> : calculée à partir du débit Q100 et de la pente. Elle classe les tronçons en 4 catégories (E1 à E4).</li>
+                    <li><b>PRHYMO</b> : méthode d'évaluation de l'altération physique des cours d'eau.</li>
                 </ul>
-
-                <h3>Croisement avec le PLUi</h3>
-                <p>L'algorithme intersecte les enveloppes EBF avec le PLUi et regroupe les entités en 4 catégories : Urbain (U), À Urbaniser (AU), Agricole (A), Naturel (N). Cette approche permet d'identifier les surfaces de conflits d'usage et les zones d'opportunités pour la révision des documents d'urbanisme.</p>
-
-                <h3>Outil réglementaire – DCE</h3>
-                <p>Le <strong>SDAGE Artois-Picardie</strong> impose sa cartographie. Intégration dans le <strong>PLUi</strong> pour sanctuariser les parcelles (classement en zone N/A ou OAP).</p>
-
-                <h3>Sources des données</h3>
-                <ul style="font-size:11px;color:#666;">
-                    <li>BD Topo / IGN – Réseau hydrographique et bâti</li>
-                    <li>BRGM – Carte géologique</li>
-                    <li>DREAL – ZNIEFF, Natura 2000</li>
-                    <li>Agence de l'Eau Artois-Picardie</li>
-                    <li>RPG / ASP – Parcellaire agricole</li>
-                    <li>RGE ALTI – MNT 5m (IGN)</li>
-                </ul>
+                <h3>Ruissellement</h3>
+                <p>L'analyse du ruissellement identifie les axes d'écoulement préférentiels et les zones à risque pour les parcelles agricoles et le bâti.</p>
             </div>
-        </div>
-        <div id="modal-presentation" style="display:none;">
-            <h2>Présentation de la vallée – Aide</h2>
-            <div class="modal-body-scroll">
-                <h3 style="color:#3b82f6;">Inondation</h3>
-                <ul>
-                    <li><strong>PPRI</strong> – Plan de Prévention des Risques d'Inondation. Document réglementaire opposable délimitant les zones exposées au risque d'inondation et imposant des règles d'urbanisme spécifiques.</li>
-                    <li><strong>AZI</strong> – Atlas des Zones Inondables. Cartographie des secteurs inondables basée sur des études hydrauliques (non opposable réglementairement).</li>
-                    <li><strong>Repères de crues</strong> – Points de marquage des niveaux atteints par les plus hautes eaux connues (PHEC). Mémoire des événements passés.</li>
-                    <li><strong>Bassins versants</strong> – Ensemble du territoire drainé par un cours d'eau. Unité hydrographique de base pour la gestion de l'eau.</li>
-                </ul>
-
-                <h3 style="color:#06b6d4;">Ruissellement</h3>
-                <ul>
-                    <li><strong>Axes de ruissellement</strong> – Chemins préférentiels d'écoulement des eaux de surface lors des pluies. Identifiés par modélisation topographique (MNT + simulation Monte-Carlo).</li>
-                </ul>
-
-                <h3 style="color:#16a34a;">Biodiversité</h3>
-                <ul>
-                    <li><strong>Zones humides</strong> – Milieux caractérisés par la présence d'eau à proximité de la surface. Rôle majeur dans l'épuration naturelle, le stockage de l'eau et la biodiversité.</li>
-                    <li><strong>Natura 2000 (ZCS)</strong> – Zone Spéciale de Conservation, réseau européen de sites naturels d'importance communautaire (directive Habitats).</li>
-                    <li><strong>ZNIEFF type 1</strong> – Zone Naturelle d'Intérêt Faunistique et Floristique à périmètre restreint, de haute valeur biologique ou écologique.</li>
-                    <li><strong>ZNIEFF type 2</strong> – ZNIEFF de grand ensemble naturel, unités de paysage cohérentes à valeur fonctionnelle.</li>
-                    <li><strong>Réservoirs de biodiversité</strong> – Zones identifiées par le SRADDET comme zones sources d'espèces et milieux remarquables.</li>
-                    <li><strong>Sites classés</strong> – Sites à protéger pour leur caractère artistique, historique, scientifique ou pittoresque (loi 1930).</li>
-                    <li><strong>Réserve de biosphère</strong> – Désignation UNESCO reconnaissant un territoire modelé par l'interaction homme-nature.</li>
-                    <li><strong>Trame verte</strong> – Réseau de corridors écologiques terrestres permettant la dispersion des espèces.</li>
-                    <li><strong>Trame bleue</strong> – Réseau de corridors écologiques aquatiques et humides (cours d'eau, zones humides).</li>
-                    <li><strong>Mares</strong> – Points d'eau stagnante, habitats remarquables pour amphibiens et flore hygrophile.</li>
-                </ul>
-
-                <h3 style="color:#0891b2;">Suivi piscicole</h3>
-                <ul>
-                    <li><strong>Stations de suivi</strong> – Points de pêche électrique permettant d'évaluer la population de poissons et l'indice biotique.</li>
-                    <li><strong>Peuplements piscicoles</strong> – Zones de répartition des communautés de poissons (truite fario, chabot, vandoise, etc.).</li>
-                    <li><strong>Obstacles à l'écoulement</strong> – Ouvrages (seuils, barrages, buses) fragmentant le cours d'eau et le transit sédimentaire.</li>
-                </ul>
-
-                <h3 style="color:#f59e0b;">Travaux et Aménagements</h3>
-                <ul>
-                    <li><strong>Travaux hydrauliques doux</strong> – Plantations réalisées pour pallier au ruissellement. Aménagements utilisant le génie végétal pour stabiliser les berges sans durcissement.</li>
-                </ul>
-
-                <h3>Sources des données</h3>
-                <ul style="font-size:11px;color:#666;">
-                    <li>PPRI / AZI – DDT Pas-de-Calais, DREAL Hauts-de-France</li>
-                    <li>ZNIEFF / Natura 2000 – DREAL, INPN </li>
-                    <li>Zones humides – Inventaire départemental</li>
-                    <li>Trame verte et bleue – SRADDET, SRCE</li>
-                    <li>Réservoirs de biodiversité – SRADDET</li>
-                    <li>Suivi piscicole – FDAAPPMA 62, OFB</li>
-                    <li>Travaux – SYMVAHEM</li>
-                </ul>
+            <div id="modal-presentation" style="display:none;">
+                <h3>Présentation de la Vallée</h3>
+                <p>Cette vue présente le territoire du bassin versant de la Hem dans sa dimension paysagère, patrimoniale et environnementale.</p>
+                <h3>PNR des Caps et Marais d'Opale</h3>
+                <p>Le Parc Naturel Régional protège et valorise le territoire. La charte 2013-2028 est en cours de renouvellement pour la période 2028-2044.</p>
+                <h3>Biodiversité</h3>
+                <p>Le bassin abrite un réseau de zones humides, de sites Natura 2000 et de ZNIEFF, formant la trame verte et bleue du territoire.</p>
             </div>
         </div>
     </div>
 </div>
 
 <!-- ========== BOTTOM BAR ========== -->
-<footer id="bottom-bar">
-    <span class="bottom-version">Vallée de la Hem – Outil de gestion intégrée du bassin versant &nbsp;|&nbsp;  Dernière mise à jour : 07/07/2026</span>
-    <div class="bottom-attribution">
-        &copy; OpenStreetMap contributors &nbsp;|&nbsp; &copy; IGN BD Topo &nbsp;|&nbsp; &copy; Agence de l'eau Artois-Picardie
-    </div>
+<div id="bottom-bar">
+    <div class="bottom-version">v2.1.0</div>
+    <div class="bottom-attribution">&copy; Vallée de la Hem – Syndicat Mixte de la Hem</div>
     <div class="bottom-user" onclick="openUserModal()">
-        <div class="user-avatar" id="user-initials">CM</div>
+        <div class="user-avatar" id="user-initials">--</div>
         <div class="user-info">
-            <b id="user-name"></b>
+            <b id="user-name">Non connecté</b>
+            <span>Mode : <span id="user-mode">Public</span></span>
         </div>
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-</footer>
+</div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// ===== LOGIN STATE =====
-let currentUser = null;
+// ========== GLOBALS ==========
+let map;
+let currentView = 'presentation';
+let currentMode = 'public';
+let currentUser = '';
+let pluiChart, filterPluiChart;
+const AGENT_CODE = 'HEM2024';
+let allCommuneNames = [];
+let searchCommunesLayer;
+let currentActiveQ = 'Q100';
 
+const definitions = {
+    'check-efo': '<b>EBF Optimal Définitif</b>\nL\'enveloppe correspondant à l\'espace de liberté complet du cours d\'eau, intégrant la mobilité latérale et toutes les fonctions écologiques.',
+    'check-buf-ero-efo': '<b>Espace morphologique (EFO)</b>\nZone tampon correspondant à l\'espace de mobilité latérale du cours d\'eau.',
+    'check-mrvbf': '<b>Enveloppe hydraulique</b>\nZone d\'expansion des crues permettant le laminage des débits.',
+    'check-geol': '<b>Enveloppe hydrogéologique</b>\nZone d\'échanges entre la rivière et les nappes superficielles.',
+    'check-geo25': '<b>Enveloppe biogéochimique (25m)</b>\nZone d\'auto-épuration et de filtration physico-chimique.',
+    'check-zhe-efo': '<b>Enveloppe biologique (EFO)</b>\nZones humides et habitats biologiques associés.',
+    'check-zdh': '<b>Zones à dominantes humides</b>\nSecteurs identifiés comme zones humides selon les critères pédologiques et botaniques.',
+    'check-perche': '<b>Lits perchés</b>\nAnciens lits de rivière situés au-dessus du niveau actuel.',
+    'check-efn': '<b>EBF Nécessaire Définitif</b>\nL\'enveloppe minimale pour maintenir les fonctions essentielles du cours d\'eau.',
+    'check-buf-ero-efn': '<b>Espace morphologique (EFN)</b>\nZone tampon minimale pour la mobilité du cours d\'eau.',
+    'check-azi-efn': '<b>Enveloppe hydraulique (EFN)</b>\nZone minimale d\'expansion des crues.',
+    'check-geol-efn': '<b>Enveloppe hydrogéologique (EFN)</b>\nZone minimale d\'échanges rivière/nappe.',
+    'check-geo5': '<b>Enveloppe biogéochimique (5m)</b>\nZone minimale d\'auto-épuration.',
+    'check-zhe': '<b>Enveloppe biologique (EFN)</b>\nZones humides minimales.',
+    'check-perche-efn': '<b>Lits perchés (EFN)</b>\nAnciens lits de rivière dans l\'EBF Nécessaire.',
+    'check-bati': '<b>Bâti & Infrastructures</b>\nOccupation des sols issue de l\'OCSGE (bâti, routes, parkings).',
+    'check-plui-efo': '<b>Zonage PLUi (EFO)</b>\nZonage du Plan Local d\'Urbanisme intercommunal intersecté avec l\'EFO.',
+    'check-plui-efn': '<b>Zonage PLUi (EFN)</b>\nZonage du PLUi intersecté avec l\'EFN.',
+    'check-hydro': '<b>Réseau Hydrographique</b>\nCours d\'eau principaux et secondaires du bassin de la Hem.',
+    'check-communes': '<b>Limites Communales</b>\nPérimètre des communes du bassin versant.',
+    'check-prhymo': '<b>Analyse PRHYMO</b>\nMéthode d\'évaluation de l\'altération physique des cours d\'eau.',
+    'check-ruissellement': '<b>Axes Ruissellement</b>\nAxes d\'écoulement préférentiels identifiés par analyse de pente.',
+    'check-parcelles-agr': '<b>Parcelles Agricoles Impactées</b>\nParcelles exposées au risque de ruissellement.',
+    'check-bati-impacte': '<b>Bâti Impacté</b>\nBâti exposé au risque de ruissellement.',
+    'check-station-diag': '<b>Stations Hydrométriques</b>\nPoints de mesure des débits et hauteurs d\'eau.',
+    'check-ouvrages-diag': '<b>Ouvrages / Obstacles</b>\nOuvrages hydrauliques et obstacles à l\'écoulement.',
+    'check-hydro-diag': '<b>Réseau Hydrographique</b>\nCours d\'eau du bassin de la Hem.'
+};
+
+// ========== MAP INIT ==========
+function initMap() {
+    map = L.map('map', {
+        center: [50.78, 2.05],
+        zoom: 11,
+        zoomControl: true,
+        attributionControl: true
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        maxZoom: 19
+    }).addTo(map);
+
+    L.control.scale({imperial: false, metric: true}).addTo(map);
+}
+
+// ========== LAYER DEFINITIONS ==========
+let ebfLayers = {};
+let layersQ = {};
+let presLayers = {};
+let layerStation, layerOuvrages, layerHydroDiag, layerPrhymo;
+let layerRuissellement, layerParcellesAgr, layerBatiImpacte;
+let layerRsaAnguille, layerSatSaumon, layerFrayeresTrf, layerFrayeresLpf, layerPeGlobal;
+let layerTravauxLin, layerTravauxPt;
+
+// ========== INFO CONTROL ==========
+let info, prhymoInfo;
+
+function initInfoControl() {
+    info = L.control({position: 'topright'});
+    info.onAdd = function() {
+        this._div = L.DomUtil.create('div', 'info');
+        this.update();
+        return this._div;
+    };
+    info.update = function(props) {
+        this._div.innerHTML = '<h4>Informations</h4>' +
+            (props ? '<b>' + (props.nom || props.NOM || props.NOM_COM || props.Nom || 'Tronçon') + '</b><br>' +
+             Object.entries(props).filter(([k]) => !['nom','NOM','NOM_COM','Nom'].includes(k)).slice(0, 5).map(([k,v]) => k + ': ' + v).join('<br>')
+            : 'Survolez un élément pour voir ses informations.');
+    };
+}
+
+// ========== LOGIN ==========
 function performLogin() {
     const input = document.getElementById('login-username');
     const error = document.getElementById('login-error');
-    const value = input.value.trim();
-
-    if (!value) {
+    if (input.value && input.value.trim()) {
+        currentUser = input.value.trim().toUpperCase().substring(0, 3);
+        document.getElementById('user-initials').textContent = currentUser;
+        document.getElementById('user-name').textContent = currentUser;
+        document.getElementById('login-overlay').style.display = 'none';
+        initApp();
+    } else {
         error.style.display = 'block';
-        return;
     }
-
-    currentUser = value.toUpperCase().substring(0, 3);
-    document.getElementById('user-initials').textContent = currentUser;
-    document.getElementById('user-name').textContent = currentUser;
-
-    document.getElementById('login-overlay').style.display = 'none';
-    initApp();
 }
 
-// ===== MAP INIT =====
-let map, basemapLight, basemapSat, basemapTopo;
-let currentActiveQ = 'Q100';
-let currentView = 'ebf';
-let currentMode = 'public';
-let searchCommunesLayer, info, prhymoInfo;
-const AGENT_CODE = 'HEM2026&*';
-let filterPluiChart = null;
-let layersQ = {};
-let layerStation, layerOuvrages, layerHydroDiag, layerPrhymo, layerRuissellement, layerParcellesAgr, layerBatiImpacte;
-let layerRsaAnguille, layerSatSaumon, layerFrayeresTrf, layerFrayeresLpf, layerPeGlobal;
-let ebfLayers = {};
-let presLayers = {};
-let presLayerDefs = [];
-let pluiChart;
-let allCommuneNames = [];
+document.getElementById('login-username').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') performLogin();
+});
 
-// Year filter state for piscicultural layers
-let piscoYearFilterEnabled = false;
-let piscoYearDataLoaded = false;
-let piscoRawData = {};
-let piscoAvailableYears = [];
-
-// Year + type filter state for Plantations_hydraulique_douce
-let hydroYearFilterEnabled = false;
-let hydroTypeFilterEnabled = false;
-let hydroYearDataLoaded = false;
-let hydroRawData = null;
-let hydroAvailableYears = [];
-let hydroAvailableTypes = [];
-let hydroSelectedTypes = new Set();
-const HYDRO_TYPE_FIELD = 'TYPEOUVRAG';
-const HYDRO_YEAR_FIELD = 'DATEREALIS';
-
-// Piscicultural layer year field mapping
-const piscoLayerYearFields = {
-    'rsa-anguille': 'ANNEE',
-    'frayeres-trf': 'date_suivi',
-    'frayeres-lpf': 'date_suivi',
-    'pe-global': 'Annee'
-};
-
+// ========== INIT APP ==========
 function initApp() {
-    basemapLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
-    });
-    basemapSat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
-    basemapTopo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17 });
-
-    map = L.map('map', {
-        center: [50.78, 2.05], zoom: 11, layers: [basemapLight],
-        zoomControl: false
-    });
-    L.control.zoom({ position: 'topleft' }).addTo(map);
-    L.control.scale({ position: 'bottomleft', imperial: false }).addTo(map);
-
-    L.control.layers(
-        { "Plan Clair": basemapLight, "Topographique": basemapTopo, "Satellite": basemapSat },
-        {}, { position: 'topleft', collapsed: true }
-    ).addTo(map);
-
-    searchCommunesLayer = L.geoJSON();
-
-    setupInfoControl();
-    setupPrhymoInfoControl();
-    setupQLayers();
-    setupPointLayers();
-    setupEbfLayers();
-    setupPresentationLayers();
-    setupBindings();
-    setupInteractiveLegend()
-
-    loadData().then(() => {
-        switchView('presentation');
-        initChart();
-    }).catch(err => {
-        console.error('loadData failed:', err);
-        switchView('presentation');
-        initChart();
-    });
-
-    document.getElementById('tab-diagnostic').style.display = 'none';
-    document.getElementById('btn-download-data').style.display = 'none';
-    updateLegendVisibility();
+    initMap();
+    initInfoControl();
+    initChart();
+    switchView('presentation');
+    loadCommunes();
 }
 
-// ===== COLOR HELPERS =====
-function getClassColor(cls) {
-    return ({ E4: '#de2d26', E3: '#fd8d3c', E2: '#31a354', E1: '#3182bd' })[cls] || '#999';
-}
-
-function getUsraStyle(feature) {
-    const s = parseFloat(feature.properties.Score_100);
-    if (s < 25) return { color: '#27ae60', weight: 2, fillColor: '#2ecc71', fillOpacity: 0.5 };
-    if (s <= 45) return { color: '#d35400', weight: 2, fillColor: '#f39c12', fillOpacity: 0.5 };
-    return { color: '#c0392b', weight: 2, fillColor: '#e74c3c', fillOpacity: 0.5 };
-}
-
-function getStyleByAction(feature) {
-    const action = (feature.properties.Action_SFN || '').trim();
-    const styles = {
-        'Phase 2 : Préservation - Couvert herbeux':                          { color: '#27ae60', fillColor: '#27ae60', fillOpacity: 0.5 },
-        'RISQUE FAIBLE : Pas de ruissellement':                               { color: '#bdc3c7', fillColor: '#bdc3c7', fillOpacity: 0.3 },
-        'SURVEILLANCE : Pratiques agronomiques':                              { color: '#f39c12', fillColor: '#f39c12', fillOpacity: 0.5 },
-        'Phase 1 : URGENCE - Haie / Fascine':                                { color: '#c0392b', fillColor: '#c0392b', fillOpacity: 0.6 },
-        'Phase 2 : Consolidation - MAEC':                                    { color: '#e67e22', fillColor: '#e67e22', fillOpacity: 0.6 },
-        'EXISTANT : Bande enherbée / tampon':                                 { color: '#9b59b6', fillColor: '#9b59b6', fillOpacity: 0.5 },
-        'Non impacté par le ruissellement':                                   { color: '#bdc3c7', fillColor: '#bdc3c7', fillOpacity: 0.3 },
-        'Phase 1 : SÉCURITÉ BÂTI - Protection d\'urgence (Noue / Mur)':     { color: '#c0392b', fillColor: '#e74c3c', fillOpacity: 0.8 },
-        'SURVEILLANCE BÂTI : Veille inondation':                             { color: '#f1c40f', fillColor: '#f1c40f', fillOpacity: 0.8 }
-    };
-    return styles[action] || { color: '#7f8c8d', weight: 1, fillColor: '#bdc3c7', fillOpacity: 0.4 };
-}
-
-function getPluiColor(typezone) {
-    const z = (typezone || '').toString().toUpperCase();
-    if (z.startsWith('A') && !z.startsWith('AU')) return '#a6da59';
-    if (z.startsWith('1AU') || z.startsWith('2AU') || z.startsWith('AU')) return 'rgb(250,172,76)';
-    if (z.startsWith('N')) return 'rgb(51,160,44)';
-    if (z.startsWith('U')) return 'rgb(217,217,217)';
-    return '#999999';
-}
-
-// ===== INFO CONTROL (Q layers) =====
-function setupInfoControl() {
-    info = L.control({ position: 'topright' });
-    info.onAdd = function() { this._div = L.DomUtil.create('div', 'info'); this.update(); return this._div; };
-    info.update = function(props) {
-        if (!props) { this._div.innerHTML = '<h4>Détail Morpho</h4>Survolez la rivière'; return; }
-        const h = (q) => q === currentActiveQ ? 'val-focus' : '';
-        const l = props.Largeur_moy || props.largeur_moy || 'N/A';
-        const v = (val) => val ? parseFloat(val).toFixed(2) : '?';
-        this._div.innerHTML = `<h4>Secteur : ${props.Typologie || 'N/A'}</h4>
-            <p style="margin:5px 0 8px;font-size:12px;color:#555;"><b>Largeur :</b> ${l !== 'N/A' ? parseFloat(l).toFixed(2) + ' m' : 'N/A'}</p>
-            <table class="data-table">
-                <tr><th>Crue</th><th>Q (m³/s)</th><th>Ps (W/m²)</th><th>Cl.</th></tr>
-                ${['Q2','Q5','Q10','Q20','Q50','Q100'].map(q => `
-                <tr class="${h(q)}"><td>${q}</td><td>${v(props['Q_'+q+'_m3s'])}</td><td>${v(props['Ps_'+q])}</td>
-                <td><b style="color:${getClassColor(props['Cl_'+q])}">${props['Cl_'+q]||'?'}</b></td></tr>`).join('')}
-            </table>`;
-    };
-}
-
-// ===== PRHYMO INFO CONTROL (hover panel) =====
-function prhymoLevelColor(v) {
-    if (v == null || isNaN(v)) return '#888';
-    const n = parseFloat(v);
-    if (n >= 4.5) return '#c0392b';
-    if (n >= 3.5) return '#e67e22';
-    if (n >= 2.5) return '#f39c12';
-    if (n >= 1.5) return '#27ae60';
-    return '#2ecc71';
-}
-
-function prhymoLevelLabel(v) {
-    if (v == null || isNaN(v)) return 'N/A';
-    const n = parseFloat(v);
-    if (n >= 4.5) return 'Critique';
-    if (n >= 3.5) return 'Fort';
-    if (n >= 2.5) return 'Modéré';
-    if (n >= 1.5) return 'Faible';
-    return 'Très bon';
-}
-
-function setupPrhymoInfoControl() {
-    prhymoInfo = L.control({ position: 'topright' });
-    prhymoInfo.onAdd = function() { this._div = L.DomUtil.create('div', 'info'); this.update(); return this._div; };
-    prhymoInfo.update = function(props) {
-        if (!props) {
-            this._div.innerHTML = '<h4>Diagnostic PRHYMO</h4>Survolez un tronçon';
-            return;
-        }
-        const score = props.Score_100 != null ? parseFloat(props.Score_100).toFixed(1) + '%' : 'N/A';
-        const indicators = [
-            { k: 'mor_pll', l: 'Altération morphologie du profil en long (seuils, rupture de pente)' },
-            { k: 'mor_ssl', l: 'Altération de la section du lit et du profil en travers (calibrage, encaissement)' },
-            { k: 'mor_riv', l: 'Dégradation de la morphologie des rives, des berges et de la ripisylve' },
-            { k: 'mor_rip', l: 'État de la couverture arborée de la ripisylve (boisement de berges)' },
-            { k: 'con_pro', l: 'Rupture de la continuité biologique induite par les obstacles en long' },
-            { k: 'con_sed', l: 'Blocage de la continuité sédimentaire et du transit de la charge de fond (sables, graviers)' },
-            { k: 'con_amp', l: "Perte de connectivité avec les annexes et réduction de l'amplitude du lit majeur" },
-            { k: 'hyd_dyn', l: 'Perturbation de la dynamique hydrologique et de la typologie des écoulements' },
-            { k: 'hyd_qte', l: "Altération quantitative du régime hydrologique et des volumes d'eau circulants" }
-        ];
-       const calcMalus = (field) => {
-    const v = props[field];
-    if (v == null || isNaN(parseFloat(v))) return 'N/A';
-    return v; // Donnée brute sans .toFixed(1) ni '%'
-};
-
-const malusAgri = calcMalus('agri3w_v');
-const malusAmenag = calcMalus('txamg_v');
-
-let rows = indicators.map(ind => {
-    const v = props[ind.k]; // Donnée brute
-    const val = (v != null && v !== '') ? v : '–';
-    const color = prhymoLevelColor(v);
-    const lbl = prhymoLevelLabel(v);
-
-    return `<tr><td title="${ind.l}" style="text-align:left;font-size:10px;padding-right:6px;cursor:help;">${ind.k}</td>
-        <td><b style="color:${color};font-size:12px;">${val}</b></td>
-        <td style="font-size:9px;color:${color};">${lbl}</td></tr>`;
-}).join('');
-
-        this._div.innerHTML = `<h4>Diagnostic PRHYMO</h4>
-            <p style="margin:4px 0 6px;font-size:12px;color:#555;"><b>Score global :</b> 
-                <span style="font-weight:700;color:${parseFloat(props.Score_100)>=45?'#c0392b':(parseFloat(props.Score_100)>=25?'#e67e22':'#27ae60')};">${score}</span>
-            </p>
-            <p style="font-size:10px;color:#999;margin-bottom:6px;">Valeurs 1 (bon) → 5 (critique). Survolez un code pour son libellé.</p>
-            <table class="data-table">
-                <tr><th style="text-align:left;">Indicateur</th><th>Val.</th><th>Niveau</th></tr>
-                ${rows}
-            </table>
-            <div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--color-border);font-size:11px;color:#555;">
-                <div style="margin-bottom:3px;"><b>Malus Agricole :</b> 
-                    <span style="font-weight:700;color:#c2410c;">${malusAgri}</span></div>
-                <div><b>Malus d'Aménagement :</b> 
-                    <span style="font-weight:700;color:#c2410c;">${malusAmenag}</span></div>
-            </div>`;
-    };
-}
-
-// ===== Q LAYERS =====
-function setupQLayers() {
-    function createQLayer(qField) {
-        return L.geoJSON(null, {
-            style: (f) => ({ color: getClassColor(f.properties[qField]), weight: 6, opacity: 0.85 }),
-            onEachFeature: (f, l) => {
-                l.on({
-                    mouseover: (e) => { e.target.setStyle({ weight: 9, color: '#333' }); info.update(f.properties); },
-                    mouseout: (e) => { e.target.setStyle({ weight: 6, color: getClassColor(f.properties[qField]) }); }
-                });
-            }
-        });
-    }
-    layersQ = {
-        Q100: createQLayer('Cl_Q100'), Q50: createQLayer('Cl_Q50'), Q20: createQLayer('Cl_Q20'),
-        Q10: createQLayer('Cl_Q10'), Q5: createQLayer('Cl_Q5'), Q2: createQLayer('Cl_Q2')
-    };
-}
-
-// ===== POINT LAYERS =====
-function setupPointLayers() {
-    layerStation = L.geoJSON(null, {
-        pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 7, fillColor: '#0078A8', color: '#fff', weight: 2, fillOpacity: 0.9 }),
-        onEachFeature: (f, l) => l.bindPopup(`<b>Station :</b><br>${f.properties.station || f.properties.nom || 'Station Hem'}`)
-    });
-    layerOuvrages = L.geoJSON(null, {
-        pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 5, fillColor: '#000', color: '#fff', weight: 1, fillOpacity: 0.8 }),
-        onEachFeature: (f, l) => l.bindPopup(`<b>Ouvrage :</b><br>${f.properties.NomPrincipalObstEcoul || 'Inconnu'}`)
-    });
-    layerHydroDiag = L.geoJSON(null, {
-        style: { color: '#3498db', weight: 2, opacity: 0.8 },
-        onEachFeature: (f, l) => l.bindPopup(`<b>Cours d'eau :</b><br>${f.properties.NOM_C_EAU || 'Non renseigné'}`)
-    });
-    layerRsaAnguille = L.geoJSON(null, {
-        pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, fillColor: '#9b59b6', color: '#fff', weight: 1.5, fillOpacity: 0.9 }),
-        onEachFeature: (f, l) => {
-            const annee = f.properties.annee || f.properties.ANNEE || "Chronique";
-            l.bindPopup(`<b>Réseau Spécifique Anguille (RSA)</b><br><br><b>Espèce cible :</b> Anguille européenne<br><b>Campagne :</b> ${annee}`);
-        }
-    });
-    layerSatSaumon = L.geoJSON(null, {
-        pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, fillColor: '#1abc9c', color: '#fff', weight: 1.5, fillOpacity: 0.9 }),
-        onEachFeature: (f, l) => {
-            l.bindPopup(`<b>Suivi Aquatique Territorial (SAT62)</b><br><br><b>Indice d'Abondance Saumon</b><br><b>Objectif :</b> Suivi de l'effort de reproduction via l'échantillonnage de tacons.<br><b>Note Hem :</b> 1 seul tacon échantillonné sur la commune de Recques-sur-Hem (2022).`);
-        }
-    });
-    layerFrayeresTrf = L.geoJSON(null, {
-        pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, fillColor: '#e74c3c', color: '#fff', weight: 1.5, fillOpacity: 0.9 }),
-        onEachFeature: (f, l) => {
-            const source = f.properties.layer || "SNDP_TRF";
-            l.bindPopup(`<b>Suivi des Frayères (SNDP)</b><br><br><b>Espèce cible :</b> Truite de mer / Grands Salmonidés<br><b>Source :</b> ${source.replace(/_/g, ' ')}`);
-        }
-    });
-    layerFrayeresLpf = L.geoJSON(null, {
-        pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, fillColor: '#e67e22', color: '#fff', weight: 1.5, fillOpacity: 0.9 }),
-        onEachFeature: (f, l) => {
-            const source = f.properties.layer || "SNDP_LPF";
-            l.bindPopup(`<b>Suivi des Frayères (SNDP)</b><br><br><b>Espèce cible :</b> Lamproie fluviatile & de Planer<br><b>Source :</b> ${source.replace(/_/g, ' ')}`);
-        }
-    });
-    layerPeGlobal = L.geoJSON(null, {
-        pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 5, fillColor: '#3498db', color: '#fff', weight: 1, fillOpacity: 0.8 }),
-        onEachFeature: (f, l) => {
-            const station = f.properties.nom_stat || f.properties.nom || "Station FD62";
-            l.bindPopup(`<b>Inventaire Pêche Électrique (PE_FD62)</b><br><br><b>Station :</b> ${station}`);
-        }
-    });
-
-    layerPrhymo = L.geoJSON(null, {
-        style: getUsraStyle,
-        onEachFeature: (f, l) => {
-            l.on({
-                mouseover: (e) => {
-                    e.target.setStyle({ weight: 4, color: '#333' });
-                    prhymoInfo.update(f.properties);
-                },
-                mouseout: (e) => {
-                    e.target.setStyle(getUsraStyle(f));
+// ========== COMMUNES LOADING ==========
+function loadCommunes() {
+    fetch('communes.geojson')
+        .then(r => r.json())
+        .then(data => {
+            searchCommunesLayer = L.geoJSON(data, {
+                style: { color: '#444', weight: 1, dashArray: '5 5', fillOpacity: 0 },
+                onEachFeature: (f, l) => {
+                    const n = f.properties.nom || f.properties.NOM || f.properties.NOM_COM || f.properties.Nom || '';
+                    if (n) allCommuneNames.push(n);
+                    l.bindTooltip(n, {sticky: true});
                 }
             });
-            const s = parseFloat(f.properties.Score_100);
-            l.bindPopup(`<b>PRHYMO</b><br>Score : ${s.toFixed(1)}%`);
-        }
-    });
-    layerRuissellement = L.geoJSON(null, {
-        style: { color: '#3498db', weight: 2, dashArray: '3,6', opacity: 0.9 }
-    });
-    layerParcellesAgr = L.geoJSON(null, {
-        style: getStyleByAction,
-        onEachFeature: (f, l) => l.bindPopup(`<b>Action SFN :</b> ${f.properties.Action_SFN || 'Non définie'}`)
-    });
-    layerBatiImpacte = L.geoJSON(null, {
-        style: getStyleByAction,
-        onEachFeature: (f, l) => l.bindPopup(`<b>Action :</b> ${f.properties.Action_SFN || 'Non définie'}`)
-    });
-}
-
-// ===== EBF LAYERS =====
-function setupEbfLayers() {
-    const pluiStyle = (f) => ({ fillColor: getPluiColor(f.properties.typezone || f.properties.TYPEZONE), weight: 1, color: '#666', fillOpacity: 0.6 });
-    const pluiPopup = (f, l) => {
-        const z = f.properties.typezone || f.properties.TYPEZONE || 'Inconnu';
-        l.bindPopup(`<b>Zonage PLUi : ${z}</b><br><i>${f.properties.libelong || f.properties.LIBELONG || ''}</i>`);
-    };
-
-    ebfLayers = {
-        efo: L.geoJSON(null, { style: { color: '#FFAA00', weight: 3, fillOpacity: 0.1 } }),
-        efn: L.geoJSON(null, { style: { color: '#e67e22', weight: 3, fillOpacity: 0.2, dashArray: '5,10' } }),
-        bufEroEfo: L.geoJSON(null, { style: { color: '#FFAA00', weight: 2, fillOpacity: 0.1 } }),
-        bufEroEfn: L.geoJSON(null, { style: { color: '#FFAA00', weight: 2, fillOpacity: 0.1, dashArray: '4,4' } }),
-        mrvbf: L.geoJSON(null, { style: { color: '#3498db', weight: 0, fillOpacity: 0.3 } }),
-        aziEfn: L.geoJSON(null, { style: { color: '#3498db', weight: 0, fillOpacity: 0.3 } }),
-        geol: L.geoJSON(null, { style: { color: '#a6cee3', weight: 0, fillOpacity: 0.4 } }),
-        geolEfn: L.geoJSON(null, { style: { color: '#a6cee3', weight: 0, fillOpacity: 0.4 } }),
-        zdh: L.geoJSON(null, { style: { color: '#2ecc71', weight: 0, fillOpacity: 0.4 } }),
-        geo25: L.geoJSON(null, { style: { color: '#f1c40f', weight: 0, fillOpacity: 0.3 } }),
-        geo5: L.geoJSON(null, { style: { color: '#f1c40f', weight: 0, fillOpacity: 0.4 } }),
-        perche: L.geoJSON(null, { style: { color: '#8e44ad', weight: 0, fillOpacity: 0.5 } }),
-        percheEfn: L.geoJSON(null, { style: { color: '#8e44ad', weight: 0, fillOpacity: 0.5 } }),
-        zheEfo: L.geoJSON(null, { style: { color: '#27ae60', weight: 0, fillOpacity: 0.5 } }),
-        zhe: L.geoJSON(null, { style: { color: '#27ae60', weight: 0, fillOpacity: 0.5 } }),
-        bati: L.geoJSON(null, { style: { color: '#e74c3c', weight: 0, fillOpacity: 0.7 } }),
-        hydro: L.geoJSON(null, {
-            style: { color: '#3498db', weight: 2, opacity: 0.8 },
-            onEachFeature: (f, l) => l.bindPopup(`<b>Cours d'eau :</b><br>${f.properties.NOM_C_EAU || 'Non renseigné'}`)
-        }),
-        pluiEfo: L.geoJSON(null, { style: pluiStyle, onEachFeature: pluiPopup }),
-        pluiEfn: L.geoJSON(null, { style: pluiStyle, onEachFeature: pluiPopup }),
-        communes: L.geoJSON(null, {
-            style: { color: '#444', weight: 2, dashArray: '5,5', fillOpacity: 0.05 },
-            onEachFeature: (f, l) => l.bindPopup(`<b>Commune :</b> ${f.properties.nom || f.properties.NOM || f.properties.NOM_COM || ''}`)
-        })
-    };
-}
-
-// ===== BIND LAYERS =====
-const definitions = {
-    'check-efo': '<b>EBF Optimal Définitif</b> – Zone de mobilité maximale théorique.',
-    'check-efn': '<b>EBF Nécessaire Définitif</b> – Périmètre d\'action prioritaire.',
-    'check-buf-ero-efo': '<b>Espace morphologique (EFO)</b> – Largeur de liberté totale.',
-    'check-buf-ero-efn': '<b>Espace morphologique (EFN)</b> – Corridor fonctionnel préservé.',
-    'check-mrvbf': '<b>Enveloppe hydraulique (EFO)</b> – Fond de vallée alluvial.',
-    'check-azi-efn': '<b>Enveloppe hydraulique (EFN)</b> – Atlas zones inondation (AZI).',
-    'check-geol': '<b>Enveloppe hydrogéologique (EFO)</b> – Alluvions quaternaires.',
-    'check-geol-efn': '<b>Enveloppe hydrogéologique (EFN)</b>',
-    'check-zdh': '<b>Zones à dominantes humides</b>\n\nCette donnée provient de la pédologie caractéristique des zones humides. Elle identifie les secteurs où les conditions pédologiques sont favorables au développement de milieux humides.',
-    'check-geo25': '<b>Enveloppe biogéochimique (EFO)</b> – Zone tampon 25m.',
-    'check-perche': '<b>Lits perchés (EFO)</b>',
-    'check-perche-efn': '<b>Lits perchés (EFN)</b>',
-    'check-zhe-efo': '<b>Enveloppe biologique (EFO)</b> – Zones humides stratégiques.',
-    'check-zhe': '<b>Enveloppe biologique (EFN)</b> – Corridor biologique contraint.',
-    'check-geo5': '<b>Enveloppe biogéochimique (EFN)</b> – Zone tampon 5m.',
-    'check-bati': '<b>Enjeux Anthropiques</b> – Bâti et infrastructures.',
-    'check-hydro': '<b>Réseau Hydrographique</b>',
-    'check-communes': '<b>Limites Communales</b>',
-    'check-plui-efo': '<b>Zonage PLUi (EFO)</b> – Occupation du sol dans l\'emprise EBF Optimal.',
-    'check-plui-efn': '<b>Zonage PLUi (EFN)</b> – Occupation du sol dans l\'emprise EBF Nécessaire.',
-    'check-prhymo': '<b>Analyse PRHYMO</b>\n\nScore de dégradation physique du cours d\'eau basé sur 9 indicateurs qualitatifs et 2 variables quantitatives.',
-    'check-ruissellement': '<b>Axes Ruissellement</b>\n\nChemins préférentiels d\'écoulement identifiés par modélisation topographique.',
-    'check-parcelles-agr': '<b>Parcelles Agricoles Impactées</b>\n\nParcelles prioritaires pour la gestion du ruissellement agricole.',
-    'check-bati-impacte': '<b>Bâti Impacté</b>\n\nConstructions exposées aux risques de ruissellement.',
-    'check-station-diag': '<b>Stations Hydrométriques</b>\n\nPoints de mesure des débits et niveaux d\'eau.',
-    'check-ouvrages-diag': '<b>Ouvrages / Obstacles</b>\n\nÉléments fragmentant le cours d\'eau.',
-    'check-hydro-diag': '<b>Réseau Hydrographique</b>\n\nTronçons homogènes du bassin de la Hem.',
-    'pres-ppri': '<b>PPRI – Plan de Prévention des Risques d\'Inondation</b>\n\nDocument réglementaire opposable qui délimite les zones exposées au risque d\'inondation. Il impose des règles d\'urbanisme spécifiques pour les constructions.',
-    'pres-azi': '<b>AZI – Atlas des Zones Inondables</b>\n\nCartographie des secteurs inondables basée sur des études hydrauliques. Outil de connaissance du risque non opposable.',
-    'pres-reperes-crues': '<b>Repères de crues</b>\n\nPoints de marquage des niveaux atteints par les plus hautes eaux connues. Servent de mémoire des événements passés.',
-    'pres-bassins': '<b>Bassins versants</b>\n\nEnsemble du territoire drainé par un cours d\'eau. Unité hydrographique de base pour la gestion de l\'eau.',
-    'pres-axes-ruiss': '<b>Axes de ruissellement</b>\n\nChemins préférentiels d\'écoulement des eaux de surface lors des pluies. Identifiés par modélisation topographique.',
-    'pres-zh': '<b>Zones humides</b>\n\nMilieux caractérisés par la présence d\'eau proximité de la surface. Rôle majeur dans l\'épuration, le stockage de l\'eau et la biodiversité.',
-    'pres-natura2000': '<b>Natura 2000 – ZSC</b>\n\nZone Spéciale de Conservation (directive européenne Habitats). Réseau de sites naturels d\'importance européenne.',
-    'pres-znieff1': '<b>ZNIEFF type 1</b>\n\nZone Naturelle d\'Intérêt Faunistique et Floristique. Périmètre restreint de haute valeur biologique ou écologique.',
-    'pres-znieff2': '<b>ZNIEFF type 2</b>\n\nZNIEFF de grand ensemble naturel. Unités de paysage cohérentes à valeur fonctionnelle.',
-    'pres-reservoirs': '<b>Réservoirs de biodiversité</b>\n\nZones identifiées par le SRADDET comme zones sources d\'espèces et milieux naturels remarquables.',
-    'pres-sites-classes': '<b>Sites classés</b>\n\nSites à protéger en raison de leur caractère artistique, historique, scientifique, légendaire ou pittoresque (loi 1930).',
-    'pres-reserve-bio': '<b>Réserve de biosphère</b>\n\nDésignation UNESCO reconnaissant un territoire modelé par l\'interaction homme-nature.',
-    'pres-trame-vert': '<b>Trame verte</b>\n\nRéseau de corridors écologiques terrestres permettant la dispersion des espèces entre réservoirs de biodiversité.',
-    'pres-trame-bleu': '<b>Trame bleue</b>\n\nRéseau de corridors écologiques aquatiques et humides (cours d\'eau, zones humides, ripisylves).',
-    'pres-mares': '<b>Mares</b>\n\nPoints d\'eau stagnante de petite taille. Habitats remarquables pour amphibiens, odonates et flore hygrophile.',
-    'pres-stations-suivi': '<b>Stations de suivi piscicole</b>\n\nPoints de pêche électrique permettant d\'évaluer la population de poissons et l\'indice biotique.',
-    'pres-obstacles': '<b>Obstacles à l\'écoulement</b>\n\nOuvrages (seuils, barrages, buses) fragmentant le cours d\'eau et le transit sédimentaire.',
-    'pres-travaux-hydro': '<b>Travaux hydrauliques doux</b>\n\nPlantations réalisées pour pallier au ruissellement. Aménagements utilisant le génie végétal pour stabiliser les berges sans durcissement.',
-    'check-rsa-anguille': '<b>Réseau Spécifique Anguille (RSA62)</b><br><br>Centralise les suivis d\'Abondance piscicole de l\'Anguille européenne à l\'échelle de la Hem. Chroniques couvrant les campagnes 2011, 2014, 2017, 2020 et 2023.',
-    'check-sat-saumon': '<b>Suivi Aquatique Territorial Saumon (SAT62)</b><br><br>Suivi de l\'effort de reproduction du Saumon Atlantique via l\'échantillonnage de tacons (juvéniles).',
-    'check-frayeres-trf': '<b>Suivi des Frayères de Grands Salmonidés (SNDP)</b><br><br> Répertorie le suivi et l\'emplacement des zones de ponte de la Truite de mer sur le bassin versant.',
-    'check-frayeres-lpf': '<b>Suivi des Frayères d\'Agnathes (SNDP)</b><br><br>Inventaires ciblés sur les zones de ponte des Lamproies (notamment la Lamproie fluviatile et de Planer) sur le réseau hydrographique.',
-    'check-pe-global': '<b>Stations de Pêches Électriques (PE_FD62)</b><br><br>Données géoréférencées de l\'ensemble des inventaires piscicoles et suivis de peuplements menés par la Fédération Départementale de Pêche 62.'
-};
-function updateLegendVisibility() {
-    const views = ['ebf', 'diagnostic', 'presentation'];
-    views.forEach(v => {
-        const legendContainer = document.getElementById('legend-' + v);
-        if (legendContainer) {
-            legendContainer.style.display = 'block';
-        }
-    });
-}
-
-function setupInteractiveLegend() {
-}
-    
-function setupBindings() {
-    const qBtns = document.getElementById('q-buttons');
-    const qControls = document.getElementById('q-layer-controls');
-    ['Q2','Q5','Q10','Q20','Q50','Q100'].forEach(q => {
-        const btn = document.createElement('button');
-        btn.className = 'chart-btn' + (q === 'Q100' ? ' active' : '');
-        btn.textContent = q;
-        btn.style.flex = '0 0 auto';
-        btn.onclick = () => {
-            document.querySelectorAll('#q-buttons .chart-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            for (let qq in layersQ) map.removeLayer(layersQ[qq]);
-            currentActiveQ = q;
-            layersQ[q].addTo(map);
-        };
-        qBtns.appendChild(btn);
-
-        const item = document.createElement('div');
-        item.className = 'layer-item';
-        item.innerHTML = `<div class="layer-swatch" style="background:${getClassColor('E'+q.replace('Q',''))||'#888'};width:10px;height:3px;border-radius:0;margin-top:5px;"></div>
-            <input type="checkbox" id="check-q-${q}" ${q==='Q100'?'checked':''}>
-            <label for="check-q-${q}">Crue ${q}</label>`;
-        item.querySelector('input').addEventListener('change', function() {
-            if (this.checked) {
-                for (let qq in layersQ) map.removeLayer(layersQ[qq]);
-                document.querySelectorAll('[id^="check-q-"]').forEach(cb => { if(cb !== this) cb.checked = false; });
-                currentActiveQ = q;
-                layersQ[q].addTo(map);
-                document.querySelectorAll('#q-buttons .chart-btn').forEach(b => b.classList.toggle('active', b.textContent === q));
-            } else {
-                map.removeLayer(layersQ[q]);
-            }
-        });
-        qControls.appendChild(item);
-    });
-
-    function bindEbf(id, layer, file) {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.addEventListener('change', function() {
-            if (this.checked) {
-                fetch(file).then(r => r.json()).then(data => {
-                    layer.addData(data);
-                    if (!id.startsWith('check-plui') && id !== 'check-communes' && id !== 'check-hydro') {
-                        layer.eachLayer(l => l.bindPopup(definitions[id] || 'Couche modélisée'));
-                    }
-                    layer.addTo(map);
-                }).catch(() => console.log('Erreur: ' + file));
-            } else {
-                map.removeLayer(layer);
-            }
-            updateLegendVisibility();
-        });
-    }
-
-    bindEbf('check-efo', ebfLayers.efo, 'EFO_FINAL_WGS.geojson');
-    bindEbf('check-efn', ebfLayers.efn, 'EFN_FINAL_WGS.geojson');
-    bindEbf('check-buf-ero-efo', ebfLayers.bufEroEfo, 'Buffer_Erosion_EFO.geojson');
-    bindEbf('check-buf-ero-efn', ebfLayers.bufEroEfn, 'Buffer_Erosion_EFN.geojson');
-    bindEbf('check-mrvbf', ebfLayers.mrvbf, 'MRVBF_LISSER.geojson');
-    bindEbf('check-azi-efn', ebfLayers.aziEfn, 'Crues_AZI.geojson');
-    bindEbf('check-geol', ebfLayers.geol, 'Geologie.geojson');
-    bindEbf('check-geol-efn', ebfLayers.geolEfn, 'Geologie.geojson');
-    bindEbf('check-zdh', ebfLayers.zdh, 'ZDH_Global.geojson');
-    bindEbf('check-geo25', ebfLayers.geo25, 'EBF_Geochimique_25m.geojson');
-    bindEbf('check-perche', ebfLayers.perche, 'LIT_perche_WGS.geojson');
-    bindEbf('check-perche-efn', ebfLayers.percheEfn, 'LIT_perche_WGS.geojson');
-    bindEbf('check-zhe-efo', ebfLayers.zheEfo, 'ZH_Enjeux.geojson');
-    bindEbf('check-zhe', ebfLayers.zhe, 'ZH_Enjeux.geojson');
-    bindEbf('check-geo5', ebfLayers.geo5, 'EBF_Geochimique_5m.geojson');
-    bindEbf('check-bati', ebfLayers.bati, 'Bati_route.geojson');
-    bindEbf('check-hydro', ebfLayers.hydro, 'Hydro_HEM_WGS.geojson');
-    bindEbf('check-plui-efo', ebfLayers.pluiEfo, 'EFO_PLUI.geojson');
-    bindEbf('check-plui-efn', ebfLayers.pluiEfn, 'EFN_PLUI.geojson');
-    bindEbf('check-communes', ebfLayers.communes, 'communes.geojson');
-
-    function bindDiag(id, layer) {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.addEventListener('change', function() {
-            if (this.checked) layer.addTo(map);
-            else map.removeLayer(layer);
-        });
-    }
-    bindDiag('check-prhymo', layerPrhymo);
-    bindDiag('check-ruissellement', layerRuissellement);
-    bindDiag('check-parcelles-agr', layerParcellesAgr);
-    bindDiag('check-bati-impacte', layerBatiImpacte);
-    bindDiag('check-station-diag', layerStation);
-    bindDiag('check-ouvrages-diag', layerOuvrages);
-    bindDiag('check-hydro-diag', layerHydroDiag);
-    bindDiag('check-rsa-anguille', layerRsaAnguille);
-    bindDiag('check-sat-saumon', layerSatSaumon);
-    bindDiag('check-frayeres-trf', layerFrayeresTrf);
-    bindDiag('check-frayeres-lpf', layerFrayeresLpf);
-    bindDiag('check-pe-global', layerPeGlobal);
-}
-
-// ===== PRESENTATION LAYERS =====
-function setupPresentationLayers() {
-   presLayerDefs = [
-        { 
-            id: 'pres-communes-hem', 
-            file: 'communes.geojson', 
-            style: { color: '#444', weight: 1.5, dashArray: '5,5', fillOpacity: 0.05 },
-            popup: f => `<b>Commune (HEM) :</b> ${f.properties.nom || f.properties.NOM || f.properties.NOM_COM || ''}` 
-        },
-        { 
-            id: 'pres-pnr-2013', 
-            file: 'PNR_CMO_2013-2028.geojson', 
-            style: { color: '#10b981', weight: 2, fillColor: '#10b981', fillOpacity: 0.1 },
-            popup: f => `<b>Périmètre PNR CMO (2013-2028)</b><br>Surface : ${f.properties.Surf_ha || ''} ha` 
-        },
-        { 
-            id: 'pres-communes-2013', 
-            file: 'Communes_2013-2028.geojson', 
-            style: { color: '#10b981', weight: 1, dashArray: '4,4', fillOpacity: 0 },
-            popup: f => `<b>Commune PNR (2013-2028) :</b> ${f.properties.nom || ''}<br>Code INSEE : ${f.properties.insee || ''}` 
-        },
-        { 
-            id: 'pres-pnr-2028', 
-            file: 'PNR_CMO_2028-2044.geojson', 
-            style: { color: '#e11d48', weight: 2, fillColor: '#e11d48', fillOpacity: 0.1 },
-            popup: f => `<b>Périmètre PNR CMO (2028-2044)</b><br>Surface : ${f.properties.Surf_ha || ''} ha` 
-        },
-        { 
-            id: 'pres-communes-2028', 
-            file: 'Communes_2028-2044.geojson', 
-            style: { color: '#e11d48', weight: 1, dashArray: '4,4', fillOpacity: 0 },
-            popup: f => `<b>Commune PNR (2028-2044) :</b> ${f.properties.nom || ''}<br>Code INSEE : ${f.properties.insee || ''}` 
-        },
-        { 
-            id: 'pres-exutoire', 
-            file: 'Exutoire_HEM.geojson', 
-            pointStyle: { radius: 8, fillColor: '#0284c7', color: '#ffffff', weight: 2, fillOpacity: 0.95 },
-        },
-       
-       { 
-            id: 'pres-hydro-noms', 
-            file: 'Hydro_HEM_WGS.geojson',
-            style: { color: '#3498db', weight: 2, opacity: 0.8 },
-            popup: f => `<b>Cours d'eau :</b> ${f.properties.NOM_C_EAU || 'Non renseigné'}`,
-            onEachExtra: (f, l) => {
-                const nom = (f.properties.NOM_C_EAU || '').toLowerCase();
-                if (nom === 'la hem' || nom === 'le locquin' || nom === "l'acquine" || nom === "l'acquin") {
-                    l.bindTooltip(f.properties.NOM_C_EAU, { permanent: true, direction: 'center', className: 'hydro-label' });
-                }
-            }
-        },
-        { id: 'pres-ppri', file: 'PPRI_ancien.geojson',
-          style: { color: '#3b82f6', weight: 1, fillColor: '#3b82f6', fillOpacity: 0.35 },
-          popup: f => `<b>PPRI</b>` },
-        { id: 'pres-azi', file: 'Crues_AZI.geojson',
-          style: { color: '#93c5fd', weight: 1, fillColor: '#93c5fd', fillOpacity: 0.35 },
-          popup: f => `<b>Atlas zones inondables</b><br><b>Année :</b> ${f.properties.ANNEE||'?'}<br><b>Nature :</b> ${f.properties.NATURE||'?'}` },
-        { id: 'pres-reperes-crues', file: 'lieux_inondes.geojson',
-          pointStyle: { radius: 7, fillColor: '#1d4ed8', color: '#fff', weight: 2, fillOpacity: 0.9 },
-          popup: f => `<b>Lieu inondé</b><br>${Object.entries(f.properties||{}).slice(0,3).map(([k,v])=>`<b>${k}:</b> ${v}`).join('<br>')}` },
-        { id: 'pres-bassins', file: 'bassin_hem.geojson',
-          style: { color: '#3b82f6', weight: 2, fillColor: '#bfdbfe', fillOpacity: 0.15 },
-          popup: f => `<b>Bassin versant</b>` },
-        { id: 'pres-axes-ruiss', file: 'Axe_ruissellement_hors_lit_pente.geojson',
-          lineStyle: { color: '#06b6d4', weight: 2, opacity: 0.85 },
-          popup: f => `<b>Axe de ruissellement</b>` },
-        { id: 'pres-zh', file: 'ZH_Enjeux.geojson',
-          style: { color: '#16a34a', weight: 1, fillColor: '#4ade80', fillOpacity: 0.4 },
-          popup: f => `<b>Zone humide</b>` },
-        { id: 'pres-natura2000', file: 'ZCS_HEM.geojson',
-          style: { color: '#16a34a', weight: 2, fillColor: '#16a34a', fillOpacity: 0.2 },
-          popup: f => `<b>ZCS – Natura 2000</b><br>${f.properties.sitename||''}` },
-        { id: 'pres-znieff1', file: 'ZNIEFF1.geojson',
-          style: { color: '#65a30d', weight: 1, fillColor: '#a3e635', fillOpacity: 0.3 },
-          popup: f => `<b>ZNIEFF type 1</b><br>${f.properties.NOM||''}` },
-        { id: 'pres-znieff2', file: 'ZNIEFF2.geojson',
-          style: { color: '#4d7c0f', weight: 1, fillColor: '#86efac', fillOpacity: 0.25 },
-          popup: f => `<b>ZNIEFF type 2</b><br>${f.properties.NOM||''}` },
-        { id: 'pres-reservoirs', file: 'reservoir_biodiversite.geojson',
-          style: { color: '#f97316', weight: 1, fillColor: '#f97316', fillOpacity: 0.35 },
-          popup: f => `<b>Réservoir de biodiversité</b><br>${f.properties.MILMAJ_REG||''}` },
-        { id: 'pres-sites-classes', file: 'Sites_classe_hem.geojson',
-          style: { color: '#d97706', weight: 2, fillColor: '#fbbf24', fillOpacity: 0.4 },
-          popup: f => `<b>Site classé</b><br>${f.properties.ref_site_5||''}` },
-        { id: 'pres-reserve-bio', file: 'reserve_biosphere.geojson',
-          style: { color: '#7c3aed', weight: 2, fillColor: '#a78bfa', fillOpacity: 0.3 },
-          popup: f => `<b>Réserve de biosphère</b><br>${f.properties.NOM_SITE||''}` },
-        { id: 'pres-trame-vert', file: 'trame_vert.geojson',
-          style: { color: '#65a30d', weight: 1, fillColor: '#84cc16', fillOpacity: 0.35 },
-          popup: f => `<b>Trame verte</b><br>${f.properties.MILMAJ_REG||''}` },
-        { id: 'pres-trame-bleu', file: 'trame_bleu.geojson',
-          style: { color: '#0284c7', weight: 1, fillColor: '#0ea5e9', fillOpacity: 0.3 },
-          popup: f => `<b>Trame bleue</b>` },
-        { id: 'pres-mares', file: 'mares.geojson',
-          pointStyle: { radius: 5, fillColor: '#6ee7b7', color: '#059669', weight: 1.5, fillOpacity: 0.9 },
-          popup: f => `<b>Mare</b><br>${Object.entries(f.properties||{}).slice(0,3).map(([k,v])=>`<b>${k}:</b> ${v}`).join('<br>')}` },
-        { id: 'pres-stations-suivi', file: 'Station.geojson',
-          pointStyle: { radius: 7, fillColor: '#0891b2', color: '#fff', weight: 2, fillOpacity: 0.9 },
-          popup: f => `<b>Station de suivi</b><br>${f.properties.station||f.properties.nom||''}` },
-        { id: 'pres-obstacles', file: 'Ouvrage_WGS.geojson',
-          pointStyle: { radius: 5, fillColor: '#222', color: '#fff', weight: 1, fillOpacity: 0.85 },
-          popup: f => `<b>Obstacle à l'écoulement</b><br>${f.properties.NomPrincipalObstEcoul||''}` },
-        { 
-            id: 'pres-travaux-hydro', file: 'Plantations_hydraulique_douce.geojson',
-            style: (f) => {
-                const type = (f.properties.TYPEOUVRAG || '').toLowerCase();
-                let col = '#0ea5e9';
-                if (type.includes('fascine')) col = '#e67e22';
-                else if (type.includes('haie')) col = '#27ae60';
-                else if (type.includes('noue')) col = '#8b5cf6';
-                return { color: col, weight: 2, fillColor: col, fillOpacity: 0.5 };
-            },
-            popup: f => `<b>Travaux hydrauliques doux</b><br><b>Date de réalisation :</b> ${f.properties.DATEREALIS||'?'}<br><b>Type d'ouvrage :</b> ${f.properties.TYPEOUVRAG||'?'}`,
-            yearField: HYDRO_YEAR_FIELD, typeField: HYDRO_TYPE_FIELD 
-        }
-    ];
-    
-    presLayerDefs.forEach(def => {
-       const onEach = (f, l) => {
-    if (def.popup) l.bindPopup(def.popup(f));
-    if (def.onEachExtra) def.onEachExtra(f, l);
-        };
-        if (def.pointStyle) {
-            presLayers[def.id] = L.geoJSON(null, {
-                pointToLayer: (f, latlng) => L.circleMarker(latlng, def.pointStyle),
-                onEachFeature: onEach
+            allCommuneNames.sort();
+            const sel = document.getElementById('commune-selector');
+            sel.innerHTML = '<option value="">-- Sélectionner une commune --</option>';
+            allCommuneNames.forEach(n => {
+                const o = document.createElement('option');
+                o.value = n; o.textContent = n;
+                sel.appendChild(o);
             });
-        } else if (def.lineStyle) {
-            presLayers[def.id] = L.geoJSON(null, { style: def.lineStyle, onEachFeature: onEach });
-        } else {
-            presLayers[def.id] = L.geoJSON(null, { style: def.style, onEachFeature: onEach });
-        }
-        const el = document.getElementById(def.id);
-        if (!el) return;
-        
-        el.addEventListener('change', function() {
-            if (this.checked) {
-                if (presLayers[def.id].getLayers().length > 0) {
-                    presLayers[def.id].addTo(map);
-                } else {
-                    fetch(def.file).then(r => r.json()).then(d => {
-                        presLayers[def.id].addData(d);
-                        presLayers[def.id].addTo(map);
-                        if (def.yearField) loadHydroYearData(d);
-                    }).catch(() => {
-                        this.checked = false;
-                        console.log('Fichier non disponible : ' + def.file);
-                        updateLegendVisibility(); 
-                    });
-                }
-            } else {
-                map.removeLayer(presLayers[def.id]);
-            }
-          
-            updateLegendVisibility();
-        });
-        
-    });
-}
-
-// ===== DATA LOADING =====
-function loadData() {
-    return fetch('hem_troncons_homogenes_finaux_1.geojson').then(r => r.json()).then(data => {
-        for (let q in layersQ) layersQ[q].addData(data);
-
-        const promises = [
-            fetch('Station.geojson').then(r=>r.json()).then(d=>layerStation.addData(d)).catch(()=>{}),
-            fetch('Ouvrage_WGS.geojson').then(r=>r.json()).then(d=>layerOuvrages.addData(d)).catch(()=>{}),
-            fetch('Hydro_HEM_WGS.geojson').then(r=>r.json()).then(d=>{
-                layerHydroDiag.addData(d); ebfLayers.hydro.addData(d);
-            }).catch(()=>{}),
-            fetch('USRA_HEM.geojson').then(r=>r.json()).then(d=>layerPrhymo.addData(d)).catch(()=>{}),
-            fetch('Axe_ruissellement_hors_lit_pente.geojson').then(r=>r.json()).then(d=>layerRuissellement.addData(d)).catch(()=>{}),
-            fetch('HEM_TON_SOL.geojson').then(r=>r.json()).then(d=>layerParcellesAgr.addData(d)).catch(()=>{}),
-            fetch('Zone_Bati.geojson').then(r=>r.json()).then(d=>layerBatiImpacte.addData(d)).catch(()=>{}),
-            fetch('RSA_62.geojson').then(r=>r.json()).then(d=>{ layerRsaAnguille.addData(d); piscoRawData['rsa-anguille'] = d; }).catch(()=>{}),
-            fetch('SIG_SAT62.geojson').then(r=>r.json()).then(d=>layerSatSaumon.addData(d)).catch(()=>{}),
-            fetch('SNDP_TRF_FD62.geojson').then(r=>r.json()).then(d=>{ layerFrayeresTrf.addData(d); piscoRawData['frayeres-trf'] = d; }).catch(()=>{}),
-            fetch('SNDP_LPF_FD62.geojson').then(r=>r.json()).then(d=>{ layerFrayeresLpf.addData(d); piscoRawData['frayeres-lpf'] = d; }).catch(()=>{}),
-            fetch('SIG_PE_FD62.geojson').then(r=>r.json()).then(d=>{ layerPeGlobal.addData(d); piscoRawData['pe-global'] = d; }).catch(()=>{}),
-            fetch('communes.geojson').then(r=>r.json()).then(data=>{
-                searchCommunesLayer.addData(data);
-                ebfLayers.communes.addData(data);
-                const sel = document.getElementById('commune-selector');
-                sel.innerHTML = '<option value="">-- Zoomer sur une commune --</option>';
-                let noms = [];
-                data.features.forEach(f => {
-                    const n = f.properties.nom || f.properties.NOM || f.properties.NOM_COM || f.properties.Nom;
-                    if (n) noms.push(n);
-                });
-                allCommuneNames = [...new Set(noms)].sort((a,b)=>a.localeCompare(b,'fr'));
-                allCommuneNames.forEach(nom => {
-                    const o = document.createElement('option');
-                    o.value = nom; o.textContent = nom;
-                    sel.appendChild(o);
-                });
-            }).catch(()=>{ document.getElementById('commune-selector').innerHTML = '<option>Erreur chargement</option>'; })
-        ];
-
-        return Promise.all(promises).then(() => {
-            populatePiscoYearSelect();
-        });
-    }).catch(err => {
-        console.error('Erreur chargement tronçons:', err);
-        return Promise.resolve();
-    });
-}
-
-// ===== PISCICULTURAL YEAR FILTER =====
-function extractYear(value) {
-    if (!value) return null;
-    const s = String(value);
-    const m = s.match(/(\d{4})/);
-    return m ? parseInt(m[1]) : null;
-}
-
-function populatePiscoYearSelect() {
-    const years = new Set();
-    for (const layerKey in piscoLayerYearFields) {
-        const field = piscoLayerYearFields[layerKey];
-        const data = piscoRawData[layerKey];
-        if (!data || !data.features) continue;
-        data.features.forEach(f => {
-            const y = extractYear(f.properties[field]);
-            if (y) years.add(y);
-        });
-    }
-    piscoAvailableYears = [...years].sort((a,b) => b - a);
-    piscoYearDataLoaded = true;
-
-    const sel = document.getElementById('pisco-year-select');
-    if (sel) {
-        sel.innerHTML = '<option value="">-- Toutes les années --</option>';
-        piscoAvailableYears.forEach(y => {
-            const o = document.createElement('option');
-            o.value = y; o.textContent = y;
-            sel.appendChild(o);
-        });
-    }
-}
-
-function togglePiscoYearFilter() {
-    const toggle = document.getElementById('pisco-year-filter-toggle');
-    const sel = document.getElementById('pisco-year-select');
-    piscoYearFilterEnabled = toggle.checked;
-    if (piscoYearFilterEnabled) {
-        sel.disabled = false;
-        sel.style.display = 'block';
-    } else {
-        sel.disabled = true;
-        sel.style.display = 'none';
-        sel.value = '';
-        rebuildPiscoLayers(null);
-    }
-}
-
-function applyPiscoYearFilter() {
-    const sel = document.getElementById('pisco-year-select');
-    const year = sel.value ? parseInt(sel.value) : null;
-    rebuildPiscoLayers(year);
-}
-
-function rebuildPiscoLayers(filterYear) {
-    const layerMap = {
-        'rsa-anguille': layerRsaAnguille,
-        'frayeres-trf': layerFrayeresTrf,
-        'frayeres-lpf': layerFrayeresLpf,
-        'pe-global': layerPeGlobal
-    };
-
-    for (const layerKey in layerMap) {
-        const layer = layerMap[layerKey];
-        const wasOnMap = map.hasLayer(layer);
-        if (wasOnMap) map.removeLayer(layer);
-
-        const field = piscoLayerYearFields[layerKey];
-        const raw = piscoRawData[layerKey];
-        if (!raw) continue;
-
-        const filtered = {
-            type: 'FeatureCollection',
-            features: filterYear
-                ? raw.features.filter(f => extractYear(f.properties[field]) === filterYear)
-                : raw.features
-        };
-
-        layer.clearLayers();
-        layer.addData(filtered);
-
-        if (wasOnMap) layer.addTo(map);
-    }
-}
-
-// ===== HYDRO YEAR + TYPE FILTER (Plantations_hydraulique_douce) =====
-function loadHydroYearData(data) {
-    if (!data || !data.features) return;
-    hydroRawData = data;
-    const years = new Set();
-    const types = new Set();
-    data.features.forEach(f => {
-        const y = extractYear(f.properties[HYDRO_YEAR_FIELD]);
-        if (y) years.add(y);
-        const t = f.properties[HYDRO_TYPE_FIELD];
-        if (t && String(t).trim()) types.add(String(t).trim());
-    });
-    hydroAvailableYears = [...years].sort((a,b) => b - a);
-    hydroAvailableTypes = [...types].sort((a,b) => a.localeCompare(b,'fr'));
-    hydroYearDataLoaded = true;
-
-    const sel = document.getElementById('hydro-year-select');
-    if (sel) {
-        sel.innerHTML = '<option value="">-- Toutes les années --</option>';
-        hydroAvailableYears.forEach(y => {
-            const o = document.createElement('option');
-            o.value = y; o.textContent = y;
-            sel.appendChild(o);
-        });
-    }
-
-    const chips = document.getElementById('hydro-type-chips');
-    if (chips) {
-        chips.innerHTML = '';
-        hydroAvailableTypes.forEach(t => {
-            const chip = document.createElement('span');
-            chip.className = 'yfb-type-chip active';
-            chip.textContent = t;
-            chip.dataset.type = t;
-            chip.onclick = () => {
-                if (hydroSelectedTypes.has(t)) {
-                    hydroSelectedTypes.delete(t);
-                    chip.classList.remove('active');
-                } else {
-                    hydroSelectedTypes.add(t);
-                    chip.classList.add('active');
-                }
-                rebuildHydroLayer();
-            };
-            chips.appendChild(chip);
-            hydroSelectedTypes.add(t);
-        });
-    }
-}
-
-function toggleHydroYearFilter() {
-    const toggle = document.getElementById('hydro-year-filter-toggle');
-    const sel = document.getElementById('hydro-year-select');
-    hydroYearFilterEnabled = toggle.checked;
-    if (hydroYearFilterEnabled) {
-        sel.disabled = false;
-        sel.style.display = 'block';
-    } else {
-        sel.disabled = true;
-        sel.style.display = 'none';
-        sel.value = '';
-        rebuildHydroLayer();
-    }
-}
-
-function applyHydroYearFilter() {
-    rebuildHydroLayer();
-}
-
-function toggleHydroTypeFilter() {
-    const toggle = document.getElementById('hydro-type-filter-toggle');
-    const chips = document.getElementById('hydro-type-chips');
-    hydroTypeFilterEnabled = toggle.checked;
-    if (hydroTypeFilterEnabled) {
-        chips.style.display = 'flex';
-    } else {
-        chips.style.display = 'none';
-        hydroSelectedTypes = new Set(hydroAvailableTypes);
-        chips.querySelectorAll('.yfb-type-chip').forEach(c => c.classList.add('active'));
-        rebuildHydroLayer();
-    }
-}
-
-function rebuildHydroLayer() {
-    const layer = presLayers['pres-travaux-hydro'];
-    if (!layer || !hydroRawData) return;
-
-    const wasOnMap = map.hasLayer(layer);
-    if (wasOnMap) map.removeLayer(layer);
-
-    let year = null;
-    if (hydroYearFilterEnabled) {
-        const sel = document.getElementById('hydro-year-select');
-        year = sel && sel.value ? parseInt(sel.value) : null;
-    }
-
-    const useTypeFilter = hydroTypeFilterEnabled && hydroSelectedTypes.size < hydroAvailableTypes.length;
-
-    const filtered = {
-        type: 'FeatureCollection',
-        features: hydroRawData.features.filter(f => {
-            const yOk = !year || extractYear(f.properties[HYDRO_YEAR_FIELD]) === year;
-            const tOk = !useTypeFilter || hydroSelectedTypes.has(String(f.properties[HYDRO_TYPE_FIELD] || '').trim());
-            return yOk && tOk;
+            const filterSel = document.getElementById('filter-commune-select');
+            filterSel.innerHTML = '<option value="">-- Sélectionner une commune --</option>';
+            allCommuneNames.forEach(n => {
+                const o = document.createElement('option');
+                o.value = n; o.textContent = n;
+                filterSel.appendChild(o);
+            });
         })
-    };
-
-    layer.clearLayers();
-    layer.addData(filtered);
-
-    if (wasOnMap) layer.addTo(map);
+        .catch(() => {
+            const sel = document.getElementById('commune-selector');
+            sel.innerHTML = '<option value="">-- Communes non disponibles --</option>';
+        });
 }
 
-// ===== ACTIVATE PRES LAYERS =====
+// ========== LAYER ACTIVATION ==========
 function activatePresLayers() {
-    document.querySelectorAll('#presentation-layers input[type="checkbox"]').forEach(cb => {
-        const def = presLayerDefs.find(d => d.id === cb.id);
-        if (!def) return;
-        
-        if (cb.checked) {
-            if (presLayers[def.id].getLayers().length > 0) {
-                presLayers[def.id].addTo(map);
-            } else {
-                fetch(def.file).then(r => {
-                    if (!r.ok) throw new Error("Fichier introuvable");
-                    return r.json();
-                }).then(d => {
-                    presLayers[def.id].addData(d);
-                    presLayers[def.id].addTo(map);
-                    if (def.yearField) loadHydroYearData(d);
-                }).catch(() => {
-                    console.log('Fichier non disponible : ' + def.file);
-                    cb.checked = false; 
-                    updateLegendVisibility(); 
-                });
-            }
-        } else {
-            if (map.hasLayer(presLayers[def.id])) {
-                map.removeLayer(presLayers[def.id]);
-            }
-        }
-    });
-
-    updateLegendVisibility();
+    if (document.getElementById('pres-communes-hem').checked) {
+        if (searchCommunesLayer) searchCommunesLayer.addTo(map);
+    } else {
+        if (searchCommunesLayer) safeRemove(searchCommunesLayer);
+    }
 }
 
-// ===== VIEW SWITCHING =====
+function safeRemove(layer) { if (layer && map.hasLayer(layer)) map.removeLayer(layer); }
+
+// ========== LEGEND VISIBILITY ==========
+function updateLegendVisibility() {
+    const legendEbf = document.getElementById('legend-ebf');
+    const legendDiag = document.getElementById('legend-diagnostic');
+    const legendPres = document.getElementById('legend-presentation');
+    const overlay = document.getElementById('legend-overlay');
+    if (legendEbf)  legendEbf.style.display  = currentView === 'ebf' ? 'block' : 'none';
+    if (legendDiag) legendDiag.style.display = currentView === 'diagnostic' ? 'block' : 'none';
+    if (legendPres) legendPres.style.display = currentView === 'presentation' ? 'block' : 'none';
+    if (overlay) overlay.style.display = 'block';
+}
+
+// ========== VIEW SWITCHING ==========
 function switchView(view) {
     if (view === 'diagnostic' && currentMode === 'public') {
         alert('Le diagnostic morphologique est réservé aux agents techniques. Veuillez vous identifier avec le code agent.');
@@ -3223,35 +2070,33 @@ function switchView(view) {
 
     openRightPanel();
 
-    function safeRemove(layer) { if (layer && map.hasLayer(layer)) map.removeLayer(layer); }
-    function safeRemoveControl(ctrl) { try { ctrl.remove(); } catch(e){} }
+    function safeRemoveCtrl(ctrl) { try { ctrl.remove(); } catch(e){} }
 
-   if (view === 'diagnostic') {
-       info.addTo(map);
-       prhymoInfo.addTo(map);
-       layersQ['Q100'].addTo(map); layerStation.addTo(map); layerOuvrages.addTo(map);
-       for (let l in ebfLayers) safeRemove(ebfLayers[l]);
-       for (let l in presLayers) safeRemove(presLayers[l]);
-       safeRemove(layerTravauxLin); safeRemove(layerTravauxPt);
-       document.getElementById('check-station-diag').checked = true;
-       document.getElementById('check-ouvrages-diag').checked = true;
-       document.getElementById('check-hydro-diag').checked = true;
-       layerHydroDiag.addTo(map);
+    if (view === 'diagnostic') {
+        if (info) info.addTo(map);
+        if (prhymoInfo) prhymoInfo.addTo(map);
+        for (let l in ebfLayers) safeRemove(ebfLayers[l]);
+        for (let l in presLayers) safeRemove(presLayers[l]);
+        safeRemove(layerTravauxLin); safeRemove(layerTravauxPt);
+        if (document.getElementById('check-station-diag')) document.getElementById('check-station-diag').checked = true;
+        if (document.getElementById('check-ouvrages-diag')) document.getElementById('check-ouvrages-diag').checked = true;
+        if (document.getElementById('check-hydro-diag')) document.getElementById('check-hydro-diag').checked = true;
     } else if (view === 'presentation') {
-        safeRemoveControl(info);
-        safeRemoveControl(prhymoInfo);
+        safeRemoveCtrl(info);
+        safeRemoveCtrl(prhymoInfo);
         for (let q in layersQ) safeRemove(layersQ[q]);
         safeRemove(layerStation); safeRemove(layerOuvrages);
         safeRemove(layerHydroDiag); safeRemove(layerPrhymo);
         safeRemove(layerRuissellement); safeRemove(layerParcellesAgr); safeRemove(layerBatiImpacte);
         for (let l in ebfLayers) safeRemove(ebfLayers[l]);
+        safeRemove(layerTravauxLin); safeRemove(layerTravauxPt);
         safeRemove(layerRsaAnguille); safeRemove(layerSatSaumon);
         safeRemove(layerFrayeresTrf); safeRemove(layerFrayeresLpf);
         safeRemove(layerPeGlobal);
         activatePresLayers();
-    } else { // EBF
-        safeRemoveControl(info);
-        safeRemoveControl(prhymoInfo);
+    } else {
+        safeRemoveCtrl(info);
+        safeRemoveCtrl(prhymoInfo);
         for (let q in layersQ) safeRemove(layersQ[q]);
         safeRemove(layerStation); safeRemove(layerOuvrages);
         safeRemove(layerHydroDiag); safeRemove(layerPrhymo);
@@ -3261,14 +2106,14 @@ function switchView(view) {
         safeRemove(layerRsaAnguille); safeRemove(layerSatSaumon);
         safeRemove(layerFrayeresTrf); safeRemove(layerFrayeresLpf);
         safeRemove(layerPeGlobal);
-        if (document.getElementById('check-hydro').checked) ebfLayers.hydro.addTo(map);
-        if (document.getElementById('check-communes').checked) ebfLayers.communes.addTo(map);
+        if (document.getElementById('check-hydro') && document.getElementById('check-hydro').checked && ebfLayers.hydro) ebfLayers.hydro.addTo(map);
+        if (document.getElementById('check-communes') && document.getElementById('check-communes').checked && ebfLayers.communes) ebfLayers.communes.addTo(map);
     }
-    
+
     updateLegendVisibility();
 }
 
-// ===== RIGHT PANEL =====
+// ========== RIGHT PANEL ==========
 function openRightPanel() {
     const panel = document.getElementById('right-panel');
     panel.classList.add('open');
@@ -3290,20 +2135,7 @@ function showRpTab(btn, contentId) {
     document.getElementById(contentId).classList.add('active');
 }
 
-// ===== LEFT SIDEBAR TABS =====
-function showSideTab(tab) {
-    document.getElementById('sideTab-couches').classList.toggle('active', tab === 'couches');
-    document.getElementById('sideTab-legende').classList.toggle('active', tab === 'legende');
-    
-    document.getElementById('sideContent-couches').style.display = tab === 'couches' ? 'block' : 'none';
-    document.getElementById('sideContent-legende').style.display = tab === 'legende' ? 'block' : 'none';
-    
-    if (tab === 'legende') {
-        updateLegendVisibility();
-    }
-}
-
-// ===== HEADER SEARCH AUTOCOMPLETE =====
+// ========== HEADER SEARCH AUTOCOMPLETE ==========
 function filterCommuneSearch(val) {
     const dropdown = document.getElementById('search-dropdown');
     const term = val.trim().toLowerCase();
@@ -3346,13 +2178,13 @@ function selectCommune(name) {
     zoomToCommune(name);
 }
 
-// ===== LAYER GROUPS =====
+// ========== LAYER GROUPS ==========
 function toggleGroup(header) {
     const group = header.parentElement;
     group.classList.toggle('open');
 }
 
-// ===== LAYER INFO =====
+// ========== LAYER INFO ==========
 function showLayerInfo(id) {
     const msg = definitions[id];
     if (msg) {
@@ -3375,7 +2207,7 @@ function showLayerInfo(id) {
     }
 }
 
-// ===== RESET LAYERS =====
+// ========== RESET LAYERS ==========
 function resetAllLayers() {
     function safeRemove(layer) { if (layer && map.hasLayer(layer)) map.removeLayer(layer); }
     if (currentView === 'ebf') {
@@ -3387,8 +2219,8 @@ function resetAllLayers() {
             }
         });
         for (let l in ebfLayers) safeRemove(ebfLayers[l]);
-        ebfLayers.hydro.addTo(map);
-        ebfLayers.communes.addTo(map);
+        if (ebfLayers.hydro) ebfLayers.hydro.addTo(map);
+        if (ebfLayers.communes) ebfLayers.communes.addTo(map);
     } else if (currentView === 'diagnostic') {
         document.querySelectorAll('#diagnostic-layers input[type="checkbox"]').forEach(cb => {
             if (cb.id === 'check-station-diag' || cb.id === 'check-ouvrages-diag' || cb.id === 'check-hydro-diag') {
@@ -3404,21 +2236,22 @@ function resetAllLayers() {
         safeRemove(layerHydroDiag); safeRemove(layerPrhymo);
         safeRemove(layerRuissellement); safeRemove(layerParcellesAgr);
         safeRemove(layerBatiImpacte);
-        layersQ['Q100'].addTo(map);
-        layerStation.addTo(map); layerOuvrages.addTo(map); layerHydroDiag.addTo(map);
+        if (layersQ['Q100']) layersQ['Q100'].addTo(map);
+        if (layerStation) layerStation.addTo(map);
+        if (layerOuvrages) layerOuvrages.addTo(map);
+        if (layerHydroDiag) layerHydroDiag.addTo(map);
         document.querySelectorAll('#q-buttons .chart-btn').forEach(b => b.classList.toggle('active', b.textContent === 'Q100'));
         currentActiveQ = 'Q100';
-   } else if (currentView === 'presentation') {
-    
+    } else if (currentView === 'presentation') {
         const defaultChecked = ['pres-communes-hem', 'pres-pnr-2013', 'pres-exutoire',
-        'pres-hydro-noms', 'pres-ppri', 'pres-reperes-crues', 
-        'pres-axes-ruiss', 'pres-zh', 'pres-natura2000', 
+        'pres-hydro-noms', 'pres-ppri', 'pres-reperes-crues',
+        'pres-axes-ruiss', 'pres-zh', 'pres-natura2000',
         'pres-znieff1', 'pres-znieff2', 'pres-reservoirs', 'pres-stations-suivi'];
-        
+
         document.querySelectorAll('#presentation-layers input[type="checkbox"]').forEach(cb => {
             cb.checked = defaultChecked.includes(cb.id);
         });
-    
+
         const filterDiv = document.getElementById('filtre-travaux');
         if(filterDiv) filterDiv.style.display = 'none';
 
@@ -3429,11 +2262,12 @@ function resetAllLayers() {
     updateLegendVisibility();
 }
 
-// ===== MODE TOGGLE =====
+// ========== MODE TOGGLE ==========
 function setMode(btn, mode) {
     btn.closest('.header-mode-group').querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentMode = mode;
+    document.getElementById('user-mode').textContent = mode === 'tech' ? 'Agent technique' : 'Public';
 
     const diagTab = document.getElementById('tab-diagnostic');
     const downloadBtn = document.getElementById('btn-download-data');
@@ -3476,7 +2310,7 @@ function verifyAgentCode() {
     }
 }
 
-// ===== FULLSCREEN =====
+// ========== FULLSCREEN ==========
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(err => {
@@ -3487,7 +2321,7 @@ function toggleFullscreen() {
     }
 }
 
-// ===== FILTER MODAL =====
+// ========== FILTER MODAL ==========
 function openFilterModal() {
     document.getElementById('filterModal').style.display = 'block';
     const filterSel = document.getElementById('filter-commune-select');
@@ -3553,7 +2387,7 @@ function updateCommuneStats(nomCommune) {
     }
 }
 
-// ===== DOWNLOAD MODAL =====
+// ========== DOWNLOAD MODAL ==========
 function openDownloadModal() {
     if (currentMode !== 'tech') {
         alert('Accès réservé aux agents techniques.');
@@ -3594,7 +2428,7 @@ function executeDownload() {
     closeDownloadModal();
 }
 
-// ===== USER MODAL =====
+// ========== USER MODAL ==========
 function openUserModal() {
     const newInitials = prompt('Entrez vos initiales :', currentUser || '');
     if (newInitials && newInitials.trim()) {
@@ -3604,18 +2438,20 @@ function openUserModal() {
     }
 }
 
-// ===== COMMUNE ZOOM =====
+// ========== COMMUNE ZOOM ==========
 function zoomToCommune(nomCommune) {
     const pdfDiv = document.getElementById('pdf-downloads');
     const pdfTitle = document.getElementById('pdf-title');
     if (!nomCommune) { pdfDiv.style.display = 'none'; map.setView([50.78, 2.05], 11); return; }
-    searchCommunesLayer.eachLayer(l => {
-        const props = l.feature.properties;
-        const n = props.nom || props.NOM || props.NOM_COM || props.Nom || '';
-        if (n.toLowerCase() === nomCommune.toLowerCase()) {
-            map.flyToBounds(l.getBounds(), { padding: [20,20], duration: 1.5, maxZoom: 15 });
-        }
-    });
+    if (searchCommunesLayer) {
+        searchCommunesLayer.eachLayer(l => {
+            const props = l.feature.properties;
+            const n = props.nom || props.NOM || props.NOM_COM || props.Nom || '';
+            if (n.toLowerCase() === nomCommune.toLowerCase()) {
+                map.flyToBounds(l.getBounds(), { padding: [20,20], duration: 1.5, maxZoom: 15 });
+            }
+        });
+    }
     pdfTitle.innerHTML = `Cartes réglementaires : <b>${nomCommune}</b>`;
     pdfDiv.style.display = 'block';
     [
@@ -3624,6 +2460,7 @@ function zoomToCommune(nomCommune) {
         { id:'link-synth', url:`Complet/${nomCommune}_EBF_Global.png`, fn:`${nomCommune}_EBF_Global.png` }
     ].forEach(async doc => {
         const btn = document.getElementById(doc.id);
+        if (!btn) return;
         btn.style.opacity = '0.5';
         btn.onclick = e => e.preventDefault();
         try {
@@ -3637,11 +2474,11 @@ function zoomToCommune(nomCommune) {
     });
 }
 
-// ===== INFO MODAL =====
+// ========== INFO MODAL ==========
 function openInfoModal() { document.getElementById('infoModal').style.display = 'block'; }
 function closeInfoModal() { document.getElementById('infoModal').style.display = 'none'; }
 
-// ===== CHART =====
+// ========== CHART ==========
 const chartData = {
     EFO: { labels: ['Agricole (A)', 'Naturel (N)', 'Urbain (U)', 'A urbaniser (AU)'], data: [60.6, 33.3, 6.0, 0.1] },
     EFN: { labels: ['Agricole (A)', 'Naturel (N)', 'Urbain (U)', 'A urbaniser (AU)'], data: [64.0, 32.0, 4.1, 0.0] }
@@ -3685,42 +2522,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
 map && map.on('overlayadd', (e) => { for(let q in layersQ){ if(layersQ[q]===e.layer) currentActiveQ=q; } });
 
-// ===== LOGIQUE TRAVAUX GLOBAL (LINEAIRE + PONCTUEL) =====
+// ========== TRAVAUX LOGIC ==========
 const TRAVAUX_DICT = {
     'pra1': { label: 'Clôtures', color: '#8b5cf6' },
     'clôture': { label: 'Clôtures', color: '#8b5cf6' },
     'clôtures': { label: 'Clôtures', color: '#8b5cf6' },
-    
     'rbt':  { label: 'Reboisement / Ripisylve', color: '#10b981' },
     'reboisement': { label: 'Reboisement / Ripisylve', color: '#10b981' },
-    
     'pra2': { label: 'Abreuvoir', color: '#3b82f6' },
     'abreuvoir': { label: 'Abreuvoir', color: '#3b82f6' },
-    
     'pag':  { label: 'Passage à gué', color: '#f59e0b' },
     'passage à gué': { label: 'Passage à gué', color: '#f59e0b' },
-    
     'abattage préventif': { label: 'Abattage préventif', color: '#eab308' },
     'passerelle': { label: 'Passerelle', color: '#64748b' },
     'pont': { label: 'Pont', color: '#475569' },
-    
     'rbt2': { label: 'Abattage d\'essences inadaptées', color: '#ef4444' },
-    
     'rcl2': { label: 'Effacement', color: '#6366f1' },
     'rlc2': { label: 'Effacement', color: '#6366f1' },
     'effacement': { label: 'Effacement', color: '#6366f1' },
-    
     'rlc3': { label: 'Aménagement seuil résiduel', color: '#f97316' },
     'aménagement seuil': { label: 'Aménagement seuil résiduel', color: '#f97316' },
-    
     'retrait embacle': { label: 'Retrait embâcle', color: '#a8a29e' },
     'retrait embâcle': { label: 'Retrait embâcle', color: '#a8a29e' }
 };
 
-function getTravauxLabel(type) { 
+function getTravauxLabel(type) {
     const tLow = type ? String(type).trim().toLowerCase() : '';
     if (TRAVAUX_DICT[tLow]) return TRAVAUX_DICT[tLow].label;
-    return type ? String(type).trim().charAt(0).toUpperCase() + String(type).trim().slice(1) : 'Inconnu'; 
+    return type ? String(type).trim().charAt(0).toUpperCase() + String(type).trim().slice(1) : 'Inconnu';
 }
 
 function getTravauxColorByLabel(label) {
@@ -3736,12 +2565,12 @@ function getTravauxColorByRaw(type) {
     return '#555';
 }
 
-let layerTravauxLin = L.geoJSON(null, {
+layerTravauxLin = L.geoJSON(null, {
     style: f => ({ color: getTravauxColorByRaw(f.properties.TYPE), weight: 3, opacity: 0.9 }),
     onEachFeature: (f, l) => l.bindPopup(`<b>Travaux Linéaires</b><br><b>Année :</b> ${f.properties.ANNEE||'?'}<br><b>Type :</b> ${getTravauxLabel(f.properties.TYPE)}`)
 });
 
-let layerTravauxPt = L.geoJSON(null, {
+layerTravauxPt = L.geoJSON(null, {
     pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 6, weight: 2, fillOpacity: 0.9, color: '#fff' }),
     onEachFeature: (f, l) => {
         l.setStyle({ fillColor: getTravauxColorByRaw(f.properties.TYPE) });
@@ -3757,7 +2586,7 @@ let travauxSelectedTypes = new Set();
 document.addEventListener('DOMContentLoaded', () => {
     const cbTravaux = document.getElementById('pres-travaux-global');
     const filterDiv = document.getElementById('filtre-travaux');
-    
+
     if(cbTravaux) {
         cbTravaux.addEventListener('change', function() {
             filterDiv.style.display = this.checked ? 'block' : 'none';
@@ -3770,7 +2599,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     layerTravauxLin.addTo(map);
                 }
-                
+
                 if(!travauxRawData.ponctuel) {
                     fetch('Travaux_ponctuels_complet.geojson').then(r => r.json()).then(d => {
                         processTravauxData(d, 'ponctuel');
@@ -3790,11 +2619,11 @@ document.addEventListener('DOMContentLoaded', () => {
 function processTravauxData(data, typeKey) {
     if (!data || !data.features) return;
     travauxRawData[typeKey] = data;
-    
+
     data.features.forEach(f => {
         const y = extractYear(f.properties['ANNEE']);
         if (y) travauxAvailableYears.add(y);
-        
+
         const t = f.properties['TYPE'];
         if (t && String(t).trim()) {
             const canonicalLabel = getTravauxLabel(t);
@@ -3803,6 +2632,13 @@ function processTravauxData(data, typeKey) {
         }
     });
     updateTravauxFilterUI();
+}
+
+function extractYear(val) {
+    if (!val) return null;
+    const s = String(val);
+    const m = s.match(/(20\d{2})/);
+    return m ? parseInt(m[1]) : null;
 }
 
 function updateTravauxFilterUI() {
@@ -3825,14 +2661,14 @@ function updateTravauxFilterUI() {
         const chip = document.createElement('span');
         chip.className = travauxSelectedTypes.has(tLabel) ? 'yfb-type-chip active' : 'yfb-type-chip';
         chip.textContent = tLabel;
-        
+
         const color = getTravauxColorByLabel(tLabel);
         chip.style.borderColor = color;
-        if(travauxSelectedTypes.has(tLabel)) { 
-            chip.style.backgroundColor = color; 
-            chip.style.color = '#fff'; 
+        if(travauxSelectedTypes.has(tLabel)) {
+            chip.style.backgroundColor = color;
+            chip.style.color = '#fff';
         }
-        
+
         chip.onclick = () => {
             if (travauxSelectedTypes.has(tLabel)) {
                 travauxSelectedTypes.delete(tLabel);
@@ -3852,14 +2688,14 @@ function updateTravauxFilterUI() {
 function toggleTravauxFilter() {
     const yearToggle = document.getElementById('travaux-year-filter-toggle').checked;
     const typeToggle = document.getElementById('travaux-type-filter-toggle').checked;
-    
+
     document.getElementById('travaux-year-select').style.display = yearToggle ? 'block' : 'none';
     document.getElementById('travaux-year-select').disabled = !yearToggle;
     document.getElementById('travaux-type-chips').style.display = typeToggle ? 'flex' : 'none';
-    
-    if(!typeToggle) travauxSelectedTypes = new Set(travauxAvailableTypes); 
+
+    if(!typeToggle) travauxSelectedTypes = new Set(travauxAvailableTypes);
     if(!yearToggle) document.getElementById('travaux-year-select').value = '';
-    
+
     updateTravauxFilterUI();
     applyTravauxFilter();
 }
@@ -3905,6 +2741,28 @@ function applyTravauxFilter() {
     }
 }
 
+// ========== PISCICULTURE FILTER ==========
+function togglePiscoYearFilter() {
+    const toggle = document.getElementById('pisco-year-filter-toggle');
+    document.getElementById('pisco-year-select').style.display = toggle.checked ? 'block' : 'none';
+}
+
+function togglePiscoTypeFilter() {
+    const toggle = document.getElementById('pisco-type-filter-toggle');
+    document.getElementById('pisco-type-chips').style.display = toggle.checked ? 'flex' : 'none';
+}
+
+// ========== LEGEND SWATCH STYLES ==========
+const legendSwatchCSS = document.createElement('style');
+legendSwatchCSS.textContent = `
+    .legend-swatch { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+    .legend-line { width: 18px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+    .legend-line-dashed { width: 18px; height: 0; border-top: 3px dashed; flex-shrink: 0; }
+    .legend-circle { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+`;
+document.head.appendChild(legendSwatchCSS);
+
+// ========== SIDEBAR CHANGE LISTENER ==========
 document.getElementById('left-sidebar').addEventListener('change', function(e) {
     if (e.target.tagName.toLowerCase() === 'input' && e.target.type === 'checkbox') {
         updateLegendVisibility();
@@ -3913,4 +2771,5 @@ document.getElementById('left-sidebar').addEventListener('change', function(e) {
 </script>
 </body>
 </html>
+
 
