@@ -2370,22 +2370,47 @@ function getPluiColor(typezone) {
 }
 let mapLegend;
 
+let mapLegend;
+
 function setupLegendControl() {
     mapLegend = L.control({ position: 'bottomright' });
 
     mapLegend.onAdd = function(map) {
-        // Crée une div avec la classe "legend" (qui utilisera votre CSS existant)
-        let div = L.DomUtil.create('div', 'legend');
-        
-        // Contenu HTML de votre légende fixe
-        div.innerHTML = `
-            <h4>Légende principale</h4>
-            <i style="background: #FFAA00;"></i> EBF Optimal<br>
-            <i style="border: 2px dashed #e67e22; background: transparent;"></i> EBF Nécessaire<br>
-            <i style="background: #3498db;"></i> Réseau Hydrographique<br>
-            <i style="background: #e74c3c;"></i> Bâti impacté<br>
-        `;
-        return div;
+        // Le "this._div" est crucial ici pour que switchView puisse le retrouver
+        this._div = L.DomUtil.create('div', 'legend');
+        this.update(currentView); // Initialise avec la vue actuelle
+        return this._div;
+    };
+
+    // On crée une méthode de mise à jour dédiée
+    mapLegend.update = function(view) {
+        if (!this._div) return;
+
+        if (view === 'diagnostic') {
+            this._div.innerHTML = `
+                <h4>Diagnostic Morpho</h4>
+                <i style="background: #3182bd;"></i> E1 - Dépôt dominant<br>
+                <i style="background: #31a354;"></i> E2 - Ajustements lents<br>
+                <i style="background: #fd8d3c;"></i> E3 - Équilibre dynamique<br>
+                <i style="background: #de2d26;"></i> E4 - Érosion active<br>
+            `;
+        } else if (view === 'presentation') {
+            this._div.innerHTML = `
+                <h4>Légende Présentation</h4>
+                <i style="border: 2px solid #10b981; background: rgba(16, 185, 129, 0.1);"></i> PNR<br>
+                <i style="background: #3b82f6;"></i> Zones inondables<br>
+                <i style="background: #06b6d4; height: 3px; margin-top: 5px;"></i> Ruissellement<br>
+                <i style="background: #4ade80;"></i> Zones humides<br>
+            `;
+        } else { // 'ebf'
+            this._div.innerHTML = `
+                <h4>Légende EBF</h4>
+                <i style="border: 2px solid #FFAA00; background: transparent;"></i> EBF Optimal<br>
+                <i style="border: 2px dashed #e67e22; background: transparent;"></i> EBF Nécessaire<br>
+                <i style="background: #3498db; height: 3px; margin-top: 5px;"></i> Réseau Hydro.<br>
+                <i style="background: #e74c3c;"></i> Bâti & Infra.<br>
+            `;
+        }
     };
 
     mapLegend.addTo(map);
@@ -3315,36 +3340,13 @@ function switchView(view) {
     }
     
     // --- NOUVEAU : MISE À JOUR DE LA LÉGENDE FIXE SUR LA CARTE ---
-    if (typeof mapLegend !== 'undefined' && mapLegend._div) {
-        if (view === 'diagnostic') {
-            mapLegend._div.innerHTML = `
-                <h4>Diagnostic Morpho</h4>
-                <i style="background: #3182bd;"></i> E1 - Dépôt dominant<br>
-                <i style="background: #31a354;"></i> E2 - Ajustements lents<br>
-                <i style="background: #fd8d3c;"></i> E3 - Équilibre dynamique<br>
-                <i style="background: #de2d26;"></i> E4 - Érosion active<br>
-            `;
-        } else if (view === 'presentation') {
-            mapLegend._div.innerHTML = `
-                <h4>Légende Présentation</h4>
-                <i style="border: 2px solid #10b981; background: rgba(16, 185, 129, 0.1);"></i> PNR<br>
-                <i style="background: #3b82f6;"></i> Zones inondables<br>
-                <i style="background: #06b6d4; height: 3px; margin-top: 5px;"></i> Ruissellement<br>
-                <i style="background: #4ade80;"></i> Zones humides<br>
-            `;
-        } else { // 'ebf'
-            mapLegend._div.innerHTML = `
-                <h4>Légende EBF</h4>
-                <i style="border: 2px solid #FFAA00; background: transparent;"></i> EBF Optimal<br>
-                <i style="border: 2px dashed #e67e22; background: transparent;"></i> EBF Nécessaire<br>
-                <i style="background: #3498db; height: 3px; margin-top: 5px;"></i> Réseau Hydro.<br>
-                <i style="background: #e74c3c;"></i> Bâti & Infra.<br>
-            `;
-        }
+   if (typeof mapLegend !== 'undefined' && mapLegend.update) {
+        mapLegend.update(view);
     }
     // -------------------------------------------------------------
 
-    updateLegendVisibility(); // Met à jour la légende du panneau latéral gauche
+    updateLegendVisibility();
+
 }
 
 // ===== RIGHT PANEL =====
