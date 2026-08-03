@@ -2642,7 +2642,6 @@ const definitions = {
     'check-pe-global': '<b>Stations de Pêches Électriques (PE_FD62)</b><br><br>Données géoréférencées de l\'ensemble des inventaires piscicoles et suivis de peuplements menés par la Fédération Départementale de Pêche 62.'
 };
 function updateLegendVisibility() {
-    // Affiche simplement le bon bloc de légende en fonction de la vue (onglet) active
     const views = ['ebf', 'diagnostic', 'presentation'];
     views.forEach(v => {
         const legendContainer = document.getElementById('legend-' + v);
@@ -2654,6 +2653,7 @@ function updateLegendVisibility() {
 
 function setupInteractiveLegend() {
 }
+    
 function setupBindings() {
     const qBtns = document.getElementById('q-buttons');
     const qControls = document.getElementById('q-layer-controls');
