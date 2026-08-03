@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <style>
+       <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
@@ -118,7 +118,7 @@
             padding: 4px 6px; font-size: 12px; color: var(--color-text);
             border-radius: 6px;
         }
-   
+
         .header-btn {
             display: flex; align-items: center; gap: 6px;
             padding: 7px 12px; border-radius: 7px; cursor: pointer;
@@ -159,7 +159,7 @@
             color: var(--color-text-muted); transition: all 0.15s; flex-shrink: 0;
         }
         .header-icon-btn:hover { background: var(--color-bg); color: var(--color-text); }
-        
+
         .hydro-label {
     background: transparent;
     border: none;
@@ -376,6 +376,10 @@
             border-radius: 3px; margin-top: 1px;
         }
         .legend br { clear: left; }
+        .legend-swatch { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+        .legend-line { width: 18px; height: 3px; border-radius: 1px; flex-shrink: 0; }
+        .legend-line-dashed { width: 18px; border-top: 2px dashed; flex-shrink: 0; }
+        .legend-circle { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
 
         /* =========== RIGHT DETAIL PANEL =========== */
         #right-panel {
@@ -663,6 +667,7 @@
 </head>
 <body>
 
+
 <!-- ========== LOGIN OVERLAY ========== -->
 <div id="login-overlay">
     <div class="login-card">
@@ -841,7 +846,7 @@
         <button class="sidebar-tab active" id="sideTab-couches" onclick="showSideTab('couches')">Couches</button>
         <button class="sidebar-tab" id="sideTab-legende" onclick="showSideTab('legende')">Légende</button>
     </div>
-
+    
     <!-- COUCHES TAB -->
     <div class="sidebar-body" id="sideContent-couches">
 
