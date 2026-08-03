@@ -2417,7 +2417,7 @@ function setupPrhymoInfoControl() {
             { k: 'con_pro', l: 'Rupture de la continuité biologique induite par les obstacles en long' },
             { k: 'con_sed', l: 'Blocage de la continuité sédimentaire et du transit de la charge de fond (sables, graviers)' },
             { k: 'con_amp', l: "Perte de connectivité avec les annexes et réduction de l'amplitude du lit majeur" },
-            { k: 'hyd_dyn', l: "Perturbation de la dynamique hydrologique et de la typologie des écoulements" },
+            { k: 'hyd_dyn', l: 'Perturbation de la dynamique hydrologique et de la typologie des écoulements' },
             { k: 'hyd_qte', l: "Altération quantitative du régime hydrologique et des volumes d'eau circulants" }
         ];
        const calcMalus = (field) => {
@@ -2646,43 +2646,18 @@ const definitions = {
     'check-frayeres-lpf': '<b>Suivi des Frayères d\'Agnathes (SNDP)</b><br><br>Inventaires ciblés sur les zones de ponte des Lamproies (notamment la Lamproie fluviatile et de Planer) sur le réseau hydrographique.',
     'check-pe-global': '<b>Stations de Pêches Électriques (PE_FD62)</b><br><br>Données géoréférencées de l\'ensemble des inventaires piscicoles et suivis de peuplements menés par la Fédération Départementale de Pêche 62.'
 };
-
-    function showSideTab(tab) {
-    // Gère l'apparence des boutons (Couches / Légende)
-    document.getElementById('sideTab-couches').classList.toggle('active', tab === 'couches');
-    document.getElementById('sideTab-legende').classList.toggle('active', tab === 'legende');
-    
-    // Gère l'affichage des contenus
-    document.getElementById('sideContent-couches').style.display = tab === 'couches' ? 'block' : 'none';
-    document.getElementById('sideContent-legende').style.display = tab === 'legende' ? 'block' : 'none';
-    
-    // Met à jour la légende fixe si on clique sur l'onglet Légende
-    if (tab === 'legende') {
-        updateLegendVisibility();
-    }
-}
 function updateLegendVisibility() {
-    // 1. On récupère les 3 blocs de légende
-    const legendEbf = document.getElementById('legend-ebf');
-    const legendDiag = document.getElementById('legend-diagnostic');
-    const legendPres = document.getElementById('legend-presentation');
-
-    // 2. Par sécurité, on cache tout
-    if (legendEbf) legendEbf.style.display = 'none';
-    if (legendDiag) legendDiag.style.display = 'none';
-    if (legendPres) legendPres.style.display = 'none';
-
-    // 3. On affiche uniquement la légende de l'onglet actif
-    if (currentView === 'ebf' && legendEbf) {
-        legendEbf.style.display = 'block';
-    } else if (currentView === 'diagnostic' && legendDiag) {
-        legendDiag.style.display = 'block';
-    } else if (currentView === 'presentation' && legendPres) {
-        legendPres.style.display = 'block';
-    }
+    const views = ['ebf', 'diagnostic', 'presentation'];
+    views.forEach(v => {
+        const legendContainer = document.getElementById('legend-' + v);
+        if (legendContainer) {
+            legendContainer.style.display = 'block';
+        }
+    });
 }
 
-
+function setupInteractiveLegend() {
+}
     
 function setupBindings() {
     const qBtns = document.getElementById('q-buttons');
@@ -3930,6 +3905,12 @@ function applyTravauxFilter() {
     }
 }
 
+document.getElementById('left-sidebar').addEventListener('change', function(e) {
+    if (e.target.tagName.toLowerCase() === 'input' && e.target.type === 'checkbox') {
+        updateLegendVisibility();
+    }
+});
 </script>
 </body>
 </html>
+
