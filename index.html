@@ -2647,17 +2647,17 @@ const definitions = {
     'check-pe-global': '<b>Stations de Pêches Électriques (PE_FD62)</b><br><br>Données géoréférencées de l\'ensemble des inventaires piscicoles et suivis de peuplements menés par la Fédération Départementale de Pêche 62.'
 };
 function updateLegendVisibility() {
+
     const views = ['ebf', 'diagnostic', 'presentation'];
     views.forEach(v => {
         const legendContainer = document.getElementById('legend-' + v);
         if (legendContainer) {
-            legendContainer.style.display = 'block';
+            legendContainer.style.display = (v === currentView) ? 'block' : 'none';
         }
     });
 }
 
-function setupInteractiveLegend() {
-}
+
     
 function setupBindings() {
     const qBtns = document.getElementById('q-buttons');
@@ -3905,11 +3905,6 @@ function applyTravauxFilter() {
     }
 }
 
-document.getElementById('left-sidebar').addEventListener('change', function(e) {
-    if (e.target.tagName.toLowerCase() === 'input' && e.target.type === 'checkbox') {
-        updateLegendVisibility();
-    }
-});
 </script>
 </body>
 </html>
