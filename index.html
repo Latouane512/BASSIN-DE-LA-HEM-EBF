@@ -1803,7 +1803,7 @@
                 </div>
                 <p class="rp-section-title" style="margin-top:16px;">Secteurs prioritaires</p>
                 <div class="rp-description" style="font-size:11px;">
-                    <b style="color:#c0392b;">Haute priorité</b> : Amont Pays de Licques (Ps > 100 W/m²) – érosion de berge active<br>
+                    <b style="color:#c0392b;">Haute priorité</b> : Amont Pays de Licques (Ps supérieur 100 W/m²) – érosion de berge active<br>
                     <b style="color:#e67e22;">Priorité moyenne</b> : Secteur de Acquin-Atte – rectification historique, encaissement<br>
                     <b style="color:#f39c12;">Surveillance</b> : Aval plaine maritime – dépôt de fines, colmatage
                 </div>
@@ -1857,7 +1857,7 @@
                 <div style="font-size:12px;line-height:1.9;">
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:8px;background:#fee2e2;border-radius:8px;">
                         <span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#c0392b;"></span>
-                        <div><b>URGENCE</b> – 168 parcelles, 644 ha<br><span style="font-size:10px;color:var(--color-text-muted);">Pente >10%, culture annuelle, axe concentré</span></div>
+                        <div><b>URGENCE</b> – 168 parcelles, 644 ha<br><span style="font-size:10px;color:var(--color-text-muted);">Pente supérieur 10%, culture annuelle, axe concentré</span></div>
                     </div>
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:8px;background:#fff7ed;border-radius:8px;">
                         <span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#e67e22;"></span>
@@ -2093,7 +2093,7 @@
                 <p>Approche probabiliste inspirée d'Exzeco avec 50 simulations Monte-Carlo sur MNT pour identifier les « autoroutes de ruissellement » persistantes.</p>
                 <ul style="font-size:12px;">
                     <li><strong>Bâti exposé pente ≥ 5%</strong> → Priorité sécurité (noues, batardeaux)</li>
-                    <li><strong>Cultures pente > 10%</strong> → Urgence : fascines vivantes</li>
+                    <li><strong>Cultures pente supérieur 10%</strong> → Urgence : fascines vivantes</li>
                     <li><strong>Cultures pente modérée</strong> → Bandes enherbées, MAEC</li>
                 </ul>
 
@@ -2311,6 +2311,7 @@ function initApp() {
 
     setupInfoControl();
     setupPrhymoInfoControl();
+    setupLegendControl();
     setupQLayers();
     setupPointLayers();
     setupEbfLayers();
@@ -2367,7 +2368,28 @@ function getPluiColor(typezone) {
     if (z.startsWith('U')) return 'rgb(217,217,217)';
     return '#999999';
 }
+let mapLegend;
 
+function setupLegendControl() {
+    mapLegend = L.control({ position: 'bottomright' });
+
+    mapLegend.onAdd = function(map) {
+        // Crée une div avec la classe "legend" (qui utilisera votre CSS existant)
+        let div = L.DomUtil.create('div', 'legend');
+        
+        // Contenu HTML de votre légende fixe
+        div.innerHTML = `
+            <h4>Légende principale</h4>
+            <i style="background: #FFAA00;"></i> EBF Optimal<br>
+            <i style="border: 2px dashed #e67e22; background: transparent;"></i> EBF Nécessaire<br>
+            <i style="background: #3498db;"></i> Réseau Hydrographique<br>
+            <i style="background: #e74c3c;"></i> Bâti impacté<br>
+        `;
+        return div;
+    };
+
+    mapLegend.addTo(map);
+}
 // ===== INFO CONTROL (Q layers) =====
 function setupInfoControl() {
     info = L.control({ position: 'topright' });
@@ -3223,6 +3245,7 @@ function switchView(view) {
 
     currentView = view;
 
+    // Mise à jour de l'interface (boutons, panneaux latéraux)
     document.getElementById('tab-ebf').classList.toggle('active', view === 'ebf');
     document.getElementById('tab-diagnostic').classList.toggle('active', view === 'diagnostic');
     document.getElementById('tab-presentation').classList.toggle('active', view === 'presentation');
@@ -3251,17 +3274,18 @@ function switchView(view) {
     function safeRemove(layer) { if (layer && map.hasLayer(layer)) map.removeLayer(layer); }
     function safeRemoveControl(ctrl) { try { ctrl.remove(); } catch(e){} }
 
-   if (view === 'diagnostic') {
-       info.addTo(map);
-       prhymoInfo.addTo(map);
-       layersQ['Q100'].addTo(map); layerStation.addTo(map); layerOuvrages.addTo(map);
-       for (let l in ebfLayers) safeRemove(ebfLayers[l]);
-       for (let l in presLayers) safeRemove(presLayers[l]);
-       safeRemove(layerTravauxLin); safeRemove(layerTravauxPt);
-       document.getElementById('check-station-diag').checked = true;
-       document.getElementById('check-ouvrages-diag').checked = true;
-       document.getElementById('check-hydro-diag').checked = true;
-       layerHydroDiag.addTo(map);
+    // Gestion de l'affichage des couches sur la carte selon la vue
+    if (view === 'diagnostic') {
+        info.addTo(map);
+        prhymoInfo.addTo(map);
+        layersQ['Q100'].addTo(map); layerStation.addTo(map); layerOuvrages.addTo(map);
+        for (let l in ebfLayers) safeRemove(ebfLayers[l]);
+        for (let l in presLayers) safeRemove(presLayers[l]);
+        safeRemove(layerTravauxLin); safeRemove(layerTravauxPt);
+        document.getElementById('check-station-diag').checked = true;
+        document.getElementById('check-ouvrages-diag').checked = true;
+        document.getElementById('check-hydro-diag').checked = true;
+        layerHydroDiag.addTo(map);
     } else if (view === 'presentation') {
         safeRemoveControl(info);
         safeRemoveControl(prhymoInfo);
@@ -3290,7 +3314,37 @@ function switchView(view) {
         if (document.getElementById('check-communes').checked) ebfLayers.communes.addTo(map);
     }
     
-    updateLegendVisibility();
+    // --- NOUVEAU : MISE À JOUR DE LA LÉGENDE FIXE SUR LA CARTE ---
+    if (typeof mapLegend !== 'undefined' && mapLegend._div) {
+        if (view === 'diagnostic') {
+            mapLegend._div.innerHTML = `
+                <h4>Diagnostic Morpho</h4>
+                <i style="background: #3182bd;"></i> E1 - Dépôt dominant<br>
+                <i style="background: #31a354;"></i> E2 - Ajustements lents<br>
+                <i style="background: #fd8d3c;"></i> E3 - Équilibre dynamique<br>
+                <i style="background: #de2d26;"></i> E4 - Érosion active<br>
+            `;
+        } else if (view === 'presentation') {
+            mapLegend._div.innerHTML = `
+                <h4>Légende Présentation</h4>
+                <i style="border: 2px solid #10b981; background: rgba(16, 185, 129, 0.1);"></i> PNR<br>
+                <i style="background: #3b82f6;"></i> Zones inondables<br>
+                <i style="background: #06b6d4; height: 3px; margin-top: 5px;"></i> Ruissellement<br>
+                <i style="background: #4ade80;"></i> Zones humides<br>
+            `;
+        } else { // 'ebf'
+            mapLegend._div.innerHTML = `
+                <h4>Légende EBF</h4>
+                <i style="border: 2px solid #FFAA00; background: transparent;"></i> EBF Optimal<br>
+                <i style="border: 2px dashed #e67e22; background: transparent;"></i> EBF Nécessaire<br>
+                <i style="background: #3498db; height: 3px; margin-top: 5px;"></i> Réseau Hydro.<br>
+                <i style="background: #e74c3c;"></i> Bâti & Infra.<br>
+            `;
+        }
+    }
+    // -------------------------------------------------------------
+
+    updateLegendVisibility(); // Met à jour la légende du panneau latéral gauche
 }
 
 // ===== RIGHT PANEL =====
