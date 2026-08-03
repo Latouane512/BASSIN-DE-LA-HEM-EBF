@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-       <style>
+    <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
@@ -667,7 +667,6 @@
 </head>
 <body>
 
-
 <!-- ========== LOGIN OVERLAY ========== -->
 <div id="login-overlay">
     <div class="login-card">
@@ -846,7 +845,7 @@
         <button class="sidebar-tab active" id="sideTab-couches" onclick="showSideTab('couches')">Couches</button>
         <button class="sidebar-tab" id="sideTab-legende" onclick="showSideTab('legende')">Légende</button>
     </div>
-    
+
     <!-- COUCHES TAB -->
     <div class="sidebar-body" id="sideContent-couches">
 
@@ -1624,6 +1623,7 @@
     </div>
 
        
+
 
 
     <div class="sidebar-footer">
@@ -2416,9 +2416,9 @@ function setupPrhymoInfoControl() {
             { k: 'mor_rip', l: 'État de la couverture arborée de la ripisylve (boisement de berges)' },
             { k: 'con_pro', l: 'Rupture de la continuité biologique induite par les obstacles en long' },
             { k: 'con_sed', l: 'Blocage de la continuité sédimentaire et du transit de la charge de fond (sables, graviers)' },
-            { k: 'con_amp', l: 'Perte de connectivité avec les annexes et réduction de l’amplitude du lit majeur' },
+            { k: 'con_amp', l: 'Perte de connectivité avec les annexes et réduction de l'amplitude du lit majeur' },
             { k: 'hyd_dyn', l: 'Perturbation de la dynamique hydrologique et de la typologie des écoulements' },
-            { k: 'hyd_qte', l: 'Altération quantitative du régime hydrologique et des volumes d’eau circulants' }
+            { k: 'hyd_qte', l: 'Altération quantitative du régime hydrologique et des volumes d'eau circulants' }
         ];
        const calcMalus = (field) => {
     const v = props[field];
@@ -2452,7 +2452,7 @@ let rows = indicators.map(ind => {
             <div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--color-border);font-size:11px;color:#555;">
                 <div style="margin-bottom:3px;"><b>Malus Agricole :</b> 
                     <span style="font-weight:700;color:#c2410c;">${malusAgri}</span></div>
-                <div><b>Malus d’Aménagement :</b> 
+                <div><b>Malus d'Aménagement :</b> 
                     <span style="font-weight:700;color:#c2410c;">${malusAmenag}</span></div>
             </div>`;
     };
@@ -2766,40 +2766,30 @@ function setupPresentationLayers() {
             style: { color: '#444', weight: 1.5, dashArray: '5,5', fillOpacity: 0.05 },
             popup: f => `<b>Commune (HEM) :</b> ${f.properties.nom || f.properties.NOM || f.properties.NOM_COM || ''}` 
         },
-
-        // 2. PNR CMO (2013-2028)
         { 
             id: 'pres-pnr-2013', 
             file: 'PNR_CMO_2013-2028.geojson', 
             style: { color: '#10b981', weight: 2, fillColor: '#10b981', fillOpacity: 0.1 },
             popup: f => `<b>Périmètre PNR CMO (2013-2028)</b><br>Surface : ${f.properties.Surf_ha || ''} ha` 
         },
-
-        // 3. Communes PNR (2013-2028)
         { 
             id: 'pres-communes-2013', 
             file: 'Communes_2013-2028.geojson', 
             style: { color: '#10b981', weight: 1, dashArray: '4,4', fillOpacity: 0 },
             popup: f => `<b>Commune PNR (2013-2028) :</b> ${f.properties.nom || ''}<br>Code INSEE : ${f.properties.insee || ''}` 
         },
-
-        // 4. PNR CMO (2028-2044)
         { 
             id: 'pres-pnr-2028', 
             file: 'PNR_CMO_2028-2044.geojson', 
             style: { color: '#e11d48', weight: 2, fillColor: '#e11d48', fillOpacity: 0.1 },
             popup: f => `<b>Périmètre PNR CMO (2028-2044)</b><br>Surface : ${f.properties.Surf_ha || ''} ha` 
         },
-
-        // 5. Communes PNR (2028-2044)
         { 
             id: 'pres-communes-2028', 
             file: 'Communes_2028-2044.geojson', 
             style: { color: '#e11d48', weight: 1, dashArray: '4,4', fillOpacity: 0 },
             popup: f => `<b>Commune PNR (2028-2044) :</b> ${f.properties.nom || ''}<br>Code INSEE : ${f.properties.insee || ''}` 
         },
-
-        // 6. Exutoire de la Hem
         { 
             id: 'pres-exutoire', 
             file: 'Exutoire_HEM.geojson', 
@@ -2873,7 +2863,7 @@ function setupPresentationLayers() {
             id: 'pres-travaux-hydro', file: 'Plantations_hydraulique_douce.geojson',
             style: (f) => {
                 const type = (f.properties.TYPEOUVRAG || '').toLowerCase();
-                let col = '#0ea5e9'; // Couleur par défaut
+                let col = '#0ea5e9';
                 if (type.includes('fascine')) col = '#e67e22';
                 else if (type.includes('haie')) col = '#27ae60';
                 else if (type.includes('noue')) col = '#8b5cf6';
@@ -2912,10 +2902,8 @@ function setupPresentationLayers() {
                         presLayers[def.id].addTo(map);
                         if (def.yearField) loadHydroYearData(d);
                     }).catch(() => {
-                        // En cas d'erreur, on décoche la case
                         this.checked = false;
                         console.log('Fichier non disponible : ' + def.file);
-                        // On met à jour la légende suite au décochage forcé
                         updateLegendVisibility(); 
                     });
                 }
@@ -3314,11 +3302,9 @@ function showSideTab(tab) {
     document.getElementById('sideTab-couches').classList.toggle('active', tab === 'couches');
     document.getElementById('sideTab-legende').classList.toggle('active', tab === 'legende');
     
-    // On force 'block' au lieu de '' pour être sûr que ça s'affiche
     document.getElementById('sideContent-couches').style.display = tab === 'couches' ? 'block' : 'none';
     document.getElementById('sideContent-legende').style.display = tab === 'legende' ? 'block' : 'none';
     
-    // On force l'actualisation de la légende quand on ouvre l'onglet
     if (tab === 'legende') {
         updateLegendVisibility();
     }
@@ -3738,14 +3724,12 @@ const TRAVAUX_DICT = {
     'retrait embâcle': { label: 'Retrait embâcle', color: '#a8a29e' }
 };
 
-// Récupérer le libellé "propre" (ex: PRA2 -> Abreuvoir)
 function getTravauxLabel(type) { 
     const tLow = type ? String(type).trim().toLowerCase() : '';
     if (TRAVAUX_DICT[tLow]) return TRAVAUX_DICT[tLow].label;
     return type ? String(type).trim().charAt(0).toUpperCase() + String(type).trim().slice(1) : 'Inconnu'; 
 }
 
-// Récupérer la couleur via le libellé propre
 function getTravauxColorByLabel(label) {
     for(let key in TRAVAUX_DICT) {
         if(TRAVAUX_DICT[key].label === label) return TRAVAUX_DICT[key].color;
@@ -3753,14 +3737,12 @@ function getTravauxColorByLabel(label) {
     return '#555';
 }
 
-// Récupérer la couleur via la donnée brute du GeoJSON
 function getTravauxColorByRaw(type) {
     const tLow = type ? String(type).trim().toLowerCase() : '';
     if (TRAVAUX_DICT[tLow]) return TRAVAUX_DICT[tLow].color;
     return '#555';
 }
 
-// Définition manuelle des deux couches Leaflet
 let layerTravauxLin = L.geoJSON(null, {
     style: f => ({ color: getTravauxColorByRaw(f.properties.TYPE), weight: 3, opacity: 0.9 }),
     onEachFeature: (f, l) => l.bindPopup(`<b>Travaux Linéaires</b><br><b>Année :</b> ${f.properties.ANNEE||'?'}<br><b>Type :</b> ${getTravauxLabel(f.properties.TYPE)}`)
@@ -3775,7 +3757,7 @@ let layerTravauxPt = L.geoJSON(null, {
 });
 
 let travauxRawData = { lineaire: null, ponctuel: null };
-let travauxAvailableTypes = new Set(); // Stockera uniquement les labels propres ("Abreuvoir", "Effacement"...)
+let travauxAvailableTypes = new Set();
 let travauxAvailableYears = new Set();
 let travauxSelectedTypes = new Set();
 
@@ -3822,7 +3804,6 @@ function processTravauxData(data, typeKey) {
         
         const t = f.properties['TYPE'];
         if (t && String(t).trim()) {
-            // On standardise tout de suite la donnée
             const canonicalLabel = getTravauxLabel(t);
             travauxAvailableTypes.add(canonicalLabel);
             travauxSelectedTypes.add(canonicalLabel);
@@ -3899,7 +3880,6 @@ function applyTravauxFilter() {
     const selYear = document.getElementById('travaux-year-select').value;
     const filterYear = (yearToggle && selYear) ? parseInt(selYear) : null;
 
-    // Fonction de filtre qui vérifie le label canonical
     const filterFeatures = (features) => {
         return features.filter(f => {
             const yOk = !filterYear || extractYear(f.properties['ANNEE']) === filterYear;
@@ -3931,7 +3911,7 @@ function applyTravauxFilter() {
         layerTravauxPt.addTo(map);
     }
 }
-// Écouteur global : détecte le moindre clic sur une case à cocher du menu de gauche
+
 document.getElementById('left-sidebar').addEventListener('change', function(e) {
     if (e.target.tagName.toLowerCase() === 'input' && e.target.type === 'checkbox') {
         updateLegendVisibility();
