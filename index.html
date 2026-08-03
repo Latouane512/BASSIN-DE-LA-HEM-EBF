@@ -113,7 +113,7 @@
             margin-bottom: 8px; padding-bottom: 4px;
             border-bottom: 1px solid var(--color-border);
         }
-       legend-item {
+       .legend-item {
             display: flex; align-items: center; gap: 8px;
             padding: 4px 6px; font-size: 12px; color: var(--color-text);
             cursor: pointer;
@@ -1219,9 +1219,9 @@
         
         <div class="layer-item">
             <div class="layer-swatch" style="border:1.5px dashed #444;background:transparent;"></div>
-            <input type="checkbox" id="pres-communes-hem" checked>
+           <input type="checkbox" id="pres-communes-hem" checked>
             <label for="pres-communes-hem"><b>Communes de la HEM</b></label>
-            <div class="layer-info-btn" onclick="showLayerInfo('check-communes-hem')">i</div>
+           <div class="layer-info-btn" onclick="showLayerInfo('pres-communes-hem')">i</div>
         </div>
 
         <div class="layer-item">
@@ -2761,31 +2761,36 @@ function updateLegendVisibility() {
     }
 }
 
-  function setupInteractiveLegend() {
+ function setupInteractiveLegend() {
     document.querySelectorAll('.legend-item[data-layer]').forEach(item => {
         item.title = "Cliquez pour afficher/masquer cette couche";
         
         item.addEventListener('click', () => {
-            // Récupère les IDs des cases à cocher liées à cet élément de légende
             const layerIds = item.getAttribute('data-layer').split(',');
             
-            // On regarde l'état actuel de la première case pour décider si on coche ou décoche
+            // SÉCURITÉ : Ne pas rendre la légende cliquable pour la puissance spécifique (E1, E2...)
+            // car ces couches s'excluent mutuellement (gérées par les boutons Q2, Q5, Q100).
+            if (layerIds.some(id => id.includes('check-q-'))) return;
+            
             const firstCb = document.getElementById(layerIds[0].trim());
             if (!firstCb) return;
             
             const targetState = !firstCb.checked;
 
-            // On applique le nouvel état et on déclenche l'événement "change" pour actualiser la carte
+            // On applique le nouvel état et on déclenche l'événement "change"
             layerIds.forEach(id => {
                 const cb = document.getElementById(id.trim());
                 if (cb && cb.checked !== targetState) {
                     cb.checked = targetState;
-                    cb.dispatchEvent(new Event('change')); // Va déclencher l'ajout/retrait Leaflet
+                    // L'option { bubbles: true } est CRUCIALE pour que l'écouteur du menu latéral le détecte
+                    cb.dispatchEvent(new Event('change', { bubbles: true })); 
                 }
             });
+
+            updateLegendVisibility();
         });
     });
-}  
+}
 function setupBindings() {
     const qBtns = document.getElementById('q-buttons');
     const qControls = document.getElementById('q-layer-controls');
