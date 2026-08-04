@@ -1879,7 +1879,6 @@
             </div>
         </div>
     </div>
-</div>
 
     <!-- Presentation Panel -->
     <div id="rp-presentation" style="display:none;flex-direction:column;height:100%;">
@@ -2409,9 +2408,9 @@ function getStyleByAction(feature) {
         'VAGUE 1 : SÉCURITÉ BÂTI - Protection d\'urgence (Noue / Mur)':      { color: '#c0392b', fillColor: '#e74c3c', fillOpacity: 0.8 },
         'SURVEILLANCE BÂTI : Veille inondation':                             { color: '#c0392b', fillColor: '#e74c3c', fillOpacity: 0.8 }
     };
-    };
     return styles[action] || { color: '#7f8c8d', weight: 1, fillColor: '#bdc3c7', fillOpacity: 0.4 };
 }
+
 
 function getPluiColor(typezone) {
     const z = (typezone || '').toString().toUpperCase();
@@ -2516,7 +2515,7 @@ let rows = indicators.map(ind => {
             <div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--color-border);font-size:11px;color:#555;">
                 <div style="margin-bottom:3px;"><b>Malus Agricole :</b> 
                     <span style="font-weight:700;color:#c2410c;">${malusAgri}</span></div>
-                <div><b>Malus d Aménagement :</b> 
+                <div><b>Malus d'Aménagement :</b>
                     <span style="font-weight:700;color:#c2410c;">${malusAmenag}</span></div>
             </div>`;
     };
