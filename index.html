@@ -715,11 +715,6 @@
         <ul id="search-dropdown"></ul>
     </div>
 
-    <button class="header-btn" onclick="openFilterModal()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
-        Statistiques communales
-    </button>
-
     <div class="header-mode-group">
         <span class="header-mode-label">Mode d'affichage :</span>
         <button class="mode-btn active" onclick="setMode(this, 'public')">Public / élus</button>
@@ -805,49 +800,7 @@
     </div>
 </div>
 
-<!-- ========== ADVANCED FILTER MODAL ========== -->
-<div id="filterModal" class="modal" onclick="if(event.target===this)closeFilterModal()">
-    <div class="modal-card" style="max-width:600px;">
-        <div class="modal-close" onclick="closeFilterModal()">&#215;</div>
-        <h2 style="font-size:16px;margin-bottom:20px;">Statistiques communales</h2>
-        <div class="modal-body-scroll">
-            <p style="font-size:12px;color:#666;margin-bottom:16px;">Sélectionnez une commune pour visualiser les statistiques détaillées.</p>
-            <select id="filter-commune-select" onchange="updateCommuneStats(this.value)" style="width:100%;padding:10px;border:1px solid var(--color-border);border-radius:8px;font-size:13px;margin-bottom:16px;">
-                <option value="">-- Sélectionner une commune --</option>
-            </select>
-            <div id="commune-stats-container" style="display:none;">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
-                    <div style="background:var(--color-primary-light);border-radius:10px;padding:16px;text-align:center;">
-                        <div style="font-size:11px;color:var(--color-primary);margin-bottom:4px;">Surface EFO</div>
-                        <div id="stat-surface-efo" style="font-size:24px;font-weight:700;color:var(--color-text);">--</div>
-                        <div style="font-size:10px;color:var(--color-text-muted);">hectares</div>
-                    </div>
-                    <div style="background:#fff7ed;border-radius:10px;padding:16px;text-align:center;">
-                        <div style="font-size:11px;color:#c2410c;margin-bottom:4px;">Surface EFN</div>
-                        <div id="stat-surface-efn" style="font-size:24px;font-weight:700;color:var(--color-text);">--</div>
-                        <div style="font-size:10px;color:var(--color-text-muted);">hectares</div>
-                    </div>
-                    <div style="background:#e0f2fe;border-radius:10px;padding:16px;text-align:center;">
-                        <div style="font-size:11px;color:#0369a1;margin-bottom:4px;">Zones humides</div>
-                        <div id="stat-zh" style="font-size:24px;font-weight:700;color:var(--color-text);">--</div>
-                        <div style="font-size:10px;color:var(--color-text-muted);">hectares</div>
-                    </div>
-                    <div style="background:#fef3c7;border-radius:10px;padding:16px;text-align:center;">
-                        <div style="font-size:11px;color:#d97706;margin-bottom:4px;">Bâti dans EBF</div>
-                        <div id="stat-bati" style="font-size:24px;font-weight:700;color:var(--color-text);">--</div>
-                        <div style="font-size:10px;color:var(--color-text-muted);">hectares</div>
-                    </div>
-                </div>
-                <div style="background:var(--color-bg);border-radius:10px;padding:16px;">
-                    <div style="font-size:12px;font-weight:600;margin-bottom:12px;">Répartition du zonage PLUi dans l'EBF</div>
-                    <div id="filter-chart-container" style="height:180px;">
-                        <canvas id="filterPluiChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <!-- ========== LEFT SIDEBAR ========== -->
 <aside id="left-sidebar">
@@ -1674,12 +1627,46 @@
         <div class="rp-body">
             <!-- Commune Tab -->
             <div class="rp-tab-content active" id="rpt-commune">
-                <p class="rp-description">Sélectionnez une commune pour zoomer et accéder aux cartes réglementaires.</p>
+                <p class="rp-description">Sélectionnez une commune pour zoomer, voir ses statistiques et télécharger les cartes.</p>
                 <br>
                 <select id="commune-selector" class="commune-search-box" onchange="zoomToCommune(this.value)">
                     <option value="">-- Chargement des communes... --</option>
                 </select>
-                <div id="pdf-downloads" style="display:none; margin-top:16px;">
+
+                <!-- STATISTIQUES (Masquées tant qu'aucune commune n'est choisie) -->
+                <div id="commune-stats-container" style="display:none; margin-top: 16px;">
+                    <p class="rp-section-title">Indicateurs clés</p>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+                        <div style="background:var(--color-primary-light);border-radius:10px;padding:16px;text-align:center;">
+                            <div style="font-size:11px;color:var(--color-primary);margin-bottom:4px;">Surface EFO</div>
+                            <div id="stat-surface-efo" style="font-size:24px;font-weight:700;color:var(--color-text);">--</div>
+                            <div style="font-size:10px;color:var(--color-text-muted);">hectares</div>
+                        </div>
+                        <div style="background:#fff7ed;border-radius:10px;padding:16px;text-align:center;">
+                            <div style="font-size:11px;color:#c2410c;margin-bottom:4px;">Surface EFN</div>
+                            <div id="stat-surface-efn" style="font-size:24px;font-weight:700;color:var(--color-text);">--</div>
+                            <div style="font-size:10px;color:var(--color-text-muted);">hectares</div>
+                        </div>
+                        <div style="background:#e0f2fe;border-radius:10px;padding:16px;text-align:center;">
+                            <div style="font-size:11px;color:#0369a1;margin-bottom:4px;">Zones humides</div>
+                            <div id="stat-zh" style="font-size:24px;font-weight:700;color:var(--color-text);">--</div>
+                            <div style="font-size:10px;color:var(--color-text-muted);">hectares</div>
+                        </div>
+                        <div style="background:#fef3c7;border-radius:10px;padding:16px;text-align:center;">
+                            <div style="font-size:11px;color:#d97706;margin-bottom:4px;">Bâti dans EBF</div>
+                            <div id="stat-bati" style="font-size:24px;font-weight:700;color:var(--color-text);">--</div>
+                            <div style="font-size:10px;color:var(--color-text-muted);">hectares</div>
+                        </div>
+                    </div>
+                    <div style="background:var(--color-bg);border-radius:10px;padding:16px;margin-bottom:16px;">
+                        <div style="font-size:12px;font-weight:600;margin-bottom:12px;">Répartition du zonage PLUi dans l'EBF</div>
+                        <div id="filter-chart-container" style="height:180px;">
+                            <canvas id="filterPluiChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="pdf-downloads" style="display:none;">
                     <p class="rp-section-title" id="pdf-title">Cartes réglementaires :</p>
                     <a id="link-efo" href="#" class="dl-link">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -3573,23 +3560,6 @@ function toggleFullscreen() {
     }
 }
 
-// ===== FILTER MODAL =====
-function openFilterModal() {
-    document.getElementById('filterModal').style.display = 'block';
-    const filterSel = document.getElementById('filter-commune-select');
-    if (filterSel.options.length <= 1 && allCommuneNames.length > 0) {
-        filterSel.innerHTML = '<option value="">-- Sélectionner une commune --</option>';
-        allCommuneNames.forEach(nom => {
-            const o = document.createElement('option');
-            o.value = nom; o.textContent = nom;
-            filterSel.appendChild(o);
-        });
-    }
-}
-
-function closeFilterModal() {
-    document.getElementById('filterModal').style.display = 'none';
-}
 
 function updateCommuneStats(nomCommune) {
     const container = document.getElementById('commune-stats-container');
@@ -3694,6 +3664,7 @@ function openUserModal() {
 function zoomToCommune(nomCommune) {
     const pdfDiv = document.getElementById('pdf-downloads');
     const pdfTitle = document.getElementById('pdf-title');
+    updateCommuneStats(nomCommune);
     if (!nomCommune) { pdfDiv.style.display = 'none'; map.setView([50.78, 2.05], 11); return; }
     searchCommunesLayer.eachLayer(l => {
         const props = l.feature.properties;
