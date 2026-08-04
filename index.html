@@ -1872,10 +1872,11 @@
                         <div><b>PRAIRIE TAMPON</b> – 165 parcelles, 412 ha<br><span style="font-size:10px;color:var(--color-text-muted);">Couvert permanent, rôle épurateur</span></div>
                     </div>
                 </div>
-                <p class="rp-section-title" style="margin-top:14px;">Bâti à risque</p>
+               <p class="rp-section-title" style="margin-top:14px;">Bâti à risque</p>
                 <div style="font-size:12px;line-height:1.8;">
-                <div><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#f59e0b;margin-right:8px;"></span><b>Sécurité bâti</b> : 46 bâtiments impactés par le ruissellement</div>
-              </div>
+                    <div><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#c0392b;margin-right:8px;"></span><b>Vague 1 (Urgence)</b> : Bâtiments impactés prioritaires</div>
+                    <div><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#f1c40f;margin-right:8px;"></span><b>Surveillance</b> : Bâtiments en veille inondation</div>
+                </div>
             </div>
         </div>
     </div>
@@ -2113,14 +2114,67 @@
 
                 <h3>Matrice Technique (Guide RMC)</h3>
                 <table class="rmc-table">
-                    <thead><tr><th>Catégorie</th><th>EFO (Optimal)</th><th>EFN (Nécessaire)</th><th>Outils SIG</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Catégorie</th>
+                            <th>EBFO (Espace de Bon Fonctionnement Optimal)</th>
+                            <th>EBFN (Espace Fonctionnel Nécessaire)</th>
+                            <th>Couches SIG / Outils et Concept du Guide RMC</th>
+                        </tr>
+                    </thead>
                     <tbody>
-                        <tr><td class="rmc-cat">Philosophie</td><td class="rmc-efo"><span class="rmc-badge badge-efo">EFO</span> Enveloppe théorique maximale. La rivière y a tout l'espace nécessaire.</td><td class="rmc-efn"><span class="rmc-badge badge-efn">EFN</span> Enveloppe réaliste, respecte les usages humains incompressibles.</td><td class="rmc-sig">Concepts EBF fluvial</td></tr>
-                        <tr><td class="rmc-cat">Aménagement</td><td class="rmc-efo">Sans contrainte de bâti.</td><td class="rmc-efn">Rabotage : soustraction routes + bâtiments (BD Topo).</td><td class="rmc-sig">Corine Land Cover, BD Topo, ROE</td></tr>
-                        <tr><td class="rmc-cat">Hydraulique</td><td class="rmc-efo">MRVBF – plaine inondable théorique.</td><td class="rmc-efn">AZI – Atlas zones inondation.</td><td class="rmc-sig">RGE ALTI 5m, PPRi, TRI</td></tr>
-                        <tr><td class="rmc-cat">Hydrogéologie</td><td class="rmc-efo">Alluvions récentes – emprise maximale.</td><td class="rmc-efn">Alluvions contraintes (BRGM).</td><td class="rmc-sig">Carte géologique BRGM, HGM</td></tr>
-                        <tr><td class="rmc-cat">Écologie</td><td class="rmc-efo">ZDH + ZHE stratégiques.</td><td class="rmc-efn">ZHE – zones stratégiques seulement.</td><td class="rmc-sig">RHOMEO, PIFH, TVB, SRADDET</td></tr>
-                        <tr><td class="rmc-cat">Biogéochimie</td><td class="rmc-efo">Filtre anti-pesticides 25m.</td><td class="rmc-efn">Filtre réglementaire 5m.</td><td class="rmc-sig">RPG, buffer linéaire</td></tr>
+                        <tr>
+                            <td class="rmc-cat">Philosophie globale<br>Et Objectif de gestion</td>
+                            <td class="rmc-efo"><span class="rmc-badge badge-efo">EFO</span> Enveloppe théorique maximale.<br>La rivière y a tout l'espace nécessaire, comme si l'homme n'existait pas.<br><b>Objectif :</b> Sert de zone de désartificialisation à très long terme (Idéal à atteindre).</td>
+                            <td class="rmc-efn"><span class="rmc-badge badge-efn">EFN</span> Enveloppe réaliste et réglementaire.<br>Protège la rivière tout en respectant les usages humains.<br><b>Objectif :</b> Périmètre d'action immédiat pour l'ingénierie végétale, la protection.</td>
+                            <td class="rmc-sig"></td>
+                        </tr>
+                        <tr>
+                            <td class="rmc-cat">Aménagement / Bâti</td>
+                            <td class="rmc-efo">Ne prend pas en compte le bâti existant<br>(Vision théorique sans contrainte).</td>
+                            <td class="rmc-efn">Rabotage : Soustraction géomatique des routes et bâtiments (Vision pragmatique). (BD Topo)</td>
+                            <td class="rmc-sig">Couches d’usage et infrastructure : Corrine Land Cover et / BD Topo<br>Couche des ouvrages (ROE)</td>
+                        </tr>
+                        <tr>
+                            <td class="rmc-cat">Enveloppe Morphologique</td>
+                            <td class="rmc-efo">Puissance spécifique : Largeur de liberté totale accordée au lit Tableau 4</td>
+                            <td class="rmc-efn">Largeur a plein bord x 15 ou calcul de la Puissance Spécifique</td>
+                            <td class="rmc-sig"></td>
+                        </tr>
+                        <tr>
+                            <td class="rmc-cat">Enveloppe Hydraulique</td>
+                            <td class="rmc-efo">MRVBF : S'étend sur toute la plaine inondable théorique.</td>
+                            <td class="rmc-efn">AZI : Atlas des zones d’inondation 2003</td>
+                            <td class="rmc-sig">Couches Aléas et Topographie : RGE ALTI 5m ou levés LiDAR, PPRi<br>Cartographie TRI : Directive inondation (crue moyenne et scénario extrême (Q100). Atlas des Zones Inondables (AZI)</td>
+                        </tr>
+                        <tr>
+                            <td class="rmc-cat">Enveloppe Hydrogéologique</td>
+                            <td class="rmc-efo">Alluvions récentes : l’emprise maximale (carte géologique BRGM)</td>
+                            <td class="rmc-efn">Méthode hydrogéomorphologique (HGM). Carte géologique (BRGM)</td>
+                            <td class="rmc-sig"></td>
+                        </tr>
+                        <tr>
+                            <td class="rmc-cat">Enveloppe Biologique</td>
+                            <td class="rmc-efo">ZDH (Zones à Dominante Humide) : Enveloppe physique globale selon la topographie et le sol.<br>+ ZHE : Uniquement les zones stratégiques</td>
+                            <td class="rmc-efn">ZHE (Zones Humides à Enjeux) : Uniquement les zones stratégiques</td>
+                            <td class="rmc-sig">Couche de fonctionnalité Fluviale : Inventaire des Zones Humides.<br>Données du pôle d’information flore-habitat (PIFH).<br>SRCE / TVB / SRADDET (Aires de Migration Simulée AMS)</td>
+                        </tr>
+                        <tr>
+                            <td class="rmc-cat">Enveloppe Biogéochimique</td>
+                            <td class="rmc-efo">Filtre anti-pesticides (25m) : Intègre la totalité de la bande maximale théorique.</td>
+                            <td class="rmc-efn">Filtre anti-pesticides (5m) : Intègre uniquement la zone tampon minimale réglementaire.</td>
+                            <td class="rmc-sig">Couches Sol et Occupation : Registre parcellaire à Grande échelle (RPG) (ciblage des parcelles agricoles riveraines). Bande tampon linéaire (générée par buffer de 15 mètres de part et d’autre de l’axe)</td>
+                        </tr>
+                        <tr>
+                            <td class="rmc-cat">Cas des Inventaires Patrimoniaux (ZNIEFF / Natura 2000)</td>
+                            <td class="rmc-efo" colspan="2">Exclu par défaut pour éviter une surpondération de l’enveloppe technique de l’EBF</td>
+                            <td class="rmc-sig">Couche d’inventaires Environnementaux : ZNIEFF de Type 1 et 2 (DREAL). Zonage réglementaire : NATURA2000 (ZCS / ZPS), APPS, ENS<br><br><i>Note technique RMC : Ces couches ne définissent pas un périmètre EBF en soi, elles permettent de contextualiser.</i></td>
+                        </tr>
+                        <tr>
+                            <td class="rmc-cat">Lit perché</td>
+                            <td class="rmc-efo" colspan="2">Lits perchés : Identification des Lits perchés par photo-interprétation sur LiDAR HD</td>
+                            <td class="rmc-sig"></td>
+                        </tr>
                     </tbody>
                 </table>
 
@@ -2559,8 +2613,7 @@ function setupPointLayers() {
         onEachFeature: (f, l) => l.bindPopup(`<b>Action SFN :</b> ${f.properties.Action_SFN || 'Non définie'}`)
     });
     layerBatiImpacte = L.geoJSON(null, {
-        style: getStyleByAction,
-        onEachFeature: (f, l) => l.bindPopup(`<b>Action :</b> ${f.properties.Action_SFN || 'Non définie'}`)
+        style: getStyleByAction
     });
 }
 
