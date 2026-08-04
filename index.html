@@ -1857,19 +1857,19 @@
                 <div style="font-size:12px;line-height:1.9;">
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:8px;background:#fee2e2;border-radius:8px;">
                         <span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#c0392b;"></span>
-                        <div><b>URGENCE</b> – 168 parcelles, 644 ha<br><span style="font-size:10px;color:var(--color-text-muted);">Pente supérieur 10%, culture annuelle, axe concentré</span></div>
+                        <div><b>URGENCE</b> – 168 parcelles, 567,00 ha <br><span style="font-size:10px;color:var(--color-text-muted);">Pente supérieur 10%, culture annuelle, axe concentré</span></div>
                     </div>
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:8px;background:#fff7ed;border-radius:8px;">
                         <span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#e67e22;"></span>
-                        <div><b>CONSOLIDATION</b> – 166 parcelles<br><span style="font-size:10px;color:var(--color-text-muted);">Pente 5-10%, vulnérabilité moyenne</span></div>
+                        <div><b>CONSOLIDATION</b> – 166 parcelles, 541,67 ha <br><span style="font-size:10px;color:var(--color-text-muted);">Pente 5-10%, vulnérabilité moyenne</span></div>
                     </div>
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:8px;background:#fef3c7;border-radius:8px;">
                         <span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#f39c12;"></span>
-                        <div><b>SURVEILLANCE</b> – 229 parcelles, 701 ha<br><span style="font-size:10px;color:var(--color-text-muted);">Pente 2-5%, pratiques à surveiller</span></div>
+                        <div><b>SURVEILLANCE</b> – 245 parcelles, 530,29 ha<br><span style="font-size:10px;color:var(--color-text-muted);">Pente 2-5%, pratiques à surveiller</span></div>
                     </div>
                     <div style="display:flex;align-items:center;gap:8px;padding:8px;background:#e8f5ee;border-radius:8px;">
                         <span style="display:inline-block;width:14px;height:14px;border-radius:3px;background:#27ae60;"></span>
-                        <div><b>PRAIRIE TAMPON</b> – 165 parcelles, 412 ha<br><span style="font-size:10px;color:var(--color-text-muted);">Couvert permanent, rôle épurateur</span></div>
+                        <div><b>PRAIRIE TAMPON</b> – 165 parcelles, 351,74 ha<br><span style="font-size:10px;color:var(--color-text-muted);">Couvert permanent, rôle épurateur</span></div>
                     </div>
                 </div>
                <p class="rp-section-title" style="margin-top:14px;">Bâti à risque</p>
@@ -1982,7 +1982,7 @@
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                     Rapport de diagnostic (Mémoire)
                 </a>
-                <a href="#" class="dl-link" onclick="return false;">
+                <a href="PPRE/ACTION_USRA_Bon_MAJ.xlsx" download class="dl-link">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                     Plan de gestion (PPRE)
                 </a>
@@ -3520,7 +3520,15 @@ function setMode(btn, mode) {
     if (mode === 'public') {
         diagTab.style.display = 'none';
         downloadBtn.style.display = 'none';
-        if (docsTab) docsTab.style.display = 'none';
+        
+        if (docsTab) {
+            docsTab.style.display = 'none';
+            // SÉCURITÉ : Si on était sur l'onglet "Documents", on force le retour sur l'onglet "Présentation"
+            if (docsTab.classList.contains('active')) {
+                showRpTab(document.querySelector('#rp-presentation .rp-tab'), 'rpt-pres-info');
+            }
+        }
+        
         if (currentView === 'diagnostic') switchView('ebf');
     } else {
         diagTab.style.display = '';
