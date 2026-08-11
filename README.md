@@ -71,6 +71,11 @@ L'outil agrège une quantité massive de données institutionnelles et de modél
 Pour fonctionner correctement (en local ou sur GitHub Pages), l'application s'attend à trouver les données géographiques à sa racine.  
 ⚠️ **Tous les fichiers géographiques (`.geojson`) doivent être projetés en EPSG:4326 (WGS84).**
 
+### 📁 Scripts Python de traitement (`/Python`)
+Le projet contient un dossier dédié `Python/` regroupant les scripts automatisés (PyQGIS / GeoPandas) ayant servi à :
+* Le prétraitement et le nettoyage des couches SIG brutes.
+* Le calcul automatisé des emprises EBF, des indices PRHYMO et de la Puissance Spécifique (Ps).
+
 **Données de base & EBF :**
 * `communes.geojson`, `Hydro_HEM_WGS.geojson`
 * `EFO_FINAL_WGS.geojson`, `EFN_FINAL_WGS.geojson`, `EFO_PLUI.geojson`, `EFN_PLUI.geojson`
